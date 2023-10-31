@@ -12,16 +12,18 @@ class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where username is the unique identifier.
     """
-    def create_user(self, email, password, ip_address=None, **extra_fields):
+    def create_user(self, email, password=None, ip_address=None, **extra_fields):
         """
         Create and save a User with the given email and password.
         """
 
-        if not email:
-            raise ValueError('The email name must be set')
+        print("email: ", email)
        
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+       
+        if password:
+            user.set_password(password)
+       
         user.save()
         return user
 
@@ -62,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ValidationError: 
     """
 
+    username = models.CharField(null=True, blank=True, default='', max_length=40)
     name = models.CharField(null=True, blank=False, max_length=30)
     email = models.EmailField(unique=True, null=True, blank=True) # used only for staff/admin users
 

@@ -41,7 +41,7 @@ class UserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
-    list_display = ['id', 'name',  'email', 'is_active']
+    list_display = ['id', 'name', 'username', 'email', 'is_active']
     list_filter = ['date_joined', 'is_active', 'is_admin']
 
     ordering = ['-date_joined']
@@ -49,7 +49,7 @@ class UserAdmin(UserAdmin):
 
     fieldsets = (
         ('user details', {'fields': ('id', 'email', 'name',   
-                                    'date_joined', 
+                                    'username', 'date_joined', 
                                     'ip_address', 'password')}), # displays hashed password
         ('permissions', {'fields': ('is_staff', 'is_active', 'is_admin')}),
         ('authorization groups', {'fields': ('groups', )}),

@@ -1,7 +1,7 @@
 {% extends './base.html' %} 
 {% load static %} 
 {% block fullpage %}
-    <div class="tw-bg-white tw-fixed tw-top-0 tw-z-[5000] 
+    <div class="tw-bg-white tw-text-black tw-fixed tw-top-0 tw-z-[5000] 
                     tw-flex max-md:tw-place-content-center 
                     tw-items-center tw-h-full tw-w-full">
         
@@ -9,7 +9,7 @@
                     tw-h-[80%] tw-p-4 tw-rounded-3xl
                         lg:tw-ml-[20%]
                         tw-overflow-hidden ">
-            <img src="{% static "./assets/images/login-illustration.svg" %}" class="tw-w-full" alt="" srcset="">
+            <img src="{% static "./assets/images/open-source.svg" %}" class="tw-w-full" alt="" srcset="">
         </div>
 
         <form action="{% url "login" %}" class="tw-w-[350px] tw-min-h-[250px] tw-h-max tw-bg-white
@@ -35,7 +35,7 @@
                     placeholder="password" name="password" maxlength="30" oninput="checkLogin()">
                 </div>
                 
-                <button type="submit" id="login-btn" disabled class="btn btn-success tw-m-3">
+                <button type="submit" id="login-btn" disabled class="btn !tw-bg-[#6C63FF] hover:!tw-text-white tw-m-3">
                     Login
                 </button>
 

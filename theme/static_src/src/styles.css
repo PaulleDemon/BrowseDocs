@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .input{
+        border: 2px solid #717070;
+        border-radius: 5px;
+        background-color: #1E293B;
+    }
+
+    .quick-search{
+        position: fixed;
+        left: 50%;
+        top: 30%;
+        width: 40%;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+        min-height: 300px;
+        transform: translate(-50%);
+        background-color: #1E293B;
+    }
+
+    .input:focus-within{
+        border: 2px solid #0072c9;
+    }
+
+    .key-btn{
+        /*used to denote key*/
+        max-height: max-content;
+        padding: 4px;
+        background-color: transparent;
+        border-radius: 4px;
+        outline: none;
+        border: 1px solid #717070;
+        max-height: min-content;
+        max-width: max-content;
+        font-size: small;
+    }
+
+    .browserdoc-btn{
+        border: 2px solid #717070;
+        cursor: pointer;
+        padding: 4px 12px;
+        border-radius: 6px;
+        background-color: inherit;
+    }
+
+    .browserdoc-btn:hover{
+        background-color: #0072c9;
+        border: 2px solid transparent;
+    }
+
+  }

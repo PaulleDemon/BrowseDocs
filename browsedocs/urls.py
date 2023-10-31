@@ -21,16 +21,22 @@ admin.site.site_url = "https://browsedocs.com"
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),    
 
+    
+    path("", include('docsapp.urls')),
+    
     path("", lambda r: redirect("home")),
 
+    path('auth/', include('social_django.urls', namespace='social')),
+    
     path('opensource-documentation/', home_view, name='home'),
 
     path('support/', support_view, name='support-view'),
     path('ratelimit-error/', rate_limiter_view, name='ratelimit-error'),
-    
+
     path('user/', include('user.urls')),
+
 
     path("__reload__/", include("django_browser_reload.urls")),
 

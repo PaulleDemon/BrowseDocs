@@ -52,18 +52,18 @@
 
     </head>
 {% comment %} <body class="tw-min-h-[100vh]" data-bs-theme="dark"> {% endcomment %}
-<body class="tw-min-h-[100vh]" >
+<body class="tw-min-h-[100vh] tw-bg-[#0F172A] !tw-text-white" data-bs-theme="dark">
     
     {% block fullpage %}{% endblock fullpage %}
 
-    <nav class="navbar navbar-expand-lg tw-shadow-xl  fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
           <a class="navbar-brand tw-flex tw-gap-1 tw-justify-center tw-place-items-center" href="/">
-            <img src="{% static './assets/logos/logo.svg'%}" alt="Logo" 
-                width="40" height="40" class="d-inline-block align-text-top !tw-fill-slate-400">
+            {% comment %} <img src="{% static ''%}" alt="Logo" 
+                width="40" height="40" class="d-inline-block align-text-top !tw-fill-slate-400"> {% endcomment %}
             <span>BrowseDocs</span> 
           </a>
           <div class="tw-justify-self-center collapse navbar-collapse" id="navbarTogglerDemo01">
@@ -73,11 +73,20 @@
                 <a class="nav-link hover:tw-text-blue-400" href="">Tutorials</a>
                 <a class="nav-link hover:tw-text-blue-400" href="">Blogs</a>
             </div>
+
+            <div class="navbar-nav tw-ml-auto md:!tw-place-items-center tw-gap-4">
+                <button class="bi bi-brightness-high-fill btn btn-lg" id="theme">
+                    <i></i>
+                </button>
+                {% if user.is_authenticated %}
+                
+                {% else %}
+                    <a class="browserdoc-btn" href="{% url "login" %}">
+                        Login
+                    </a>
+                {% endif %}
+            </div>
         
-            <a href="https://github.com/PaulleDemon/Email-automation" target="_blank" rel="noreferrer" class="tw-m-2">
-                <i class="tw-text-3xl bi bi-github"></i>
-            </a>
-            
         </div>
         </div>
         
@@ -94,6 +103,25 @@
         </div>
     </div>
 
+    <div class="quick-search tw-hidden" id="quick-search-container">
+        <div class="input tw-flex">
+            <input type="text" name="" 
+                                    class="tw-w-full tw-bg-transparent
+                                                tw-border-none active:tw-border-none 
+                                                focus:tw-border-none" 
+                                    placeholder="Quick search..."
+                                    id="quick-search"
+                                    autofocus
+                                        >
+            <div class="tw-p-2">
+                <button type="button" class="key-btn" onclick="hideQuickSearch()">Esc</button>
+            </div>
+        </div>
+        <div class="tw-flex tw-w-full tw-flex-col tw-max-h-[450px] tw-overflow-y-auto" 
+             id="search-dropdown">
+             
+        </div>
+    </div>
 
     <div class="tw-h-[100%] tw-min-h-[100vh] tw-mt-[70px]">
 
@@ -103,7 +131,7 @@
     </div>
 
         
-    <footer class="tw-flex tw-z-[100] tw-flex-wrap p-4 tw-text-gray-400 tw-bg-gray-700 shadow-[0px_0px_3px_#000] tw-justify-around">
+    <footer class="tw-flex tw-z-[100] tw-flex-wrap p-4 tw-text-gray-600 shadow-[0px_0px_3px_#000] tw-justify-around">
         
         <div class="tw-flex tw-text-decoration-none tw-place-items-center">
             {% comment %} <a href="{% url 'privacy' %}" >privacy</a> {% endcomment %}

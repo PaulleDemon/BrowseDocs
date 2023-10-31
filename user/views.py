@@ -10,9 +10,21 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
 
+
 from .models import User
 from .forms import CustomUserCreationForm
 from utils.token_generator import send_token
+
+
+def o_auth_login(request):
+
+    return render(request, 'oAuth-login.html')
+
+
+# class CustomLoginView(LoginView):
+#     template_name = 'oAuth-login.html' 
+
+
 
 def login_view(request):
 

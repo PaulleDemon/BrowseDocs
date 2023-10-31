@@ -10,10 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import environ
+import pyrebase
+ 
+import firebase_admin
+from firebase_admin import credentials
+
 import dj_database_url
 from email.headerregistry import Address
-from google.oauth2 import service_account
 
+from firebase_admin import firestore
+from google.oauth2 import service_account
 
 from pathlib import Path
 
@@ -57,15 +63,41 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_browser_reload',
 
+    #authentication
+    'social_django',
+
     'user',
-
-
 ]
 
 
 LOGIN_URL = '/user/login/'
 
 AUTH_USER_MODEL = "user.User" 
+
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+if DEBUG:
+    SOCIAL_AUTH_GITHUB_KEY = env('GITHUB_DEV_KEY')
+    SOCIAL_AUTH_GITHUB_SECRET = env('GITHUB_DEV_SECRET')
+
+else:
+    SOCIAL_AUTH_GITHUB_KEY = env('GITHUB_KEY')
+    SOCIAL_AUTH_GITHUB_SECRET = env('GITHUB_SECRET')
+
+SOCIAL_AUTH_GITHUB_SCOPE = [
+    'repo',
+    'user:email',
+]
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_SESSION_EXPIRATION = True
+
+LOGIN_REDIRECT_URL = '/'
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -102,10 +134,10 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware', #whitenoise
 
     'django_browser_reload.middleware.BrowserReloadMiddleware', # reload
-    
+
     'django_ratelimit.middleware.RatelimitMiddleware',
+    
     'browsedocs.middlewares.RateLimitJsonResponseMiddleware',
-  
     'browsedocs.middlewares.FileUploadMiddleware',
 
 ]
@@ -118,6 +150,8 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR.joinpath("templates"),
             BASE_DIR.joinpath("templates", "html", ),
+            BASE_DIR.joinpath("templates", "html", "docs"),
+            BASE_DIR.joinpath("templates", "html", "blog"),
 
             BASE_DIR.joinpath("templates", "html", "error"),
             BASE_DIR.joinpath("templates", "html", "authentication"),
@@ -129,6 +163,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
 
                 'browsedocs.context_processors.secrets',
 
@@ -139,16 +176,40 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'browsedocs.wsgi.application'
 
+cred = credentials.Certificate(env('FIREBASE_CRED_PATH'))
+app = firebase_admin.initialize_app(cred)
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+FIRESTORE_CLIENT = firestore.client()
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        },
+        'OPTIONS': {
+            "timeout": 20,
+        }
     }
-}
+
+else:
+    # DATABASES = {
+    #         'default': {
+    #             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #             'NAME': env.get_value('POSTGRES_DATABASE'), # use env file
+    #             'USER': env.get_value('POSTGRES_USER'),
+    #             'PASSWORD': env.get_value('POSTGRES_PASSWORD'),
+    #             'HOST': env.get_value('POSTGRES_HOST'),
+    #             'PORT': '5432',
+    #     }
+    # }
+
+    DATABASES  = {
+                    'default':dj_database_url.config(default=env('POSTGRES_URL')),
+                    
+                    # 'nosql':           
+                }
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
 
 # Password validation
