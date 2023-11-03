@@ -36,6 +36,7 @@ urlpatterns = [
     path('ratelimit-error/', rate_limiter_view, name='ratelimit-error'),
 
     path('user/', include('user.urls')),
+    path('blog/', include('blog.urls')),
 
 
     path("__reload__/", include("django_browser_reload.urls")),

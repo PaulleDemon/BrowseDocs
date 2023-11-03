@@ -67,6 +67,8 @@ INSTALLED_APPS = [
     'social_django',
 
     'user',
+    'blog',
+    'docsapp'
 ]
 
 

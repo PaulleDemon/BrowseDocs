@@ -29,7 +29,7 @@ def o_auth_login(request):
 def login_view(request):
 
     if request.user.is_authenticated:
-        return redirect('email-templates')
+        return redirect('home')
 
     if request.method == "GET":
         return render(request, 'login.html')
@@ -44,7 +44,7 @@ def login_view(request):
 
     if user is not None:
         login(request, user)
-        return redirect('email-templates')
+        return redirect('home')
 
     return render(request, 'login.html', {'error': f'Invalid email or password'})
 
@@ -52,7 +52,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
 
-    return redirect('email-templates')
+    return redirect('home')
 
 @require_http_methods(["GET", "POST"])
 def signup_view(request):

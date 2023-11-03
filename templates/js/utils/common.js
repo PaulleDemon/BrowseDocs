@@ -2,7 +2,6 @@
  * commonnly used functions
  */
 
-
 /**
  * 
  * @param {HTMLElement} alert 
@@ -84,7 +83,17 @@ function isValidDomain(domain) {
 
     return domainPattern.test(domain);
 }
- 
+
+function isValidUrl(url){
+
+    try{
+        new URL(url)
+        return true
+    }catch(e){
+        return false
+    }
+
+}
 
 /**
  * 

@@ -25,19 +25,20 @@ def get_github_repo(username, access_token=None):
 
     if response.status_code == 200:
         repositories = response.json()
-        for repo in repositories:
-            # Access repository details (e.g., name, description, URL, etc.)
-            repos.append(repo)
+        # sorts by latest commit
+        repos = list(sorted(repositories, key=lambda repo: repo['updated_at'], reverse=True))
 
-        return repos
+        # for repo in sorted_repositories:
+        #     # Access repository details (e.g., name, description, URL, etc.)
+        #     repos.append(repo)
 
-    return False
+    return repos
 
 
 def check_config_file(owner, repo):
 
     """
-        returns if the repo contains .browsedoc.json or .readthedocs.yaml files
+        returns if the repo contains .browsedoc.json files
     """
 
     api_url = f'https://api.github.com/repos/{owner}/{repo}/contents'
@@ -51,19 +52,19 @@ def check_config_file(owner, repo):
         # Check if '.browsedocs.json' is in the repository's top-level
         
         for f in repository_contents:
-            if f['name'] == '.browsedocs.json' or f['name'] == '.readthedocs.yaml':
+            if f['name'].lower() == '.browsedocs.json': # or f['name'].lower() == '.readthedocs.yaml':
                 return f['name']
 
     return False
     
 
 
-def read_config_file(owner, repo):
+def read_config_file(owner, repo) -> dict:
     
-    file_path = check_config_file(owner, repo)
+    file_path = '.browsedocs.json' #check_config_file(owner, repo)
     
-    if file_path == False:
-        return {"error": ".browsedocs.yaml not found"}
+    # if file_path == False:
+    #     return {"error": ".browsedocs.yaml not found"}
     
     api_url = f'https://api.github.com/repos/{owner}/{repo}/contents/{file_path}'
 
@@ -75,17 +76,12 @@ def read_config_file(owner, repo):
         # Extract and decode the file content
         if 'content' in file_data:
             file_content = base64.b64decode(file_data['content']).decode('utf-8')
-            print(f'Content of {file_path}:\n{file_content}')
+        
+            try:
+                return json.loads(file_content)
 
-            if file_path == '.browsedocs.json':
-                try:
-
-                    json.loads(file_content)
-
-                except json.decoder.JSONDecodeError:
-                    return {'error': 'error decoding json, check json format'}
-
-            return True
+            except json.decoder.JSONDecodeError:
+                return {'error': 'error decoding json, check json format'}
 
         else:
             return {'error': f'Failed to retrieve content for {file_path}.'}
@@ -95,3 +91,58 @@ def read_config_file(owner, repo):
     
     else:
         return {"error": "An unknown error occurred"}
+
+
+def get_repo_info(owner, repo):
+
+    repo_url = f'https://api.github.com/repos/{owner}/{repo}'
+
+    response = requests.get(repo_url)
+
+    if response.status_code == 200:
+        repo_info = response.json()
+        return repo_info
+
+
+
+def scan_for_doc(owner, repo):
+
+    config = read_config_file(owner, repo)
+
+    path = config.get('source')
+
+    
+    default_branch = get_repo_info(owner, repo).get('default_branch')
+    # print("defaul branch" , default_branch)
+    if not default_branch:
+        return {'error': 'repo not found'}
+
+    api = f'https://api.github.com/repos/{owner}/{repo}/git/trees/{default_branch}?recursive=1'
+    # docs_folder_url = f'https://api.github.com/repos/{owner}/{repo}/contents/docs'
+    response = requests.get(api)
+    docs_names = []
+
+    if response.status_code == 200: 
+        contents = response.json()
+
+        for item in contents['tree']:
+
+            if item['path'].lower() in ['readme.rst', 'readme.md']:
+                docs_names.appned(item) # only one either readme.rst or readme.md
+
+            if path and item['path'].lower() == path:
+                docs_names.append(item)
+
+            if item['path'].lower() == 'docs' and item['type'] == 'tree':
+                docs_names.append(item)
+
+        if not docs_names:
+            return {'error': 'docs couldn\'t be found please modify .browsedocs.json or add docs directory or add readme.md '}
+
+        return {'docs': docs_names, 'config': config}
+
+    elif response.status_code == 404:
+        return {'error': 'docs couldn\'t be found please modify .browsedocs.json or add docs directory or add readme.md '}
+
+    
+

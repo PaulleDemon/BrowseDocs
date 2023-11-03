@@ -1,3 +1,5 @@
+import json
+
 from asgiref.sync import sync_to_async
 
 from django.views import View
@@ -6,7 +8,7 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-from utils.repos import get_github_repo, read_config_file
+from utils.repos import get_github_repo, read_config_file, scan_for_doc
 from utils.decorators import login_required_for_post, login_required_rest_api
 
 
@@ -16,29 +18,32 @@ class DocsCreateView(View, LoginRequiredMixin):
 
     def get(self, request):
 
-        # repos = get_github_repo(request.user.username)
-
+        repos = []#get_github_repo(request.user.username)
+      
         return render(request, self.template_name, context={
-            'repos': [] # repos
+            'repos': repos
         })
     
 
 class ImportRepoView(View, LoginRequiredMixin):
 
     def post(self, request):
+        data = json.loads(request.body.decode("utf-8"))
 
-        repo_name = request.POST.get('repo_name') # must be of the format paulledemon/browserdocs
-        
+        repo_name = data.get('repo') # must be of the format paulledemon/browserdocs
+   
         try:
             owner, repo = repo_name.split('/')
 
-        except ValueError:
-            return JsonResponse({'repo': 'required repo in the format Owner/Reponame'})
+        except (ValueError, AttributeError):
+            return JsonResponse({'error': 'required repo in the format Owner/Reponame'}, status=400)
 
-        check_files = read_config_file(owner, repo)
+        doc_files = scan_for_doc(owner, repo)
+    
+        if doc_files.get('error'):
 
-        if isinstance(check_files, dict):
+            return JsonResponse({"error": doc_files.get('error')}, status=400)
 
-            return JsonResponse({"error": check_files.get('error')})
+        doc_files['project'] = repo
 
-        return JsonResponse({'success': 'the email has been sent'}, status=200)
+        return JsonResponse(doc_files, status=200)
