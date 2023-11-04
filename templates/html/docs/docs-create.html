@@ -6,7 +6,7 @@
 {% block content %}
     <div class="tw-h-full tw-w-full tw-flex-col tw-p-3">
         
-        <div class="tw-mt-3 tw-p-4 !tw-leading-8 md:!tw-mx-[30%] tw-flex tw-flex-col tw-place-items-center" id=''>
+        <div class="tw-mt-3 tw-p-4 !tw-leading-8 md:!tw-mx-[30%] tw-flex tw-flex-col md:tw-place-items-center" id=''>
 
             {% if not user.is_authenticated %}
                 <div class="alert alert-warning">
@@ -18,8 +18,11 @@
                 Create documentation
             </div>
             
+            <div class="alert alert-warning tw-m-2 tw-hidden" id="doc-create-alert">
 
-            <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]">
+            </div>
+
+            <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]" id="repo-container">
                 <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
                     Select repository
                 </div>
@@ -52,7 +55,7 @@
                          id="repo-input" maxlength="50">
                 <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository({{repo.full_name}})">import</button>
             </div> {% endcomment %}
-            <form action="" id="create-project" class="tw-flex tw-flex-col tw-gap-2 tw-place-items-center" method="post" onsubmit="return false;">
+            <form action="" id="create-project" class="tw-hidden tw-flex tw-flex-col tw-gap-2 tw-place-items-center" method="post" onsubmit="return false;">
                 <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]" id="docfile">
                     <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
                         Select Docs
@@ -64,30 +67,38 @@
                                 tw-justify-between" id="doc-files">
                     </div>
                 </div>
-    
+                <hr>
                 <div id="project-details" class="tw-mt-[5%] tw-w-full tw-flex tw-flex-col tw-gap-4">
 
-                    <input type="text" class="input" name="name" maxlength="30" value="" placeholder="project name" id="project-name">                
-                    <textarea name="about" id="" class="input tw-min-h-[200px] tw-max-h-[350px]" 
+                    <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
+                        Project info
+                    </div>
+
+                    <input type="text" class="input tw-max-w-xs" name="version" maxlength="30" value="" required placeholder="version">                
+                    <input type="text" class="input" name="name" maxlength="30" required value="" placeholder="project name" id="project-name">                
+                    <textarea name="about" id="" required class="input tw-min-h-[200px] tw-max-h-[350px]" 
                                             placeholder="About the project" maxlength="400"></textarea>
                     
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <input type="text" class="input" name="unique-name" maxlength="30" value="" placeholder="unique project name" id="project-name">
+                        <input type="text" class="input" oninput="checkProjectNameAvailabilty(this.value)" onchange="checkProjectNameAvailabilty(this.value)" required name="unique_name" maxlength="30" value="" placeholder="unique project name" 
+                                id="unique-name">
                         <div class="tw-text-sm">This name is subject to availability. (Avoid using well-known project names to prevent potential conflicts with original authors.)</div>
                     </div>
+                    <input type="text" class="input" name="tags" maxlength="30" value="" placeholder="project tags seperated by comma (max 3)" id="project-name">                
+
 
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
                         Select project type
                     </div>
-                    <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-text-lg tw-place-items-center tw-text-left">
+                    <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-text-lg tw-place-items-start tw-mx-[30%] tw-text-left">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="doc-type" value="lng" id="pgm-lang" checked>
+                            <input class="form-check-input" required type="radio" name="doc_type" value="lng" id="pgm-lang" checked>
                             <label class="form-check-label" for="pgm-lang">
                                 Programming Language
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="doc-type" value="tool" id="tool" >
+                            <input class="form-check-input" required type="radio" name="doc_type" value="tool" id="tool" >
                             <label class="form-check-label" for="tool">
                                 Tool
                             </label>
@@ -99,7 +110,7 @@
                     </div>
                     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4 tw-text-lg tw-place-items-center">
                         <img src=" " class="tw-w-[100px] tw-h-[100px] tw-bg-black" id="project-logo">
-                        <input type="text" name="project-logo" placeholder="project logo url (optional)" 
+                        <input type="text" name="project_logo" placeholder="project logo url (optional)" 
                                 class="input tw-w-full tw-max-w-lg" onchange="changeProjectIcon()" 
                                 maxlength="350"
                                 id="project-logo-input">
@@ -108,7 +119,7 @@
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
                         Social
                     </div>
-                    <div name='social' class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-place-items-center">
+                    <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-place-items-center">
                         
                         <div class="input-group mb-3">
                             <i class="input-group-text bi bi-stack-overflow"></i>
@@ -136,7 +147,7 @@
                         <div class="input-group mb-3">
                             <i class="input-group-text bi bi-mastodon"></i>
                             <input type="text" class="input" 
-                                    name="stackoverflow"
+                                    name="mastodon"
                                     maxlength="30"
                                     value=""
                                     placeholder="Mastodon community" >
@@ -154,27 +165,27 @@
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
                         Additional links
                     </div>
-                    <div name='additional-links' class="tw-flex tw-flex-col tw-w-full tw-gap-4 tw-place-items-center">
+                    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4 tw-place-items-center">
                         
-                        <div class="tw-flex tw-gap-2">
+                        <div class="tw-flex tw-flex-wrap tw-gap-2">
                             <input type="text" class="input" 
-                                    name="link-name"
+                                    name="link_name"
                                     value=""
                                     maxlength="30"
                                     placeholder="Link name" maxlength="30">
                             <input type="text" class="input" 
-                                    name="link"
+                                    name="link_url"
                                     value=""
                                     placeholder="Link (url)" maxlength="300">
                         </div>
-                        <div class="tw-flex tw-gap-2">
+                        <div class="tw-flex tw-flex-wrap tw-gap-2">
                             <input type="text" class="input" 
-                                    name="link-name"
+                                    name="link_name"
                                     value=""
                                     maxlength="30"
                                     placeholder="Link name" maxlength="30">
                             <input type="text" class="input" 
-                                    name="link"
+                                    name="link_url"
                                     value=""
                                     placeholder="Link (url)" maxlength="300">
                         </div>
@@ -206,7 +217,7 @@
                         <div class="input-group mb-3">
                             <i class="input-group-text bi bi-currency-dollar"></i>
                             <input type="text" class="input" 
-                                    name="Patreon"
+                                    name="patreon"
                                     value=""
                                     maxlength="30"
                                     placeholder="Patreon" >

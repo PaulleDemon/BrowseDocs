@@ -25,7 +25,8 @@ function alertError(alert, text=""){
 /**
  * 
  * @param {HTMLElement | null} toast 
- * @param {"normal" | "danger"} text 
+ * @param {string} text
+ * @param {"normal" | "danger"} type 
  */
 function toastAlert(toast, text="", type="normal"){
 

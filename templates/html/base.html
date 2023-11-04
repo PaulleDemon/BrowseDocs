@@ -54,11 +54,11 @@
 
     </head>
 {% comment %} <body class="tw-min-h-[100vh]" data-bs-theme="dark"> {% endcomment %}
-<body class="tw-min-h-[100vh] tw-bg-[#0F172A] !tw-text-white" data-bs-theme="dark">
+<body class="tw-min-h-[100vh] tw-bg-[#0F172A] !tw-text-white tw-overflow-x-hidden" data-bs-theme="dark">
     
     {% block fullpage %}{% endblock fullpage %}
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top max-sm:!tw-bg-[#0F172A] max-sm:!tw-shadow-xl">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -76,7 +76,21 @@
                 <a class="nav-link hover:tw-text-blue-400" href="">Blogs</a>
             </div>
 
-            <div class="navbar-nav tw-ml-auto md:!tw-place-items-center tw-gap-4">
+            <div class="navbar-nav tw-ml-auto max-md:!tw-place-items-center tw-gap-4">
+                <div class="sm:tw-hidden tw-flex tw-w-[250px] tw-bg-inherit tw-rounded-full 
+                            tw-border-solid tw-border tw-h-[40px] tw-place-items-center tw-p-3
+                            tw-cursor-pointer tw-border-gray-500
+                            " 
+                            id="nav-search"
+                            onclick="showQuickSearch()">
+                    {% comment %} <input type="text" class="tw- tw-bg-inherit tw-rounded-full" name="" id=""> {% endcomment %}
+                    <i class="bi bi-search"></i>
+                    <div class="tw-p-2 tw-ml-auto">
+                        <button type="button" class="key-btn tw-px-3" onclick="hideQuickSearch()">Ctrl</button>
+                        <span>+</span>
+                        <button type="button" class="key-btn tw-px-3" onclick="hideQuickSearch()">k</button>
+                    </div>
+                </div>
                 <button class="bi bi-brightness-high-fill btn btn-lg" id="theme">
                     <i></i>
                 </button>

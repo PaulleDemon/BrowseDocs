@@ -18,7 +18,7 @@ class DocsCreateView(View, LoginRequiredMixin):
 
     def get(self, request):
 
-        repos = []#get_github_repo(request.user.username)
+        repos = get_github_repo(request.user)
       
         return render(request, self.template_name, context={
             'repos': repos
@@ -38,7 +38,7 @@ class ImportRepoView(View, LoginRequiredMixin):
         except (ValueError, AttributeError):
             return JsonResponse({'error': 'required repo in the format Owner/Reponame'}, status=400)
 
-        doc_files = scan_for_doc(owner, repo)
+        doc_files = scan_for_doc(request.user, owner, repo)
     
         if doc_files.get('error'):
 

@@ -2,6 +2,8 @@
 
 const defaultToast = document.getElementById("error-toast")
 
+const navSearch = document.getElementById("nav-search")
+
 const quickSearchContainer = document.getElementById("quick-search-container")
 const quickSearchInput = document.getElementById("quick-search")
 const quickSearchDropdown = document.getElementById("search-dropdown")
@@ -57,9 +59,8 @@ function intializeQuickSearch(){
 		
 		if (isCtrlPressed && e.key == "k"){
 			e.preventDefault();
-            e.stopPropagation();
-			quickSearchContainer.classList.remove("tw-hidden")
-			quickSearchInput.focus()
+			e.stopPropagation();
+			showQuickSearch()
 		}
 
 		if (e.key == "Escape"){
@@ -78,8 +79,18 @@ function intializeQuickSearch(){
 
 }
 
+function showQuickSearch(){
+	event?.preventDefault()
+	event?.stopPropagation()
+
+	quickSearchContainer.classList.remove("tw-hidden")
+	quickSearchInput.focus()
+	navSearch.classList.add("tw-hidden")
+}
+
 function hideQuickSearch(){
 	quickSearchContainer.classList.add("tw-hidden")
+	navSearch.classList.remove("tw-hidden")
 }
 
 intializeQuickSearch()
