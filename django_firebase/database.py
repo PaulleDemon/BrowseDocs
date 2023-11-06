@@ -54,6 +54,8 @@ def create_or_update_doc(data: dict, projectid=None, pk=None):
     else:
         collection.document().add(data)
 
+def get_document(pk):
+    db_client.collection("project")
 
 def create_or_update_blog(data: dict, pk=None):
 
