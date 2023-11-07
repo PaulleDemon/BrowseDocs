@@ -72,7 +72,7 @@ INSTALLED_APPS = [
 ]
 
 
-LOGIN_URL = '/user/login/'
+LOGIN_URL = '/user/oauth-login/'
 
 AUTH_USER_MODEL = "user.User" 
 

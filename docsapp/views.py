@@ -6,14 +6,18 @@ from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_http_methods
 
+from django_ratelimit.decorators import ratelimit
 
 from utils.repos import get_github_repo, read_config_file, scan_for_doc
 from utils.decorators import login_required_for_post, login_required_rest_api
 
 
+from django_firebase.database import unqiue_project_name_exists
 
-class DocsCreateView(View, LoginRequiredMixin):
+
+class DocsCreateView(LoginRequiredMixin, View):
     template_name = 'docs-create.html'
 
     def get(self, request):
@@ -25,7 +29,7 @@ class DocsCreateView(View, LoginRequiredMixin):
         })
     
 
-class ImportRepoView(View, LoginRequiredMixin):
+class ImportRepoView(LoginRequiredMixin, View):
 
     def post(self, request):
         data = json.loads(request.body.decode("utf-8"))
@@ -47,3 +51,19 @@ class ImportRepoView(View, LoginRequiredMixin):
         doc_files['project'] = repo
 
         return JsonResponse(doc_files, status=200)
+
+
+@login_required_rest_api
+@require_http_methods(['POST'])
+@ratelimit(key='ip', rate='200/min', method=ratelimit.ALL, block=True)
+def check_name_exists(request):
+    
+    data = json.loads(request.body.decode("utf-8"))
+
+    if data.get('name'):
+        exists = unqiue_project_name_exists(data.get('name'))
+
+    else:
+        return JsonResponse({'error': 'invalid name'}, status=400)
+
+    return JsonResponse({'exists': exists}, status=200)

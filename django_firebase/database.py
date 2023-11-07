@@ -1,7 +1,8 @@
 from django.conf import settings
 
 from google.cloud.firestore_v1 import Client
-
+from google.cloud.firestore_v1.query import Query
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 db_client: Client  = settings.FIRESTORE_CLIENT
 
@@ -23,7 +24,7 @@ def create_or_update_project(data:dict, pk=None):
             datetime: "",
         }
     """
-    collection =  db_client.collection('project')
+    collection =  db_client.collection('projects')
     
     if pk:
        return collection.document(pk).update(data)
@@ -45,7 +46,7 @@ def create_or_update_doc(data: dict, projectid=None, pk=None):
                 user: 1 // commit author
             }
     """
-    project = db_client.collection("project").document(projectid)
+    project = db_client.collection("projects").document(projectid)
     collection =  project.collection('docs')
 
     if pk:
@@ -54,8 +55,17 @@ def create_or_update_doc(data: dict, projectid=None, pk=None):
     else:
         collection.document().add(data)
 
-def get_document(pk):
-    db_client.collection("project")
+
+def get_project(projectid):
+    return db_client.collection("projects").document(projectid).get()
+
+
+def unqiue_project_name_exists(project_name):
+    """
+        checks if the project name already exists
+    """
+    return len(db_client.collection("projects").where(filter=FieldFilter("unqiue_name", "==", project_name.lower())).limit(1).get()) > 0
+
 
 def create_or_update_blog(data: dict, pk=None):
 

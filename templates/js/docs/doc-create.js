@@ -213,11 +213,14 @@ let projectNameTimeout = null
 
 function checkProjectNameAvailabilty(name){
 
+    console.log("checking")
+
     if (projectNameTimeout){
         clearTimeout(projectNameTimeout)
     }
 
-    projectNameTimeout = setTimeout(100, async () => {
+    projectNameTimeout = setTimeout(async () => {
+            console.log("triggered")
             const res = await fetch("/docs/check-name-availability/", {
                 method: "POST",
                 headers: {
@@ -225,19 +228,20 @@ function checkProjectNameAvailabilty(name){
                     "Content-Type": "application/json"
                     }, 
                 body: JSON.stringify({name: name}),
-                signal: fetchSignal
+                // signal: fetchSignal
             })
 
             if (res.status == 200){
                 data = await res.json()
-
-                if (data.available === false){
-                    uniqueProjectName.classList.add("tw-border-red-500")
+                console.log("data: ", data, uniqueProjectName)
+                if (data.exists === false){
+                    uniqueProjectName.classList.remove("!tw-border-red-500")
                 }else{
-                    uniqueProjectName.classList.remove("tw-border-red-500")
+                    uniqueProjectName.classList.add("!tw-border-red-500")
                 }
             }
         }
+        , 100
     )
 
 }

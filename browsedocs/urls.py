@@ -25,6 +25,7 @@ urlpatterns = [
 
     
     path("", include('docsapp.urls')),
+    # path('docs/', include('docsapp.urls')),
     
     path("", lambda r: redirect("home")),
 
@@ -37,6 +38,7 @@ urlpatterns = [
 
     path('user/', include('user.urls')),
     path('blog/', include('blog.urls')),
+    
 
 
     path("__reload__/", include("django_browser_reload.urls")),
