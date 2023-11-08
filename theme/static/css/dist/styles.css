@@ -275,6 +275,18 @@ select{
   background-color: #1E293B;
 }
 
+.input:focus-within{
+  border: 2px solid #0072c9;
+}
+
+.input-error{
+  border: 2px solid #ff1e1e;
+}
+
+.input-error:focus-within{
+  border: 2px solid #fd0101;
+}
+
 .quick-search{
   position: fixed;
   left: 50%;
@@ -287,10 +299,6 @@ select{
   min-height: 300px;
   transform: translate(-50%);
   background-color: #1E293B;
-}
-
-.input:focus-within{
-  border: 2px solid #0072c9;
 }
 
 .key-btn{
@@ -744,16 +752,6 @@ select{
 .tw-border-gray-500{
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
-}
-
-.tw-border-red-600{
-  --tw-border-opacity: 1;
-  border-color: rgb(220 38 38 / var(--tw-border-opacity));
-}
-
-.\!tw-border-red-600{
-  --tw-border-opacity: 1 !important;
-  border-color: rgb(220 38 38 / var(--tw-border-opacity)) !important;
 }
 
 .\!tw-bg-\[\#6C63FF\]{

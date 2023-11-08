@@ -55,7 +55,11 @@
                          id="repo-input" maxlength="50">
                 <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository({{repo.full_name}})">import</button>
             </div> {% endcomment %}
-            <form action="" id="create-project" class="tw-hidden tw-flex tw-flex-col tw-gap-2 tw-place-items-center" method="post" onsubmit="return false;">
+            <form action="{% url "docs-create" %}" id="create-project" class="tw-hidden tw-flex tw-flex-col tw-gap-2 tw-place-items-center" 
+                            method="post" onsubmit="return validateFields()">
+                {% csrf_token %}
+                <input type="hidden" name="source" value="">
+
                 <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]" id="docfile">
                     <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
                         Select Docs
@@ -74,17 +78,19 @@
                         Project info
                     </div>
 
-                    <input type="text" class="input tw-max-w-xs" name="version" maxlength="30" value="" required placeholder="version">                
+                    <input type="text" class="input tw-max-w-xs" name="version" maxlength="10" value="" required placeholder="version">                
                     <input type="text" class="input" name="name" maxlength="30" required value="" placeholder="project name" id="project-name">                
                     <textarea name="about" id="" required class="input tw-min-h-[200px] tw-max-h-[350px]" 
                                             placeholder="About the project" maxlength="400"></textarea>
                     
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <input type="text" class="input tw-border-solid" oninput="checkProjectNameAvailabilty(this.value)" onchange="checkProjectNameAvailabilty(this.value)" required name="unique_name" maxlength="30" value="" placeholder="unique project name" 
+                        <input type="text" class="input" oninput="checkProjectNameAvailabilty(this.value)" required name="unique_name" maxlength="30" value="" placeholder="unique project name" 
                                 id="unique-name">
                         <div class="tw-text-sm">This name is subject to availability. (Avoid using well-known project names to prevent potential conflicts with original authors.)</div>
                     </div>
                     <input type="text" class="input" name="tags" maxlength="30" value="" placeholder="project tags seperated by comma (max 3)" id="project-name">                
+                    <input type="text" class="input" name="source_code" maxlength="150" value=""
+                    placeholder="source code url (optional)">                
 
 
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
@@ -94,7 +100,7 @@
                         <div class="form-check">
                             <input class="form-check-input" required type="radio" name="doc_type" value="lng" id="pgm-lang" checked>
                             <label class="form-check-label" for="pgm-lang">
-                                Programming Language
+                                Programming Language <span class="tw-text-sm">(related to Programming, such as libraries and frameworks)</span>
                             </label>
                         </div>
                         <div class="form-check">
@@ -116,6 +122,7 @@
                                 id="project-logo-input">
                     </div>
                     
+
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
                         Social
                     </div>

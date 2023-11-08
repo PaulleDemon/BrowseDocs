@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import (DocsCreateView, ImportRepoView, check_name_exists)
+from .views import (DocsCreateView, ImportRepoView, 
+                    check_name_exists)
 
 urlpatterns = [
 

@@ -29,6 +29,19 @@ class DocsCreateView(LoginRequiredMixin, View):
         })
     
 
+    def post(self, request):
+
+        data = request.POST
+
+        print("data: ", data)
+
+        return render(request, self.template_name, context={
+            'data': data
+        })
+
+
+
+
 class ImportRepoView(LoginRequiredMixin, View):
 
     def post(self, request):
@@ -49,6 +62,7 @@ class ImportRepoView(LoginRequiredMixin, View):
             return JsonResponse({"error": doc_files.get('error')}, status=400)
 
         doc_files['project'] = repo
+        doc_files['source'] = f'https://github.com/{repo_name}'
 
         return JsonResponse(doc_files, status=200)
 

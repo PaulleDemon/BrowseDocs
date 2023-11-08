@@ -40,6 +40,7 @@ else:
 
 if DEBUG:
     ALLOWED_HOSTS = []
+    CSRF_TRUSTED_ORIGINS = ['http://*.localhost:8000']
 
 else:
     ALLOWED_HOSTS = env('ALLOWED_PROD_HOSTS').replace(' ', '').split(',')
@@ -132,6 +133,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 
     'whitenoise.middleware.WhiteNoiseMiddleware', #whitenoise
 

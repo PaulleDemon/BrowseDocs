@@ -193,12 +193,16 @@ function configureProject(configuration={}){
         else if(['opencollective', 'github', 'patreon', 'buymeacoffee'].includes(field_name) && config['sponsor']){
             x.value = config['sponsor'][field_name] || ''
         }
-        else{
+        else if (config[field_name]){ // this condition is necessary to ensure the csrf token is unaffected
             x.value = config[field_name] || ''
         }
 
         changeProjectIcon()
 
+    }
+
+    if (config['unique_name']){
+        checkProjectNameAvailabilty(config['unique_name'])
     }
 
     
@@ -235,9 +239,10 @@ function checkProjectNameAvailabilty(name){
                 data = await res.json()
                 console.log("data: ", data, uniqueProjectName)
                 if (data.exists === false){
-                    uniqueProjectName.classList.remove("!tw-border-red-500")
+                    uniqueProjectName.classList.remove("input-error")
                 }else{
-                    uniqueProjectName.classList.add("!tw-border-red-500")
+                    uniqueProjectName.classList.add("input-error")
+                    toastAlert(null, "Unique name is already taken. Please choose another.", "danger")
                 }
             }
         }
@@ -254,9 +259,23 @@ function validateFields(){
 
         let field_name = x.name
 
-        if (field_name == ''){}
+        if (['version', 'name', 'about'].includes(field_name)){
+            if (x.value.trim() === ''){
+                toastAlert(null, `${field_name} cannot be empty`, 'danger')
+                return false
+            }
+        }
+
+        if (['project_logo', 'link_url', 'source_code'].includes(field_name)){
+
+            if (x.value.trim() && !isValidUrl(x.value)){
+                toastAlert(null, `Enter a valid ${field_name} url`, 'danger')
+                return false
+            }
+
+        }
 
     }
 
-
+    return true
 }
