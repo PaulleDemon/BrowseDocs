@@ -35,6 +35,9 @@ class DocsCreateView(LoginRequiredMixin, View):
 
         print("data: ", data)
 
+        # if data.get('unique_name')
+
+
         return render(request, self.template_name, context={
             'data': data
         })
@@ -75,7 +78,7 @@ def check_name_exists(request):
     data = json.loads(request.body.decode("utf-8"))
 
     if data.get('name'):
-        exists = unqiue_project_name_exists(data.get('name'))
+        exists = unqiue_project_name_exists(data.get('name')) and not data.get('name') in ['admin', 'www', 'staff', 'blog']
 
     else:
         return JsonResponse({'error': 'invalid name'}, status=400)
