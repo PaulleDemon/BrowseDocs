@@ -279,14 +279,6 @@ select{
   border: 2px solid #0072c9;
 }
 
-.input-error{
-  border: 2px solid #ff1e1e;
-}
-
-.input-error:focus-within{
-  border: 2px solid #fd0101;
-}
-
 .quick-search{
   position: fixed;
   left: 50%;
