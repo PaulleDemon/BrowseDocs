@@ -1,7 +1,17 @@
 from typing import List, Dict
 from typeguard import check_type as _check_type, TypeCheckError
 
-from django.db.models import QuerySet
+
+class ErrorDict:
+
+    def __init__(self, error: dict) -> None:
+        self.error = error
+
+    def __iter__(self):
+        return self.error
+    
+    def as_dict(self):
+        return self.error
 
 
 def check_type(data, data_type):
@@ -76,6 +86,7 @@ def delete_collection(coll_ref, batch_size):
 
 
 
+
 def clean_data(data_structure, data):
 
     errors = {}
@@ -104,11 +115,12 @@ def clean_data(data_structure, data):
         
         # print("rules: ", key, rules)
         
-        if key in data:
-            value = data[key] # if it exists continue with teh validation
+        if rules.get('required') == False and key not in data:
+            continue # don't continue with the validation if the key doesn't exist
+        
+        else:
+            value = data[key] # if it exists continue with the validation
 
-        elif rules.get('required') == False:
-            continue # don't continue with the validation
 
         if 'type' in rules and not check_type(value, rules['type']):
             addError(f"'{key}' should be of type {rules['type']}.", key)
@@ -162,7 +174,7 @@ def clean_data(data_structure, data):
     return validated_data, errors
 
 
-def convert_queryset_to_datastructure(data_structure: dict, data: QuerySet):
+def convert_to_datastructure(data_structure: dict, data: dict):
     result = []
     
     for item in data:

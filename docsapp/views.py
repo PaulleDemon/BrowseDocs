@@ -13,9 +13,8 @@ from django_ratelimit.decorators import ratelimit
 from utils.repos import get_github_repo, read_config_file, scan_for_doc
 from utils.decorators import login_required_for_post, login_required_rest_api
 
-
-from django_firebase.database import unqiue_project_name_exists
-
+from django_firestore.utils import ErrorDict
+from django_firestore.database import (project_name_exists, create_or_update_project)
 
 class DocsCreateView(LoginRequiredMixin, View):
     template_name = 'docs-create.html'
@@ -31,12 +30,15 @@ class DocsCreateView(LoginRequiredMixin, View):
 
     def post(self, request):
 
-        data = request.POST
-
+        data = dict(request.POST)
         print("data: ", data)
+        instance = create_or_update_project(data)
 
-        # if data.get('unique_name')
-
+        if isinstance(instance, ErrorDict):
+            return render(request, self.template_name, context={
+                                'data': data,
+                                'error': [instance.as_dict()]
+                            })
 
         return render(request, self.template_name, context={
             'data': data
@@ -70,6 +72,24 @@ class ImportRepoView(LoginRequiredMixin, View):
         return JsonResponse(doc_files, status=200)
 
 
+def my_docs(request):
+    """
+        returns docs that user has created
+    """
+    
+
+    return render(request, 'mydocs.html', {
+
+    })
+
+
+def explore_docs(request):
+
+    """
+        returns the docs for the user to explore new docs
+    """
+
+
 @login_required_rest_api
 @require_http_methods(['POST'])
 @ratelimit(key='ip', rate='200/min', method=ratelimit.ALL, block=True)
@@ -78,7 +98,7 @@ def check_name_exists(request):
     data = json.loads(request.body.decode("utf-8"))
 
     if data.get('name'):
-        exists = unqiue_project_name_exists(data.get('name')) and not data.get('name') in ['admin', 'www', 'staff', 'blog']
+        exists = project_name_exists(data.get('name')) and not data.get('name') in ['admin', 'www', 'staff', 'blog']
 
     else:
         return JsonResponse({'error': 'invalid name'}, status=400)

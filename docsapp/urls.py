@@ -1,14 +1,16 @@
 from django.urls import path
 
 from .views import (DocsCreateView, ImportRepoView, 
-                    check_name_exists)
+                    check_name_exists, my_docs, explore_docs)
 
 urlpatterns = [
 
     path('docs/create/', DocsCreateView.as_view(), name='docs-create'),
     path('repo/import/', ImportRepoView.as_view(), name='import-repo'),
+    path('docs/my/', my_docs, name='my-docs'),
     
-    path('docs/check-name-availability/', check_name_exists, name='name-availabilty')
+    path('docs/explore/', explore_docs, name='explore-docs'),
+    path('docs/check-name-availability/', check_name_exists, name='name-availabilty'),
 
     # path('<str:projectid>/', ),
     # path('<str:projectname>/docs/', ),

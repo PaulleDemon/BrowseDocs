@@ -7,23 +7,14 @@ from google.cloud.firestore_v1.query import Query
 from google.cloud.firestore_v1.base_query import FieldFilter
 
 from . import datastructures
-from .utils import validate_data
+from .utils import clean_data, convert_to_datastructure, ErrorDict
 
 db_client: Client  = settings.FIRESTORE_CLIENT
 
-
-class AbstractModel:
-
-    def create_or_update(data: dict, pk=None):
-
-        pass
-
-
-class ValidationException(Exception):
-    pass
-
-
-
+"""
+    Every function should return the instance returned by the firestore or an ErrorDict if 
+    there are any error
+"""
 
 def create_or_update_project(data:dict, pk=None):
     """
@@ -36,8 +27,18 @@ def create_or_update_project(data:dict, pk=None):
         }
     """
     data_structure = datastructures.CREATE_PROJECT
+    
+    converted_data = convert_to_datastructure(data_structure, data)
+    
+    validated_data, errors = clean_data(data_structure, converted_data)
 
-    validated_data, errors = validate_data(data_structure, data)
+    validated_data['unique_name'] = validated_data['unique_name'].lower()
+
+    if project_name_exists(validated_data.get('unique_name')):
+        errors['unique_name'] = ['unique_name is already taken']
+    
+    if errors:
+        return ErrorDict(errors)
 
     collection =  db_client.collection('projects')
     
@@ -75,7 +76,7 @@ def get_project(projectid):
     return db_client.collection("projects").document(projectid).get()
 
 
-def unqiue_project_name_exists(project_name):
+def project_name_exists(project_name):
     """
         checks if the project name already exists. returns true if the name exists
     """
