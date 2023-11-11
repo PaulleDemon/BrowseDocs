@@ -18,9 +18,9 @@ def name_validator(value):
     return True
 
 
-def tag_validator(value):
+def tag_validator(value: list):
 
-    for x in value.split(','):
+    for x in value:
         if not re.match('^[a-zA-Z0-9_]+$', x.strip()):
             return "invalid tags"
 
