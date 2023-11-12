@@ -22,32 +22,6 @@
 
             </div>
 
-            <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]" id="repo-container">
-                <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
-                    Select repository
-                </div>
-                {% comment %} <div class="tw-flex tw-gap-3 tw-w-full tw-justify-between">
-                    <a class="tw-text-center tw-text-blue-400 tw-m-2 !tw-right-auto">Manage repositories</a>
-                    <button type="button" id="reload-repo" 
-                            class="btn bi bi-arrow-clockwise bold !tw-left-auto"></button>
-                </div> {% endcomment %}
-
-                <div class="tw-flex tw-flex-col tw-border-solid tw-p-3 tw-w-full tw-border 
-                                tw-rounded-xl tw-min-h-[250px] tw-max-h-[450px] tw-overflow-y-auto 
-                                tw-gap-4
-                                tw-justify-between" id="repositories">
-                   
-                    {% for repo in repos %}
-                        <div class="tw-flex tw-w-full tw-border-solid tw-p-2 tw-gap-2 tw-border-2 tw-rounded-xl
-                                    tw-place-items-center">
-                            {% comment %} <img src="{{repo.owner.avatar_url}}" class="tw-w-[35px] tw-h-[35px] tw-rounded-full" alt="" srcset=""> {% endcomment %}
-                            <span class="tw-max-w-[80%] tw-text-sm md:tw-text-lg tw-text-left tw-overflow-hidden">{{repo.full_name}}</span>
-                            <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository('{{repo.full_name}}')">import</button>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-
             {% comment %} <div class="tw-flex tw-gap-2 tw-w-full tw-mt-4">
                 <input type="text" class="input tw-w-full" name="" placeholder="Some other repo? Owner name"
                          id="repo-input" maxlength="50">
@@ -55,7 +29,7 @@
                          id="repo-input" maxlength="50">
                 <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository({{repo.full_name}})">import</button>
             </div> {% endcomment %}
-            <form action="{% url "docs-create" %}" id="create-project" class="tw-hidden tw-flex tw-flex-col tw-gap-2 tw-place-items-center" 
+            <form action="{% url "docs-create" %}" id="create-project" class="tw-flex tw-flex-col tw-gap-2 tw-place-items-center" 
                             method="post" onsubmit="return validateFields()">
                 {% csrf_token %}
                 <input type="hidden" name="source" value="">
@@ -69,6 +43,25 @@
                                 tw-rounded-xl tw-max-h-[250px] tw-overflow-y-auto 
                                 tw-gap-0
                                 tw-justify-between" id="doc-files">
+
+                        {% for doc in configuration.docs %}
+                            <div class="input-group">
+                                <span class="input-group-text bi 
+                                                {% if doc.type == 'folder' %}
+                                                bi-folder
+                                                {% else %}
+                                                bi-file-earmark-medical
+                                                {% endif %}" 
+                                        style="border-radius:0px;"></span>
+                                <div class="form-control">{{doc.path}}</div>
+                                
+                                <span class="input-group-text" style="border-radius:0px;">
+                                    <input class="form-check-input" type="radio" name="docs" 
+                                        value="{{doc.path}}" checked>
+                                </span>
+                            </div>
+                        {% endfor %}
+
                     </div>
                 </div>
                 <hr>
@@ -78,19 +71,37 @@
                         Project info
                     </div>
 
-                    <input type="text" class="input tw-max-w-xs" name="version" maxlength="10" value="" required placeholder="version">                
-                    <input type="text" class="input" name="name" maxlength="30" required value="" placeholder="project name" id="project-name">                
-                    <textarea name="about" id="" required class="input tw-min-h-[200px] tw-max-h-[350px]" 
-                                            placeholder="About the project" maxlength="400"></textarea>
+                    <input type="text" class="input tw-max-w-xs" name="version" maxlength="10" 
+                            value="{{configuration.version}}" 
+                            required placeholder="version">                
+                    <input type="text" class="input" name="name" maxlength="30" 
+                            required 
+                            value="{{configuration.name}}" 
+                            placeholder="project name" 
+                            id="project-name">                
+                    <textarea name="about" id="" 
+                                        required 
+                                        value="{{configuration.about}}"
+                                        class="input tw-min-h-[200px] tw-max-h-[350px]" 
+                                        placeholder="About the project" 
+                                        maxlength="400">{{configuration.about}}</textarea>
                     
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <input type="text" class="input" oninput="checkProjectNameAvailabilty(this.value)" required name="unique_name" maxlength="30" value="" placeholder="unique project name" 
+                        <input type="text" class="input" oninput="checkProjectNameAvailabilty(this.value)" 
+                                required 
+                                name="unique_name" 
+                                maxlength="30" 
+                                {% if update %}disabled{% endif %}
+                                value="{{configuration.unique_name}}" placeholder="unique project name" 
                                 id="unique-name">
                         <div class="tw-text-sm">This name is subject to availability. (Avoid using well-known project names to prevent potential conflicts with original authors.)</div>
                     </div>
-                    <input type="text" class="input" name="tags" maxlength="30" value="" placeholder="project tags seperated by comma (max 3)" id="project-name">                
-                    <input type="text" class="input" name="source_code" maxlength="150" value=""
-                    placeholder="source code url (optional)">                
+                    <input type="text" class="input" name="tags" maxlength="30" 
+                            value="{{configuration.tags}}" placeholder="project tags seperated by comma (max 3)" 
+                            id="project-name">                
+                    <input type="text" class="input" name="source_code" maxlength="150"
+                            value="{{configuration.source_code}}"
+                            placeholder="source code url (optional)">                
 
 
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
@@ -98,13 +109,17 @@
                     </div>
                     <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-text-lg tw-place-items-start tw-mx-[30%] tw-text-left">
                         <div class="form-check">
-                            <input class="form-check-input" required type="radio" name="doc_type" value="lng" id="pgm-lang" checked>
+                            <input class="form-check-input" required type="radio" name="doc_type" 
+                                    value="lng" id="pgm-lang" {% if not configuration.doc_type or configuration.doc_type == 'pgm-lang' %}checked{% endif %}>
                             <label class="form-check-label" for="pgm-lang">
                                 Programming Language <span class="tw-text-sm">(related to Programming, such as libraries and frameworks)</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" required type="radio" name="doc_type" value="tool" id="tool" >
+                            <input class="form-check-input" required type="radio" 
+                                    name="doc_type" value="tool" id="tool" 
+                                    {% if configuration.doc_type == 'tool' %}checked{% endif %}
+                                    >
                             <label class="form-check-label" for="tool">
                                 Tool
                             </label>
@@ -119,6 +134,7 @@
                         <input type="text" name="project_logo" placeholder="project logo url (optional)" 
                                 class="input tw-w-full tw-max-w-lg" onchange="changeProjectIcon()" 
                                 maxlength="350"
+                                value="{{configuration.project_logo}}"
                                 id="project-logo-input">
                     </div>
                     
@@ -133,6 +149,7 @@
                             <input type="text" class="input" 
                                     name="stackoverflow"
                                     maxlength="30"
+                                    value="{% if configuration.social %}{{configuration.social.stackoverflow}}{% endif %}"
                                     placeholder="Stackoverflow question tag" >
                         </div>
                         <div class="input-group mb-3">
@@ -140,7 +157,7 @@
                             <input type="text" class="input" 
                                     name="twitter"
                                     maxlength="30"
-                                    value=""
+                                    value="{% if configuration.social %}{{configuration.social.twitter}}{% endif %}"
                                     placeholder="Username" >
                         </div>
                         <div class="input-group mb-3">
@@ -148,7 +165,7 @@
                             <input type="text" class="input"
                                     name="reddit"
                                     maxlength="30"
-                                    value=""
+                                    value="{% if configuration.social %}{{configuration.social.reddit}}{% endif %}"
                                     placeholder="Reddit community" >
                         </div>
                         <div class="input-group mb-3">
@@ -156,7 +173,7 @@
                             <input type="text" class="input" 
                                     name="mastodon"
                                     maxlength="30"
-                                    value=""
+                                    value="{% if configuration.social %}{{configuration.social.mastodon}}{% endif %}"
                                     placeholder="Mastodon community" >
                         </div>
                         <div class="input-group mb-3">
@@ -164,7 +181,7 @@
                             <input type="text" class="input" 
                                     name="discord"
                                     maxlength="30"
-                                    value=""
+                                    value="{% if configuration.social %}{{configuration.social.discord}}{% endif %}"
                                     placeholder="Discord server" >
                         </div>
                     </div>
@@ -175,15 +192,17 @@
                     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4 tw-place-items-center">
                         
                         <div class="tw-flex tw-flex-wrap tw-gap-2">
-                            <input type="text" class="input" 
-                                    name="link_name"
-                                    value=""
-                                    maxlength="30"
-                                    placeholder="Link name" maxlength="30">
-                            <input type="text" class="input" 
-                                    name="link_url"
-                                    value=""
-                                    placeholder="Link (url)" maxlength="300">
+                            {% for link in configuration.additional_link %}
+                                <input type="text" class="input" 
+                                        name="link_name"
+                                        value="{% if configuration.additional_link %}{{configuration.additional_link.link_name}}{% endif %}"
+                                        maxlength="30"
+                                        placeholder="Link name" maxlength="30">
+                                <input type="text" class="input" 
+                                        name="link_url"
+                                        value="{% if configuration.additional_link %}{{configuration.additional_link.link_url}}{% endif %}"
+                                        placeholder="Link (url)" maxlength="300">
+                            {% endfor %}
                         </div>
                         <div class="tw-flex tw-flex-wrap tw-gap-2">
                             <input type="text" class="input" 

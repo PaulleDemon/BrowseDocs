@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Union, Callable
 from typeguard import check_type as _check_type, TypeCheckError
 
 
@@ -87,7 +87,7 @@ def delete_collection(coll_ref, batch_size):
 
 
 
-def clean_data(data_structure, data):
+def clean_data(data_structure, data, update=False):
 
     errors = {}
     validated_data = {}
@@ -108,15 +108,27 @@ def clean_data(data_structure, data):
 
     for key, rules in data_structure.items():
         
+        if (update and rules.get('oneoff') and key in data): # if the data is oneoff only add the value once
+            addError(f"'{key}' cannot be updated", key)
 
-        if key not in data and rules.get('required', False) == True:
+        if rules.get('readonly', False) == True:
+            # if the readonly is true then the user value must be discarded and default value must be used
+            if check_type(rules.get('default'), Callable):
+                
+                if (not update or not rules.get('oneoff')): # if the data is oneoff only add the value once
+                    data[key] = rules.get('default')() # continue with the validation
+
+            else:
+                raise TypeError("Invalid default value, must be a callable function")
+
+        if key not in data and rules.get('required', False) == True and rules.get('readonly', False) == False:
+            # if required is true and the key doesn't exist then raise error
             addError(f"'{key}' is required but not provided.", key)
             continue
         
-        # print("rules: ", key, rules)
         
-        if rules.get('required') == False and key not in data:
-            continue # don't continue with the validation if the key doesn't exist
+        if (rules.get('required') == False or update) and key not in data:
+            continue # don't continue with the validation if the key doesn't exist, and required is False
         
         else:
             value = data[key] # if it exists continue with the validation
@@ -174,17 +186,30 @@ def clean_data(data_structure, data):
     return validated_data, errors
 
 
-def convert_to_datastructure(data_structure: dict, data: dict):
-    result = []
-    
-    for item in data:
-        converted_item = {}
-        
-        for key in data_structure:
-            # Assume key is the field name
-            field_value = getattr(item, key, None)
-            converted_item[key] = field_value
-        
-        result.append(converted_item)
-    
-    return result
+def convert_data_to_structure(data_structure, data: Dict[str, List[Union[str, Dict[str, str]]]]):
+    """
+        Given a POST request data, it will convert to a proper data format required
+    """
+    converted_data = {}
+
+    for key, rules in data_structure.items():
+        values = data.get(key, [])
+        if 'inner' in rules:
+
+            if isinstance(rules['inner'], dict):
+                inner_data = convert_data_to_structure(rules['inner'], data)
+                converted_data[key] = inner_data
+
+            elif check_type(rules['inner'], List[Dict]):
+                inner_data = []
+                for x in rules['inner']:
+                    inner_data.append(convert_data_to_structure(x, data))
+                
+                converted_data[key] = inner_data
+
+        else:
+            if values and values[0] != '':
+                converted_data[key] = values[0]
+                # converted_data[key] = values[0]
+
+    return converted_data

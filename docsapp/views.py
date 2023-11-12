@@ -20,13 +20,33 @@ class DocsCreateView(LoginRequiredMixin, View):
     template_name = 'docs-create.html'
 
     def get(self, request):
+        
+        step = request.GET.get("step")
+        
+        if step != '2':
+            repos = get_github_repo(request.user)
 
-        repos = get_github_repo(request.user)
-      
-        return render(request, self.template_name, context={
-            'repos': repos
-        })
-    
+            return render(request, 'docs-import.html', context={
+                            'repos': repos
+                        })
+
+        else:
+            repo_name = request.GET.get("repo_name") # must be of the format paulledemon/browserdocs
+
+            try:
+                owner, repo = repo_name.split('/')
+
+            except (ValueError, AttributeError):
+                return JsonResponse({'error': 'required repo in the format Owner/Reponame'}, status=400)
+
+
+            doc_files = scan_for_doc(request.user, owner, repo)
+            doc_files['project'] = repo
+            doc_files['source'] = f'https://github.com/{repo_name}'
+
+            return render(request, 'docs-create.html', context={
+                                    'configuration': doc_files
+                                })
 
     def post(self, request):
 

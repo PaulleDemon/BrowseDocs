@@ -7,7 +7,7 @@ from google.cloud.firestore_v1.query import Query
 from google.cloud.firestore_v1.base_query import FieldFilter
 
 from . import datastructures
-from .utils import clean_data, convert_to_datastructure, ErrorDict
+from .utils import clean_data, convert_data_to_structure, ErrorDict
 
 db_client: Client  = settings.FIRESTORE_CLIENT
 
@@ -28,9 +28,9 @@ def create_or_update_project(data:dict, pk=None):
     """
     data_structure = datastructures.CREATE_PROJECT
     
-    converted_data = convert_to_datastructure(data_structure, data)
+    converted_data = convert_data_to_structure(data_structure, data)
     
-    validated_data, errors = clean_data(data_structure, converted_data)
+    validated_data, errors = clean_data(data_structure, converted_data, True if pk else False)
 
     validated_data['unique_name'] = validated_data['unique_name'].lower()
 

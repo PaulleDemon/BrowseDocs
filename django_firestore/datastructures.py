@@ -1,7 +1,10 @@
 # contains datastructures 
-from typing import List, Dict, Union, TypedDict, Any
-from .validators import tag_validator, name_validator, url_validator
+from typing import List, Dict, Union, TypedDict, Callable
 
+from datetime import datetime
+from django.utils import timezone
+
+from .validators import tag_validator, name_validator, url_validator
 
 class FieldValue(TypedDict):
     type: str
@@ -10,12 +13,16 @@ class FieldValue(TypedDict):
     required: bool
     validators: List
     inner:  Union[Dict, List]
+    default: Callable
+    readonly: bool
+    oneoff: bool # The value can't be chaned if this is True
+
 
 DatastructureType = Dict[str, FieldValue]
 
 
 CREATE_PROJECT: DatastructureType = {
-        'project_name': {'type': str, 'maxlength': 30, 'required': True},
+        'name': {'type': str, 'maxlength': 30, 'required': True},
         'unique_name': {'type': str, 'maxlength': 30, 'required': True},
         'version': {'type': str, 'maxlength': 10, 'required': True},
         'about': {'type': str, 'maxlength': 100, 'required': True},
@@ -54,5 +61,6 @@ CREATE_PROJECT: DatastructureType = {
                 'buymeacoffee': {'type': str, 'maxlength': 25, 'required': False, 'validators': [name_validator]},
                 'patreon': {'type': str, 'maxlength': 25, 'required': False, 'validators': [name_validator]},
             }   
-        }
+        },
+        'datetime': {'type': datetime, 'default': timezone.now, 'required': True, 'readonly': True, 'oneoff': True} 
     }
