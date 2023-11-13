@@ -10,6 +10,8 @@ const docAlert = document.getElementById("doc-create-alert")
 const createProject = document.getElementById("create-project")
 
 
+changeProjectIcon()
+
 function disableImportBtns(disable=true){
     const docImportButton = Array.from(document.querySelectorAll("[name='import-repo']"))
 
@@ -251,6 +253,7 @@ function checkProjectNameAvailabilty(name){
 
 }
 
+
 function validateFields(){
 
     const fields = Array.from(createProject.querySelectorAll('[name]'))
@@ -258,6 +261,22 @@ function validateFields(){
     for (let x of fields){
 
         let field_name = x.name
+
+        if (field_name == 'unique_name' && (!isNameValid('name') || x.value.trim().length > 3)){
+            toastAlert(null, `name can contain only alpha-numeric, _, -`, 'danger')
+            return false
+        }
+
+        if (field_name == 'tags'){
+            let tags = x.value.split(',')
+
+            for(let x in tags){
+                if(!isNameValid(x)){
+                    toastAlert(null, `tags can contain only alpha-numeric, _, -`, 'danger')
+                    return false
+                }
+            }
+        }
 
         if (['version', 'name', 'about'].includes(field_name)){
             if (x.value.trim() === ''){

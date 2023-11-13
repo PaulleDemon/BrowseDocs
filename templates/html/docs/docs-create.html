@@ -24,6 +24,14 @@
 
             </div>
 
+            {% if errors %}
+                <div class="alert alert-danger tw-m-2">
+                    {% for error in errors %}
+                        {{error}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             {% comment %} <div class="tw-flex tw-gap-2 tw-w-full tw-mt-4">
                 <input type="text" class="input tw-w-full" name="" placeholder="Some other repo? Owner name"
                          id="repo-input" maxlength="50">
@@ -31,7 +39,7 @@
                          id="repo-input" maxlength="50">
                 <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository({{repo.full_name}})">import</button>
             </div> {% endcomment %}
-            <form action="{% url "docs-create" %}" id="create-project" class="tw-flex tw-flex-col tw-gap-2 tw-place-items-center" 
+            <form action="" id="create-project" class="tw-flex tw-flex-col tw-gap-2 tw-place-items-center" 
                             method="post" onsubmit="return validateFields()">
                 {% csrf_token %}
                 <input type="hidden" name="source" value="{{source}}">

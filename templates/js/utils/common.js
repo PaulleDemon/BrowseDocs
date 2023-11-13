@@ -73,6 +73,14 @@ function enableBtn(btn){
     btn.disabled = false
 }
 
+function isNameValid(text){
+    const regex = /^[a-zA-Z0-9_-]+$/;
+
+    // Example usage
+    return regex.test(text);
+}
+
+
 function isValidEmail(email){
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }

@@ -13,7 +13,8 @@ from django_ratelimit.decorators import ratelimit
 from utils.repos import get_github_repo, read_config_file, scan_for_doc
 from utils.decorators import login_required_for_post, login_required_rest_api
 
-from django_firestore.utils import ErrorDict
+from django_firestore.datastructures import CREATE_PROJECT
+from django_firestore.utils import ErrorDict, convert_data_to_structure
 from django_firestore.database import (project_name_exists, create_or_update_project)
 
 class DocsCreateView(LoginRequiredMixin, View):
@@ -43,8 +44,7 @@ class DocsCreateView(LoginRequiredMixin, View):
             doc_files = scan_for_doc(request.user, owner, repo)
             doc_files['project'] = repo
             doc_files['source'] = f'https://github.com/{repo_name}'
-            print("Doc files: ", doc_files)
-
+        
             return render(request, 'docs-create.html', context={
                                     'config': doc_files.get('config'),
                                     'docs': doc_files.get('docs'),
@@ -54,15 +54,41 @@ class DocsCreateView(LoginRequiredMixin, View):
 
     def post(self, request):
 
+        step = request.GET.get("step")
+        repo_name = request.GET.get("repo_name") # must be of the format paulledemon/browserdocs
+
+        if step != '2':
+            return render(request, '404.html')
+
         data = dict(request.POST)
-        print("data: ", data)
+      
         instance = create_or_update_project(data)
+        print("data: ", instance, isinstance(instance, ErrorDict))
+
 
         if isinstance(instance, ErrorDict):
+
+            try:
+                owner, repo = repo_name.split('/')
+
+            except (ValueError, AttributeError):
+                return JsonResponse({'error': 'required repo in the format Owner/Reponame'}, status=400)
+
+
+            doc_files = convert_data_to_structure(CREATE_PROJECT, data)
+
+            doc_files['source'] = f'https://github.com/{repo_name}'
+            doc_files['project'] = doc_files.get('name')
+
+            print("doc files: ", doc_files)
+
             return render(request, self.template_name, context={
-                                'data': data,
-                                'error': [instance.as_dict()]
-                            })
+                                        'config': data,
+                                        'docs': doc_files.get('docs'),
+                                        'project': repo,
+                                        'source': doc_files.get('source'),
+                                        'error': [instance.as_dict()]
+                                    })
 
         return render(request, self.template_name, context={
             'data': data
