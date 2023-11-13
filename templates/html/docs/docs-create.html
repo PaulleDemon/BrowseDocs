@@ -3,6 +3,8 @@
 {% load tz %}
 {% load static %}
 
+{% load custom_tags %}
+
 {% block content %}
     <div class="tw-h-full tw-w-full tw-flex-col tw-p-3">
         
@@ -32,7 +34,7 @@
             <form action="{% url "docs-create" %}" id="create-project" class="tw-flex tw-flex-col tw-gap-2 tw-place-items-center" 
                             method="post" onsubmit="return validateFields()">
                 {% csrf_token %}
-                <input type="hidden" name="source" value="">
+                <input type="hidden" name="source" value="{{source}}">
 
                 <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]" id="docfile">
                     <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
@@ -44,7 +46,7 @@
                                 tw-gap-0
                                 tw-justify-between" id="doc-files">
 
-                        {% for doc in configuration.docs %}
+                        {% for doc in docs %}
                             <div class="input-group">
                                 <span class="input-group-text bi 
                                                 {% if doc.type == 'folder' %}
@@ -72,19 +74,19 @@
                     </div>
 
                     <input type="text" class="input tw-max-w-xs" name="version" maxlength="10" 
-                            value="{{configuration.version}}" 
+                            value="{{config.version}}" 
                             required placeholder="version">                
                     <input type="text" class="input" name="name" maxlength="30" 
                             required 
-                            value="{{configuration.name}}" 
+                            value="{% if config.name %}{{config.name}} {% else %} {{project}} {% endif %}" 
                             placeholder="project name" 
                             id="project-name">                
                     <textarea name="about" id="" 
                                         required 
-                                        value="{{configuration.about}}"
+                                        value="{{config.about}}"
                                         class="input tw-min-h-[200px] tw-max-h-[350px]" 
                                         placeholder="About the project" 
-                                        maxlength="400">{{configuration.about}}</textarea>
+                                        maxlength="400">{{config.about}}</textarea>
                     
                     <div class="tw-flex tw-flex-col tw-gap-1">
                         <input type="text" class="input" oninput="checkProjectNameAvailabilty(this.value)" 
@@ -92,15 +94,15 @@
                                 name="unique_name" 
                                 maxlength="30" 
                                 {% if update %}disabled{% endif %}
-                                value="{{configuration.unique_name}}" placeholder="unique project name" 
+                                value="{{config.unique_name}}" placeholder="unique project name" 
                                 id="unique-name">
                         <div class="tw-text-sm">This name is subject to availability. (Avoid using well-known project names to prevent potential conflicts with original authors.)</div>
                     </div>
                     <input type="text" class="input" name="tags" maxlength="30" 
-                            value="{{configuration.tags}}" placeholder="project tags seperated by comma (max 3)" 
+                            value="{{config.tags}}" placeholder="project tags seperated by comma (max 3)" 
                             id="project-name">                
                     <input type="text" class="input" name="source_code" maxlength="150"
-                            value="{{configuration.source_code}}"
+                            value="{{config.source_code}}"
                             placeholder="source code url (optional)">                
 
 
@@ -110,7 +112,7 @@
                     <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-text-lg tw-place-items-start tw-mx-[30%] tw-text-left">
                         <div class="form-check">
                             <input class="form-check-input" required type="radio" name="doc_type" 
-                                    value="lng" id="pgm-lang" {% if not configuration.doc_type or configuration.doc_type == 'pgm-lang' %}checked{% endif %}>
+                                    value="lng" id="pgm-lang" {% if config.doc_type == 'pgm-lng' or config.doc_type == None %}checked{% endif %}>
                             <label class="form-check-label" for="pgm-lang">
                                 Programming Language <span class="tw-text-sm">(related to Programming, such as libraries and frameworks)</span>
                             </label>
@@ -118,7 +120,7 @@
                         <div class="form-check">
                             <input class="form-check-input" required type="radio" 
                                     name="doc_type" value="tool" id="tool" 
-                                    {% if configuration.doc_type == 'tool' %}checked{% endif %}
+                                    {% if config.doc_type == 'tool' %}checked{% endif %}
                                     >
                             <label class="form-check-label" for="tool">
                                 Tool
@@ -134,7 +136,8 @@
                         <input type="text" name="project_logo" placeholder="project logo url (optional)" 
                                 class="input tw-w-full tw-max-w-lg" onchange="changeProjectIcon()" 
                                 maxlength="350"
-                                value="{{configuration.project_logo}}"
+                                oninput="changeProjectIcon()"
+                                value="{{config.project_logo}}"
                                 id="project-logo-input">
                     </div>
                     
@@ -149,7 +152,7 @@
                             <input type="text" class="input" 
                                     name="stackoverflow"
                                     maxlength="30"
-                                    value="{% if configuration.social %}{{configuration.social.stackoverflow}}{% endif %}"
+                                    value="{% if config.social %}{{config.social.stackoverflow}}{% endif %}"
                                     placeholder="Stackoverflow question tag" >
                         </div>
                         <div class="input-group mb-3">
@@ -157,7 +160,7 @@
                             <input type="text" class="input" 
                                     name="twitter"
                                     maxlength="30"
-                                    value="{% if configuration.social %}{{configuration.social.twitter}}{% endif %}"
+                                    value="{% if config.social %}{{config.social.twitter}}{% endif %}"
                                     placeholder="Username" >
                         </div>
                         <div class="input-group mb-3">
@@ -165,7 +168,7 @@
                             <input type="text" class="input"
                                     name="reddit"
                                     maxlength="30"
-                                    value="{% if configuration.social %}{{configuration.social.reddit}}{% endif %}"
+                                    value="{% if config.social %}{{config.social.reddit}}{% endif %}"
                                     placeholder="Reddit community" >
                         </div>
                         <div class="input-group mb-3">
@@ -173,7 +176,7 @@
                             <input type="text" class="input" 
                                     name="mastodon"
                                     maxlength="30"
-                                    value="{% if configuration.social %}{{configuration.social.mastodon}}{% endif %}"
+                                    value="{% if config.social %}{{config.social.mastodon}}{% endif %}"
                                     placeholder="Mastodon community" >
                         </div>
                         <div class="input-group mb-3">
@@ -181,7 +184,7 @@
                             <input type="text" class="input" 
                                     name="discord"
                                     maxlength="30"
-                                    value="{% if configuration.social %}{{configuration.social.discord}}{% endif %}"
+                                    value="{% if config.social %}{{config.social.discord}}{% endif %}"
                                     placeholder="Discord server" >
                         </div>
                     </div>
@@ -190,29 +193,27 @@
                         Additional links
                     </div>
                     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4 tw-place-items-center">
-                        
-                        <div class="tw-flex tw-flex-wrap tw-gap-2">
-                            {% for link in configuration.additional_link %}
-                                <input type="text" class="input" 
-                                        name="link_name"
-                                        value="{% if configuration.additional_link %}{{configuration.additional_link.link_name}}{% endif %}"
-                                        maxlength="30"
-                                        placeholder="Link name" maxlength="30">
-                                <input type="text" class="input" 
-                                        name="link_url"
-                                        value="{% if configuration.additional_link %}{{configuration.additional_link.link_url}}{% endif %}"
-                                        placeholder="Link (url)" maxlength="300">
-                            {% endfor %}
-                        </div>
                         <div class="tw-flex tw-flex-wrap tw-gap-2">
                             <input type="text" class="input" 
                                     name="link_name"
-                                    value=""
+                                    value="{% if config.additional_links|length > 0 %}{{config.additional_links|get_key:0}}{% endif %}"
                                     maxlength="30"
                                     placeholder="Link name" maxlength="30">
                             <input type="text" class="input" 
                                     name="link_url"
-                                    value=""
+                                    value="{% if config.additional_links|length > 0 %}{{config.additional_links|get_value:0}}{% endif %}"
+                                    placeholder="Link (url)" maxlength="300">
+                        </div>
+                        
+                        <div class="tw-flex tw-flex-wrap tw-gap-2">
+                            <input type="text" class="input" 
+                                    name="link_name"
+                                    value="{% if config.additional_links|length == 2 %}{{config.additional_links|get_key:1}}{% endif %}"
+                                    maxlength="30"
+                                    placeholder="Link name" maxlength="30">
+                            <input type="text" class="input" 
+                                    name="link_url"
+                                    value="{% if config.additional_links|length == 2 %}{{config.additional_links|get_value:1}}{% endif %}"
                                     placeholder="Link (url)" maxlength="300">
                         </div>
                     
@@ -227,7 +228,7 @@
                             <i class="input-group-text bi bi-opencollective"></i>
                             <input type="text" class="input" 
                                     name="opencollective"
-                                    value=""
+                                    value="{{config.sponsor.opencollective}}"
                                     maxlength="30"
                                     placeholder="Open collective" >
                         </div>
@@ -235,7 +236,7 @@
                             <i class="input-group-text bi bi-github"></i>
                             <input type="text" class="input" 
                                     name="github"
-                                    value=""
+                                    value="{{config.sponsor.github}}"
                                     maxlength="30"
                                     placeholder="Githib sponsorship" >
                         </div>
@@ -244,7 +245,7 @@
                             <i class="input-group-text bi bi-currency-dollar"></i>
                             <input type="text" class="input" 
                                     name="patreon"
-                                    value=""
+                                    value="{{config.sponsor.patreon}}"
                                     maxlength="30"
                                     placeholder="Patreon" >
                         </div>
@@ -252,7 +253,7 @@
                             <i class="input-group-text bi bi-currency-dollar"></i>
                             <input type="text" class="input" 
                                     name="buymeacoffee"
-                                    value=""
+                                    value="{{config.sponsor.buymeacoffee}}"
                                     maxlength="30"
                                     placeholder="Buymeacoffee" >
                         </div>

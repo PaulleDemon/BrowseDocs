@@ -89,6 +89,10 @@ def delete_collection(coll_ref, batch_size):
 
 def clean_data(data_structure, data, update=False):
 
+    """
+        validates the data and returns errors if any and the validated data
+    """
+
     errors = {}
     validated_data = {}
 

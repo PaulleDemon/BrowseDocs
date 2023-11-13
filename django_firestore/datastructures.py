@@ -62,5 +62,6 @@ CREATE_PROJECT: DatastructureType = {
                 'patreon': {'type': str, 'maxlength': 25, 'required': False, 'validators': [name_validator]},
             }   
         },
-        'datetime': {'type': datetime, 'default': timezone.now, 'required': True, 'readonly': True, 'oneoff': True} 
+        'datetime': {'type': datetime, 'default': timezone.now, 'required': True, 'readonly': True, 'oneoff': True},
+        'user': {'type': int, 'required': True}
     }

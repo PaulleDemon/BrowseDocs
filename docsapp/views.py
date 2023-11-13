@@ -43,9 +43,13 @@ class DocsCreateView(LoginRequiredMixin, View):
             doc_files = scan_for_doc(request.user, owner, repo)
             doc_files['project'] = repo
             doc_files['source'] = f'https://github.com/{repo_name}'
+            print("Doc files: ", doc_files)
 
             return render(request, 'docs-create.html', context={
-                                    'configuration': doc_files
+                                    'config': doc_files.get('config'),
+                                    'docs': doc_files.get('docs'),
+                                    'project': repo,
+                                    'source': doc_files.get('source')
                                 })
 
     def post(self, request):

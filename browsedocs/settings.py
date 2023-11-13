@@ -175,6 +175,9 @@ TEMPLATES = [
                 'browsedocs.context_processors.secrets',
 
             ],
+            'libraries':{
+                'custom_tags': 'browsedocs.templatetags.custom_tags',
+            }
         },
     },
 ]
