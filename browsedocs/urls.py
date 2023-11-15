@@ -38,6 +38,7 @@ urlpatterns = [
 
     path('user/', include('user.urls')),
     path('blog/', include('blog.urls')),
+    path('tutorial/', include('tutorial.urls')),
     
 
 

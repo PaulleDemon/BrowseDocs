@@ -1,0 +1,134 @@
+{% extends './html/base.html' %}
+
+{% load tz %}
+{% load static %}
+
+{% load custom_tags %}
+
+{% block content %}
+
+<div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-place-items-center tw-p-3">
+
+	<input type="text" maxlength="250" placeholder="Title" 
+						class="tw-border-none tw-border-gray-300 
+								tw-bg-transparent tw-border-b-2 tw-w-full" 
+						id="">
+
+    <div id="editor" style="min-height: 100vh;" class="tw-w-full">
+    </div>
+
+	<div class="tw-flex tw-flex-col tw-place-content-center tw-place-items-center tw-mt-[3%]">
+		<span class="tw-text-lg tw-mr-2">add tags</span>
+		<input type="text" maxlength="250" placeholder="Add tags" 
+				class="tw-border-none tw-border-gray-300 
+						tw-bg-transparent tw-border-b-2 tw-w-full" 
+				id="">
+	</div>
+
+	<input type="submit" class="btn btn-primary tw-mt-[2%] tw-w-[250px]" value="Draft">
+	<input type="submit" class="btn btn-success tw-mt-[2%] tw-w-[250px]" value="Publish">
+
+</div>
+<style>
+
+	.ql-toolbar.ql-snow{
+		border: none !important;
+        outline: none !important;
+		display: flex;
+		gap: 20px;
+		width: 100%;
+		justify-content: center;
+		font-size: 20px;
+		padding: 10px;
+	}
+
+	.ql-container{
+		border: none !important;
+        outline: none !important;
+		font-size: 16px;
+		line-height: large;
+	}
+
+	.ql-formats{
+		margin-right: 20px; 
+	}
+
+	.ql-editor{
+		min-height: 100vh;
+	}
+
+</style>
+
+<script>
+
+    const icons = window.Quill.import('ui/icons');
+
+    {% comment %} va  r toolbar = window.quill.getModule('toolbar'); {% endcomment %}
+    {% comment %} toolbar.addHandler('header', function(value) {
+        // Apply your custom styles based on the selected heading value
+        var color = '#fff'; // Replace with your desired color
+        quill.format('header', value); // Apply the header format
+        quill.format('color', color); // Apply the color format
+    }); {% endcomment %}
+
+    const fontSizeArr = ['14px', '24px','32px','42px','54px','68px','84px','98px'];
+
+    var Size = Quill.import('attributors/style/size')
+    Size.whitelist = fontSizeArr
+    Quill.register(Size, true)
+
+      
+    icons['bold'] = '<i class="bi bi-type-bold"></i>';
+    icons['italic'] = '<i class="bi bi-type-italic"></i>';
+    icons['underline'] = '<i class="bi bi-type-underline"></i>';
+    icons['strike'] = '<i class="bi bi-type-strikethrough"></i>';
+    icons['blockquote'] = '<i class="bi bi-quote"></i>';
+    icons['code-block'] = '<i class="bi bi-code-slash"></i>';
+    icons['image'] = '<i class="bi bi-card-image"></i>';
+    icons['list']['ordered'] = '<i class="bi bi-list-ol"></i>';
+    icons['list']['bullet'] = '<i class="bi bi-list-ul"></i>';
+    icons['script']['sub'] = '<i class="bi bi-subscript"></i>';
+    icons['script']['super'] = '<i class="bi bi-superscript"></i>';
+    icons['indent']['-1'] = '<i class="bi bi-text-indent-right"></i>';
+    icons['indent']['+1'] = '<i class="bi bi-text-indent-left"></i>';
+    //icons['direction']['rtl'] = '<i class="bi bi-paragraph"></i>';
+    icons['align']['center'] = '<i class="bi bi-text-center"></i>';
+    icons['align']['justify'] = '<i class="bi bi-justify"></i>';
+    icons['align']['right'] = '<i class="bi bi-justify-right"></i>';
+    icons['align']['left'] = '<i class="bi bi-justify-left"></i>';
+
+    var toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block', 'image'],
+  
+   
+    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+    //[{ 'direction': 'rtl' }],                         // text direction
+  
+    //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+    [{ 'header': [1, 2, 3, false] }],
+  
+    [{ 'align': [] }],
+  
+    ['clean']                                         // remove formatting button
+    [{ 'size': fontSizeArr }],
+
+    ];
+  hljs.configure({   // optionally configure hljs
+    languages: ['javascript', 'ruby', 'python']
+  });
+  var editor = new Quill('#editor', {
+    modules: 
+        { 
+            syntax: true,  
+            toolbar: toolbarOptions
+
+        },
+	theme: 'snow',
+	placeholder: '',
+  });
+</script>
+
+{% endblock content %}

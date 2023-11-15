@@ -37,6 +37,12 @@
     
     <script src="https://cdn.jsdelivr.net/npm/fetch-retry@5.0.6/dist/fetch-retry.umd.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+
     <link rel="stylesheet" href="{%static './css/index.css'%}">
     
     <script src="{% static "./js/utils/common.js" %}"></script>
@@ -101,6 +107,8 @@
                     </button>
                     <div class="dropdown-menu" style="right: 0; left: auto;" aria-labelledby="profile">
                         <a class="dropdown-item" href="{% url "docs-create" %}">Create Documentation</a>
+                        <a class="dropdown-item" href="{% url "create-tutorial" %}">Write tutorial</a>
+                        <hr class="dropdown-divider">
                         <a class="dropdown-item" href="#">My Documentations</a>
                         <hr class="dropdown-divider">
                         <a class="dropdown-item tw-flex tw-gap-4" href="{% url "logout" %}">

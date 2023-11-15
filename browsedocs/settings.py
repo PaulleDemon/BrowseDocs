@@ -69,7 +69,8 @@ INSTALLED_APPS = [
 
     'user',
     'blog',
-    'docsapp'
+    'docsapp',
+    'tutorial'
 ]
 
 
@@ -157,6 +158,7 @@ TEMPLATES = [
             BASE_DIR.joinpath("templates", "html", ),
             BASE_DIR.joinpath("templates", "html", "docs"),
             BASE_DIR.joinpath("templates", "html", "blog"),
+            BASE_DIR.joinpath("templates", "html", "tutorials"),
 
             BASE_DIR.joinpath("templates", "html", "error"),
             BASE_DIR.joinpath("templates", "html", "authentication"),
@@ -253,10 +255,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATICFILES_DIRS = [
-    BASE_DIR.joinpath("templates"),
-]
 
 
 STATIC_URL = '/static/'

@@ -44,7 +44,9 @@ class DocsCreateView(LoginRequiredMixin, View):
             doc_files = scan_for_doc(request.user, owner, repo)
             doc_files['project'] = repo
             doc_files['source'] = f'https://github.com/{repo_name}'
-        
+
+            # doc_files['config']
+
             return render(request, 'docs-create.html', context={
                                     'config': doc_files.get('config'),
                                     'docs': doc_files.get('docs'),
