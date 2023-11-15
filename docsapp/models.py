@@ -5,6 +5,7 @@ from user.models import User
 from utils.validators import name_validator, tag_validator
 from utils.constraint_fields import ContentTypeRestrictedFileField
 
+
 class SOCIAL(models.IntegerChoices):
 
     REDDIT = (0, 'Reddit')
@@ -28,14 +29,14 @@ class SPONSORS(models.IntegerChoices):
     PATREON = (3, 'Patreon')
 
 
-class Project(models):
+class Project(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     name = models.CharField(max_length=100)
     unique_name = models.CharField(max_length=40)
     version = models.CharField(max_length=10)
-    about = models.TextChoices(max_length=500)
+    about = models.TextField(max_length=500)
 
     project_logo = models.URLField(null=True, blank=True)
 
@@ -52,7 +53,7 @@ class Project(models):
         return self.name
     
 
-class Social(models):
+class Social(models.Model):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -60,7 +61,7 @@ class Social(models):
     username = models.CharField(max_length=45, validators=[name_validator])
 
 
-class Sponsor(models):
+class Sponsor(models.Model):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

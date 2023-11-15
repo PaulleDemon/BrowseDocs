@@ -2,15 +2,17 @@ from django.db import models
 
 from user.models import User
 
+from docsapp.models import Project
+
 from utils.constraint_fields import ContentTypeRestrictedFileField
 
 
-class Tutorial(models):
+class Tutorial(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     title = models.CharField(max_length=100)
-    project = models.ForeignKey(null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 
     text = models.TextField()
     tag = models.CharField(max_length=100)
@@ -21,7 +23,7 @@ class Tutorial(models):
         return self.title
 
 
-class TutorialImage(models):
+class TutorialImage(models.Model):
 
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
     image =  ContentTypeRestrictedFileField(upload_to='tutorial-media/', null=True, blank=True, 
