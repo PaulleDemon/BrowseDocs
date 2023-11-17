@@ -313,30 +313,54 @@ async function viewTemplate(id){
 }
 
 
-function templateModalRenderPreview(){
-    const templateModalSubject = document.getElementById("templateModalSubject")
-    const templateModalBody = document.getElementById("templateViewModel-body")
-    const testVariables = document.getElementById("templateModal-variables")
 
-    const alertWarning = document.getElementById("templateModalAlert")
+/**
+ * 
+ * @param {Event} event 
+ * @param {HTMLDivElement} contextMenu 
+ * @returns 
+ */
+function setContextMenuPosition(event, contextMenu) {
+    var mousePosition = {};
+    var menuPosition = {};
+    var menuDimension = {};
 
-    try{
-        templateModalBody.innerHTML = renderTemplate(templateModalBody.innerText, testVariables.value)
-        templateModalSubject.innerHTML = renderTemplate(templateModalSubject.innerText, testVariables.value)
-        hideAlertError(alertWarning)
-    }catch(e){
-        alertError(alertWarning, "error with the template or variables.")
-        console.log("Error :", e)
+    menuDimension.x = contextMenu.offsetWidth;
+    menuDimension.y = contextMenu.offsetHeight;
+    mousePosition.x = event.pageX;
+    mousePosition.y = event.pageY;
+
+
+    function removeContextMenu(e){
+        if (!contextMenu.contains(e.target) || e.key == "Escape") {
+            contextMenu.classList.add("tw-hidden")
+            document.removeEventListener("click", removeContextMenu)
+            document.removeEventListener("keydown", removeContextMenu)
+        }
     }
+    
+    // Hide context menu if clicked outside of it
+    document.addEventListener("click", removeContextMenu)
+    document.addEventListener("keydown", removeContextMenu)
+
+    if (mousePosition.x + menuDimension.x > window.innerWidth + window.scrollX) {
+        menuPosition.x = mousePosition.x - menuDimension.x;
+    } else {
+        menuPosition.x = mousePosition.x;
+    }
+
+    if (mousePosition.y + menuDimension.y > window.innerHeight + window.scrollY) {
+        menuPosition.y = mousePosition.y - menuDimension.y;
+    } else {
+        menuPosition.y = mousePosition.y;
+    }
+
+    // Set the position of the context menu
+    contextMenu.style.top = menuPosition.y + "px";
+    contextMenu.style.left = menuPosition.x + "px";
+    contextMenu.position = "fixed"
+    // Make the context menu visible
+    contextMenu.classList.remove("tw-hidden");
+
+    return menuPosition;
 }
-
-
-// function templateModalClosed(){
-//     const templateModalSubject = document.getElementById("templateViewModelLabel")
-//     const templateModalBody = document.getElementById("templateViewModel-body")
-//     const templateModalLoader = document.getElementById("templateViewModel-loader")
-
-//     templateModalLoader.classList.remove("!tw-hidden")
-//     templateModalSubject.innerText = ""
-//     templateModalBody.innerHTML = ""
-// }

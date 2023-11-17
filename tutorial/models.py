@@ -19,6 +19,9 @@ class Tutorial(models.Model):
 
     datetime = models.DateTimeField(auto_now=True)
 
+    draft = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
+
     def __str__(self):
         return self.title
 
