@@ -1,5 +1,7 @@
 from django.db import models
 
+from django_quill.fields import QuillField
+
 from user.models import User
 
 from docsapp.models import Project
@@ -11,11 +13,11 @@ class Tutorial(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 
-    text = models.TextField()
-    tag = models.CharField(max_length=100)
+    body = QuillField(null=True, blank=True)
+    tag = models.CharField(max_length=150, null=True, blank=True)
 
     datetime = models.DateTimeField(auto_now=True)
 

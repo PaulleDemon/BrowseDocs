@@ -78,31 +78,54 @@
         </button>
     </div>
 
-	<input type="text" maxlength="250" placeholder="Title" 
-						class="tw-border-none
-								tw-bg-transparent tw-border-b-2 tw-w-full
-                tw-text-5xl tw-font-normal
-                active:tw-border-none focus-within:tw-border-none
-                " 
-                id="">
+    <form action="" method="post" enctype="multipart/form-data">
 
-    <div id="editor" style="min-height: 100vh;" class="tw-w-full">
-    </div>
+        {% comment %} <div contenteditable="true" aria-multiline="true"
+                class="tw-border-none
+                        tw-bg-transparent tw-w-full
+                        tw-text-5xl tw-font-normal
+                        active:tw-border-none focus-within:tw-border-none"
+        >Title</div> {% endcomment %}
 
-	<div class="tw-flex tw-flex-col tw-place-content-center tw-place-items-center tw-mt-[3%]">
-		<span class="tw-text-lg tw-mr-2">add tags</span>
-		<input type="text" maxlength="250" placeholder="Add tags" 
-				class="tw-border-none tw-border-gray-300 
-						tw-bg-transparent tw-border-b-2 tw-w-full" 
-				id="">
-	</div>
+        <input type="hidden" id="tutorial-id" value="">
 
-	<input type="submit" class="btn btn-primary tw-mt-[2%] tw-w-[250px]" value="Draft">
-	<input type="submit" class="btn btn-success tw-mt-[2%] tw-w-[250px]" value="Publish">
+        <input type="text" maxlength="200" placeholder="Title" 
+                            class="tw-border-none
+                                    tw-bg-transparent tw-border-b-2 tw-w-full
+                                    tw-text-5xl tw-font-normal
+                                    active:tw-border-none focus-within:tw-border-none
+                                    " 
+                                    id="tutorial-title">
+
+        <div id="editor" style="min-height: 100vh;" class="tw-w-full">
+        </div>
+
+        <div class="tw-flex tw-flex-col tw-place-content-center tw-place-items-center tw-mt-[3%]">
+            <span class="tw-text-lg tw-mr-2">add tags</span>
+            <input type="text" maxlength="250" placeholder="Add tags" 
+                    class="tw-border-none tw-border-gray-300 
+                            tw-bg-transparent tw-border-b-2 tw-w-full" 
+                    id="tags">
+        </div>
+        
+        <div class="tw-flex tw-gap-3">
+            <button type="button" data-bs-toggle="tooltip" title="save draft" 
+                    class="btn btn-primary bi bi-cloud-upload-fill tw-mt-[2%] tw-w-[100px]"
+                    id="save-draft"
+                    onclick="saveDraft()"
+                    />
+            <button type="submit"
+                    disabled
+                    id="publish"
+                    data-bs-toggle="tooltip" title="publish"
+                    class="btn btn-success bi bi-floppy-fill  tw-mt-[2%] tw-w-[100px]" />
+        </div>
+    </form>
 
 </div>
 <link rel="stylesheet" href="{% static "./css/quill-config.css" %}">
 
 <script src="{% static "./js/editor/quill-modules.js" %}"></script>
 <script src="{% static "./js/editor/quill-configurations.js" %}"></script>
+<script src="{% static "./js/editor/tutorial-editor.js" %}"></script>
 {% endblock content %}

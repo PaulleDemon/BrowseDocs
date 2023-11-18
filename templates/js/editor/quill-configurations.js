@@ -1,10 +1,6 @@
 const icons = window.Quill.import('ui/icons');
-
 const tableContextMenu = document.getElementById("table-context-menu") 
 
-let codeEditor = Array.from(document.querySelectorAll('.ql-editor pre'))
-
-   
 
 const fontSizeArr = ['20px', '24px','32px','42px','54px','68px','84px','98px'];
 
@@ -33,10 +29,10 @@ icons['align']['center'] = '<i class="bi bi-text-center"></i>'
 icons['align']['justify'] = '<i class="bi bi-justify"></i>'
 icons['align']['right'] = '<i class="bi bi-justify-right"></i>'
 icons['align']['left'] = '<i class="bi bi-justify-left"></i>'
+// icons['align'] = '<i class="bi bi-justify-left"></i>'
 icons['table'] = '<i class="bi bi-table" id="insert-table"></i>'
 
 icons['notice'] = '<i class="bi bi-exclamation-circle"></i>'
-// icons['bettertable'] = '<i class="bi bi-table"></i>'
 
 var toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -48,7 +44,8 @@ var toolbarOptions = [
     //[{ 'direction': 'rtl' }],                         // text direction
     //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
     [{ 'header': [1, 2, 3, false] }],
-    [{ 'align': [] }],
+    // [{ 'align': [] }],
+    [{ 'align': ['left', 'right', 'center', 'justify'] }],
     // ['clean'],                                        // remove formatting button
     // [{ 'size': fontSizeArr }],
     ['notice'],
@@ -60,7 +57,8 @@ const Parchment = Quill.import('parchment')
 
 Quill.register(NoticeBlot)
 Quill.register(InlineCodeBlot)
-
+Quill.register("modules/imageCompressor", imageCompressor);
+      
 
 
 let editor = new Quill('#editor', {
@@ -89,12 +87,23 @@ let editor = new Quill('#editor', {
                 }
             }
         },
+        imageCompressor: {
+            quality: 0.6,
+            maxWidth: 1000, // default
+            maxHeight: 1000, // default
+            imageType: 'image/png',
+            ignoreImageTypes: ['image/gif']
+        },
+        clipboard: {
+        },
     },
     theme: 'snow',
     placeholder: 'start writing....',
 })
 
 editor.on('text-change', function(delta, oldDelta, source) {
+    // console.log("source: ", editor.root)
+    let selection = editor.getSelection();
     if (source === 'user') {
         setTimeout(function() {
             hljs.highlightAll(); // Highlight code blocks after text change
@@ -103,7 +112,36 @@ editor.on('text-change', function(delta, oldDelta, source) {
         // editor.updateContents(delta, 'api');
         // updateOutput();
     }
-});
+
+    
+
+    function updateHeading() {
+        // if current line is heading then update the heading with the id of the current title
+        let cursorPosition = editor.getSelection().index;
+  
+        let format = editor.getFormat(cursorPosition);
+  
+        if (format.header) {
+            //if current line contains any heading formattig then add id
+            const headingNodes = editor.root.querySelectorAll('h1, h2, h3');
+            headingNodes.forEach(function (headingNode) {
+                const headingText = headingNode.textContent.trim();
+                
+                const slugifiedId = slugify(headingText)
+                headingNode.setAttribute('id', slugifiedId);
+            })
+        } 
+    }
+
+    updateHeading()
+
+})
+
+
+// editor.on('selection-change', function(range, oldRange, source) {
+    
+// })
+
 const table = editor.getModule('table')
 
 
@@ -172,12 +210,22 @@ function toggleNotice() {
     const range = editor.getSelection();
     const format = editor.getFormat(range);
   
-    // Toggle the 'yellow-background' format
     if (format['ql-notice']) {
         editor.formatText(range.index, range.index + range.length, 'ql-notice', false)
     } else {
-        editor.formatText(range.index, range.index + range.length, 'ql-notice', true)
+        // editor.formatText(range.index, range.index + range.length, 'ql-notice', true)
+        editor.formatLine(range.index + 1, 1, 'ql-notice', true, Quill.sources.USER);
+        
         // editor.format('notice', true)
     }
 }
 
+
+editor.keyboard.addBinding({
+    key: 'Enter',
+    collapsed: true,
+    format: ['warning'],
+  }, function(range, context) {
+        editor.insertText(range.index, '\n', Quill.sources.USER);
+        editor.setSelection(range.index + 1, Quill.sources.SILENT);
+  })

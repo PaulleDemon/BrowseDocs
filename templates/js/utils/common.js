@@ -103,6 +103,19 @@ function isValidUrl(url){
 
 }
 
+
+function slugify(text) {
+    if (text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')           
+            .replace(/[^\w-]+/g, '')        
+            .replace(/--+/g, '-')           
+            .replace(/^-+/, '')             
+            .replace(/-+$/, '')
+    }
+    return '';
+}
+
 /**
  * 
  * @param {File} file 

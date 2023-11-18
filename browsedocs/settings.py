@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_celery_beat',
     'django_browser_reload',
+    'django_quill',
 
     #authentication
     'social_django',
