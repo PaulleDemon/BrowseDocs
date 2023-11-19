@@ -12,7 +12,55 @@ from .froms import TutorialForm
 
 def create_tutorial_view(request):
 
+    id = request.GET.get('edit')
+
+    if id:
+        try:
+            id = int(id)
+            instance = Tutorial.objects.get(id=id)
+            return render(request, 'tutorial-create.html', {
+                                                            'tutorial': instance
+                                                        })
+
+        except (Tutorial.DoesNotExist, ValueError):
+            return render(request, '404.html')
+
     return render(request, 'tutorial-create.html')
+
+
+
+def publish_tutorial(request):
+    # id = request.POST.get('id')
+    id = request.GET.get('edit')
+
+    instance = None
+
+    if id:
+        try:
+            id = int(id)
+            instance = Tutorial.objects.get(id=id)
+
+        except (Tutorial.DoesNotExist, ValueError):
+            return render(request, 'tutorial-create.html', {
+                    'errors': ['invalid id']
+                })
+
+    form = TutorialForm(request.POST, instance=instance)
+
+    if form.is_valid():
+        tutorial = form.save(commit=False)
+        tutorial.user = request.user
+        tutorial.published = True
+        tutorial.save()
+        return render(request, 'tutorial-create.html')
+
+    else:
+        # print("errors: ", form.errors)
+        return render(request, 'tutorial-create.html', {
+            'errors': form.errors
+        })
+
+
 
 
 @login_required_rest_api
@@ -20,20 +68,30 @@ def create_tutorial_view(request):
 @ratelimit(key='ip', rate='60/min', method=ratelimit.ALL, block=True)
 def save_draft(request):
 
-    form = TutorialForm(request.POST)
 
-    print("tutorial: ", request.POST.get("body"))
+    # id = request.POST.get('id')
+    id = request.GET.get('edit')
+    instance = None
+
+    if id:
+        try:
+            id = int(id)
+            instance = Tutorial.objects.get(id=id)
+
+        except (Tutorial.DoesNotExist, ValueError):
+            return JsonResponse({'error': 'invalid id'}, status=400)
+
+    form = TutorialForm(request.POST, instance=instance)
+
     if form.is_valid():
         tutorial = form.save(commit=False)
         tutorial.user = request.user
+        tutorial.published = False
+        tutorial.draft = True
         tutorial.save()
         return JsonResponse({'id': tutorial.id}, status=200)
 
     else:
-        print("errors: ", form.errors)
+        # print("errors: ", form.errors)
         return JsonResponse({'error': 'invalid data error'}, status=400)
 
-
-        # except Exception as e:
-            # print("exception: ", e)
-            # return JsonResponse({'error': 'invalid data error'}, status=400)

@@ -4,6 +4,19 @@ const publishButton = document.getElementById("publish")
 const title = document.getElementById("tutorial-title")
 const tutorial_id = document.getElementById("tutorial-id") 
 
+const quillEditorTextArea = document.getElementById("quill-textarea")
+
+
+const titleInput = new TitleInput(title)
+
+const body_data = JSON.parse(document.getElementById('body-data').textContent)
+
+if (body_data){
+    editor.setContents(
+        JSON.parse((body_data))
+    )
+}
+
 editor.on('text-change', function(delta, oldDelta, source) {
     if (editor.getLength() > 250 && title.value.length > 10){
         publishButton.disabled = false
@@ -14,11 +27,29 @@ editor.on('text-change', function(delta, oldDelta, source) {
 })
 
 
+function onSubmit(){
+
+    if (heading.length < 10){
+        toastAlert(null, "Please add a proper title", "danger")
+        return 
+    }
+
+    if (editor.getLength() < 30){
+        toastAlert(null, "Please add atleast 30 characters to save as draft", "danger")
+        return
+    }
+
+    quillEditorTextArea.value = JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': editor.root.innerHTML})
+
+    return true
+
+}
+
 
 async function saveDraft(){
 
     const id = tutorial_id.value || ''
-
+    console.log("IDwdwde: ", id)
     const heading = title.value
 
     if (heading.length < 10){
@@ -40,7 +71,7 @@ async function saveDraft(){
     data.append("body", JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': editor.root.innerHTML}))
     data.append("tag", tags.value)
 
-    const res = await fetch(`/tutorial/save-draft/`, {
+    const res = await fetch(`/tutorial/save-draft/?edit=${id}`, {
         method: "POST",
         headers: {
             "X-CSRFToken": Cookies.get('csrftoken'),
@@ -68,7 +99,11 @@ async function saveDraft(){
     if (res.status == 400){
         toastAlert(null, "Invalid data", "danger")
     }else if (res.status == 200){
-        tutorial_id.value = data.id
+        console.log("Why: ", res_data)
+        tutorial_id.value = res_data.id
+        const urlParams = new URLSearchParams(window.location.search)
+        urlParams.set('edit', res_data.id)
+        history.pushState(null, null, '?' + urlParams.toString());
         toastAlert(null, "draft saved")
     }
 

@@ -9,6 +9,14 @@
 
 <div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-3">
 
+    {% if errors %}
+        <div class="alert alert-danger">
+            {% for error in errors  %}
+                {{error}}
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div id="table-context-menu" class="tw-w-[250px] tw-min-h-[100px] tw-bg-white tw-rounded-md 
                                          tw-text-gray-700
                                          tw-z-10 tw-hidden
@@ -64,7 +72,7 @@
             <div>
                 <i class="bi bi-align-middle"></i>
             </div>
-            <div>Delete row column</div>
+            <div>Delete column</div>
         </button>
         <button class="tw-text-lg hover:tw-bg-blue-200 tw-p-[10px] 
                         tw-bg-inherit tw-text-inherit tw-border-none
@@ -78,8 +86,8 @@
         </button>
     </div>
 
-    <form action="" method="post" enctype="multipart/form-data">
-
+    <form action="" method="post" enctype="multipart/form-data" onsubmit="return onSubmit()">
+        {% csrf_token %}
         {% comment %} <div contenteditable="true" aria-multiline="true"
                 class="tw-border-none
                         tw-bg-transparent tw-w-full
@@ -87,17 +95,34 @@
                         active:tw-border-none focus-within:tw-border-none"
         >Title</div> {% endcomment %}
 
-        <input type="hidden" id="tutorial-id" value="">
+        <input type="hidden" id="tutorial-id" value="{{tutorial.id}}">
 
-        <input type="text" maxlength="200" placeholder="Title" 
+        <textarea  class="tw-border-none
+                            tw-bg-transparent tw-border-b-2 tw-w-full
+                            tw-text-5xl tw-font-normal
+                            tw-overflow-hidden
+                            active:tw-outline-none focus:tw-outline-none
+                            tw-resize-none
+                            " 
+                            maxlength="200"
+                            name="title"
+                            placeholder="Title"
+                            id="tutorial-title"
+                            value="{{tutorial.title}}">{{tutorial.title}}</textarea>
+
+        {% comment %} <input type="text" maxlength="200" placeholder="Title" 
+                            value="{{tutorial.title}}"
                             class="tw-border-none
                                     tw-bg-transparent tw-border-b-2 tw-w-full
                                     tw-text-5xl tw-font-normal
                                     active:tw-border-none focus-within:tw-border-none
                                     " 
-                                    id="tutorial-title">
+                                    id="tutorial-title"> {% endcomment %}
 
-        <div id="editor" style="min-height: 100vh;" class="tw-w-full">
+        <textarea name="text" style="display:none" id="quill-textarea"></textarea>
+
+        {% comment %} Quill editor is below and quill text area is above for saving {% endcomment %}
+        <div id="editor" style="min-height: 10vh;" class="tw-w-full">
         </div>
 
         <div class="tw-flex tw-flex-col tw-place-content-center tw-place-items-center tw-mt-[3%]">
@@ -105,6 +130,7 @@
             <input type="text" maxlength="250" placeholder="Add tags" 
                     class="tw-border-none tw-border-gray-300 
                             tw-bg-transparent tw-border-b-2 tw-w-full" 
+                    value="{{tutorial.tags}}"
                     id="tags">
         </div>
         
@@ -121,9 +147,11 @@
                     class="btn btn-success bi bi-floppy-fill  tw-mt-[2%] tw-w-[100px]" />
         </div>
     </form>
-
 </div>
 <link rel="stylesheet" href="{% static "./css/quill-config.css" %}">
+
+{{ tutorial.body.delta|json_script:"body-data" }}
+
 
 <script src="{% static "./js/editor/quill-modules.js" %}"></script>
 <script src="{% static "./js/editor/quill-configurations.js" %}"></script>

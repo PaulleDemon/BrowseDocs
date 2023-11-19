@@ -8,3 +8,6 @@ class TutorialAdmin(admin.ModelAdmin):
     
     search_fields = ['title']
     list_display = ['id', 'title', 'datetime']
+
+    def titl(self, obj):
+        return obj.title[:10]
