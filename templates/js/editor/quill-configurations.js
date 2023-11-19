@@ -117,8 +117,11 @@ editor.on('text-change', function(delta, oldDelta, source) {
 
     function updateHeading() {
         // if current line is heading then update the heading with the id of the current title
-        let cursorPosition = editor.getSelection().index;
-  
+        let cursorPosition = editor.getSelection()?.index;
+
+        if (!cursorPosition)
+            return
+
         let format = editor.getFormat(cursorPosition);
   
         if (format.header) {

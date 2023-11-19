@@ -11,13 +11,22 @@ const titleInput = new TitleInput(title)
 
 const body_data = JSON.parse(document.getElementById('body-data').textContent)
 
+
 if (body_data){
     editor.setContents(
         JSON.parse((body_data))
     )
 }
 
+
+if (editor.getLength() > 250 && title.value.length > 10){
+    publishButton.disabled = false
+}else{
+    publishButton.disabled = true
+}
+
 editor.on('text-change', function(delta, oldDelta, source) {
+    console.log("changed: ", title.value.length, editor.getLength())
     if (editor.getLength() > 250 && title.value.length > 10){
         publishButton.disabled = false
     }else{
@@ -29,14 +38,17 @@ editor.on('text-change', function(delta, oldDelta, source) {
 
 function onSubmit(){
 
+    const heading = title.value
+
+
     if (heading.length < 10){
         toastAlert(null, "Please add a proper title", "danger")
-        return 
+        return false
     }
 
-    if (editor.getLength() < 30){
-        toastAlert(null, "Please add atleast 30 characters to save as draft", "danger")
-        return
+    if (editor.getLength() < 200){
+        toastAlert(null, "Sorry tutorials that are too short(undeer 200 characters) aren't allowed to publish", "danger")
+        return false
     }
 
     quillEditorTextArea.value = JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': editor.root.innerHTML})
@@ -49,7 +61,6 @@ function onSubmit(){
 async function saveDraft(){
 
     const id = tutorial_id.value || ''
-    console.log("IDwdwde: ", id)
     const heading = title.value
 
     if (heading.length < 10){
@@ -63,8 +74,6 @@ async function saveDraft(){
     }
 
     let data = new FormData()
-
-    console.log("ID: ", editor.getContents())
 
     data.append("id", id)
     data.append("title", heading)
@@ -99,10 +108,12 @@ async function saveDraft(){
     if (res.status == 400){
         toastAlert(null, "Invalid data", "danger")
     }else if (res.status == 200){
-        console.log("Why: ", res_data)
+
         tutorial_id.value = res_data.id
+
         const urlParams = new URLSearchParams(window.location.search)
         urlParams.set('edit', res_data.id)
+
         history.pushState(null, null, '?' + urlParams.toString());
         toastAlert(null, "draft saved")
     }

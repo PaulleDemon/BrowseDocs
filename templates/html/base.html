@@ -88,7 +88,10 @@
             <div class="navbar-nav">
                 <a class="nav-link hover:tw-text-blue-400" href="">About</a>
                 <a class="nav-link hover:tw-text-blue-400" href="">Docs</a>
-                <a class="nav-link hover:tw-text-blue-400" href="">Tutorials</a>
+                <a class="nav-link hover:tw-text-blue-400" 
+                    href="{% if project.url %}{{project.url}}{% else %}{% url "list-tutorials" %}{% endif %}">
+                        Tutorials
+                </a>
                 <a class="nav-link hover:tw-text-blue-400" href="">Blogs</a>
             </div>
 
@@ -120,6 +123,7 @@
                         <a class="dropdown-item" href="{% url "create-tutorial" %}">Write tutorial</a>
                         <hr class="dropdown-divider">
                         <a class="dropdown-item" href="#">My Documentations</a>
+                        <a class="dropdown-item" href="{% url "list-tutorials" %}?my=true">My tutorials</a>
                         <hr class="dropdown-divider">
                         <a class="dropdown-item tw-flex tw-gap-4" href="{% url "logout" %}">
                             <span>Logout</span>

@@ -95,13 +95,14 @@
                         active:tw-border-none focus-within:tw-border-none"
         >Title</div> {% endcomment %}
 
-        <input type="hidden" id="tutorial-id" value="{{tutorial.id}}">
+        <input type="hidden" id="tutorial-id" name="id" value="{{tutorial.id}}">
 
         <textarea  class="tw-border-none
                             tw-bg-transparent tw-border-b-2 tw-w-full
-                            tw-text-5xl tw-font-normal
+                            tw-text-4xl tw-font-normal
                             tw-overflow-hidden
-                            active:tw-outline-none focus:tw-outline-none
+                            focus:tw-outline-none
+                            active:tw-outline-none
                             tw-resize-none
                             " 
                             maxlength="200"
@@ -119,7 +120,7 @@
                                     " 
                                     id="tutorial-title"> {% endcomment %}
 
-        <textarea name="text" style="display:none" id="quill-textarea"></textarea>
+        <textarea name="body" style="display:none" id="quill-textarea"></textarea>
 
         {% comment %} Quill editor is below and quill text area is above for saving {% endcomment %}
         <div id="editor" style="min-height: 10vh;" class="tw-w-full">
@@ -128,15 +129,28 @@
         <div class="tw-flex tw-flex-col tw-place-content-center tw-place-items-center tw-mt-[3%]">
             <span class="tw-text-lg tw-mr-2">add tags</span>
             <input type="text" maxlength="250" placeholder="Add tags" 
-                    class="tw-border-none tw-border-gray-300 
-                            tw-bg-transparent tw-border-b-2 tw-w-full" 
+                    name="tags"
+                    class=" tw-border-gray-300 tw-border-b-2
+                            tw-border-0
+                            focus:tw-outline-none
+                            tw-bg-transparent tw-w-full" 
                     value="{{tutorial.tags}}"
                     id="tags">
         </div>
         
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-[5%]">
+            <span class="tw-text-sm">Project id </span>
+            <input type="text" maxlength="5" 
+                    class="input tw-max-w-xs"
+                    placeholder="Project id"
+                    name="project"
+                    value="{% if tutorial.project %}{{tutorial.project}}{% else %}{% endif %}">
+        </div>
+
         <div class="tw-flex tw-gap-3">
             <button type="button" data-bs-toggle="tooltip" title="save draft" 
-                    class="btn btn-primary bi bi-cloud-upload-fill tw-mt-[2%] tw-w-[100px]"
+                    class="btn btn-primary bi bi-cloud-upload-fill tw-mt-[2%] tw-w-[100px]
+                            tw-ml-auto"
                     id="save-draft"
                     onclick="saveDraft()"
                     />
