@@ -82,12 +82,11 @@ def save_draft(request):
     if id:
         try:
             id = int(id)
-            instance = Tutorial.objects.get(id=id)
+            instance = Tutorial.objects.get(id=id, user=request.user)
 
         except (Tutorial.DoesNotExist, ValueError):
             return JsonResponse({'error': 'invalid id'}, status=400)
 
-    print("project id: ", request.POST.get("body"))
     form = TutorialForm(request.POST, instance=instance)
 
 

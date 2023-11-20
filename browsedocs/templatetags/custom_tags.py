@@ -1,5 +1,6 @@
 import os
 import pytz
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 
 from django import template
@@ -49,3 +50,13 @@ def get_key(items: dict, index=0):
 @register.filter
 def get_value(items: dict, index=0):
     return list(items.values())[index]
+
+
+@register.filter
+def extract_path(url):
+    """
+        extracts path from url
+    """
+    path = urlparse(url).path
+    print("path: ", path)
+    return path[1:]

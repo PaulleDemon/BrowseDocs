@@ -1,0 +1,62 @@
+{% extends './html/base.html' %}
+
+{% load tz %}
+{% load static %}
+
+{% load custom_tags %}
+
+{% block content %}
+
+<div class="tw-flex tw-flex-col tw-h-full 
+            tw-w-full md:tw-px-[25%] tw-place-items-center 
+            tw-p-3 ">
+
+    {% for project in projects  %}
+        {% comment %} <a href="{% url 'get-tutorial' tutorial.id tutorial.title|slugify %}"  {% endcomment %}
+                                    class="tw-text-md tw-w-full tw-h-full">
+            <div class="tw-text-4xl tw-w-full">
+                {{project.name}}
+            </div>
+            <div class="tw-mt-[2%] tw-mb-[5%] tw-w-full">
+                @{{project.unique_name}}
+            </div>
+            {% if project.user == request.user %}
+                <a class="btn btn-success" href="{% url "docs-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
+                    Edit    
+                </a>
+            {% endif %}
+        {% comment %} </a> {% endcomment %}
+    {% endfor %}
+
+    {% if projects.has_previous or projects.has_next %}
+        <ul class="pagination justify-content-center flex-wrap mt-2 mb-4">
+            {% if projects.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ projects.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+            {% for i in page_range|default_if_none:projects.paginator.get_elided_page_range  %}
+                {% if projects.number == i %}
+                    <li class="active page-item"><span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    {% if i == projects.paginator.ELLIPSIS %}
+                        <li class="page-item"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if projects.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ projects.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+
+
+</div>
+
+{% endblock content %}

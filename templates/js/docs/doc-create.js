@@ -219,7 +219,6 @@ let projectNameTimeout = null
 
 function checkProjectNameAvailabilty(name){
 
-    console.log("checking")
 
     if (projectNameTimeout){
         clearTimeout(projectNameTimeout)
@@ -261,8 +260,7 @@ function validateFields(){
     for (let x of fields){
 
         let field_name = x.name
-
-        if (field_name == 'unique_name' && (!isNameValid('name') || x.value.trim().length > 3)){
+        if (field_name == 'unique_name' && (!isNameValid(x.value) || x.value.trim().length < 3)){
             toastAlert(null, `name can contain only alpha-numeric, _, -`, 'danger')
             return false
         }

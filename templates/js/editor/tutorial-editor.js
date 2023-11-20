@@ -4,6 +4,8 @@ const publishButton = document.getElementById("publish")
 const title = document.getElementById("tutorial-title")
 const tutorial_id = document.getElementById("tutorial-id") 
 
+// TODO: insert copy code to all the code editor
+
 const quillEditorTextArea = document.getElementById("quill-textarea")
 
 
@@ -26,7 +28,6 @@ if (editor.getLength() > 250 && title.value.length > 10){
 }
 
 editor.on('text-change', function(delta, oldDelta, source) {
-    console.log("changed: ", title.value.length, editor.getLength())
     if (editor.getLength() > 250 && title.value.length > 10){
         publishButton.disabled = false
     }else{

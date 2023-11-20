@@ -26,9 +26,15 @@
 
             {% if errors %}
                 <div class="alert alert-danger tw-m-2">
-                    {% for error in errors %}
-                        {{error}}
-                    {% endfor %}
+                    <ul>
+                        {% for field, error in errors.items%}
+                            <li>{{ field|title }}:
+                                {% for err in error %}
+                                    {{ err }}
+                                {% endfor %}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             {% endif %}
 
@@ -84,23 +90,35 @@
                     <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
                         Project info
                     </div>
-
-                    <input type="text" class="input tw-max-w-xs" name="version" maxlength="10" 
-                            value="{{config.version}}" 
-                            required placeholder="version">                
-                    <input type="text" class="input" name="name" maxlength="30" 
-                            required 
-                            value="{% if config.name %}{{config.name}} {% else %} {{project}} {% endif %}" 
-                            placeholder="project name" 
-                            id="project-name">                
-                    <textarea name="about" id="" 
-                                        required 
-                                        value="{{config.about}}"
-                                        class="input tw-min-h-[200px] tw-max-h-[350px]" 
-                                        placeholder="About the project" 
-                                        maxlength="400">{{config.about}}</textarea>
                     
-                    <div class="tw-flex tw-flex-col tw-gap-1">
+                    <div>
+                        <div>version</div>
+                        <input type="text" class="input tw-max-w-xs" name="version" maxlength="10" 
+                                value="{{config.version}}" 
+                                required placeholder="version">
+                    </div>
+                    
+                    <div class="tw-w-full tw-flex tw-flex-col">
+                        <div>Project name</div>
+                        <input type="text" class="input" name="name" maxlength="30" 
+                                required 
+                                value="{% if config.name %}{{config.name}} {% else %} {{project}} {% endif %}" 
+                                placeholder="project name" 
+                                id="project-name"> 
+                    </div>  
+                    
+                    <div class="tw-w-full tw-flex tw-flex-col">
+                        <div>About</div>
+                        <textarea name="about" id="" 
+                                            required 
+                                            value="{{config.about}}"
+                                            class="input tw-min-h-[200px] tw-max-h-[350px]" 
+                                            placeholder="About the project" 
+                                            maxlength="400">{{config.about}}</textarea>
+                    </div>
+
+                    <div class="tw-flex tw-flex-col tw-gap-1 tw-w-full">
+                        <div>unique name</div>
                         <input type="text" class="input" oninput="checkProjectNameAvailabilty(this.value)" 
                                 required 
                                 name="unique_name" 
@@ -110,34 +128,33 @@
                                 id="unique-name">
                         <div class="tw-text-sm">This name is subject to availability. (Avoid using well-known project names to prevent potential conflicts with original authors.)</div>
                     </div>
-                    <input type="text" class="input" name="tags" maxlength="30" 
-                            value="{{config.tags}}" placeholder="project tags seperated by comma (max 3)" 
-                            id="project-name">                
-                    <input type="text" class="input" name="source_code" maxlength="150"
-                            value="{{config.source_code}}"
-                            placeholder="source code url (optional)">                
 
+                    <div class="tw-w-full tw-flex tw-flex-col">
+                        <div>Tags</div>
+                        <input type="text" class="input" name="tags" maxlength="30" 
+                                value="{{config.tags}}" placeholder="project tags seperated by comma (max 3)" 
+                                id="project-name">    
+                    </div>
+                    
+                    <div class="tw-w-full tw-flex tw-flex-col">
+                        <div>source code</div>
+                        <input type="text" class="input" name="source_code" maxlength="150"
+                                value="{% if config.source_code %}{{config.source_code}}{% else %}{% endif %}"
+                                placeholder="source code url (optional)">                
+                    </div>
 
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">
                         Select project type
                     </div>
-                    <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-text-lg tw-place-items-start tw-mx-[30%] tw-text-left">
-                        <div class="form-check">
-                            <input class="form-check-input" required type="radio" name="doc_type" 
-                                    value="lng" id="pgm-lang" {% if config.doc_type == 'pgm-lng' or config.doc_type == None %}checked{% endif %}>
-                            <label class="form-check-label" for="pgm-lang">
-                                Programming Language <span class="tw-text-sm">(related to Programming, such as libraries and frameworks)</span>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" required type="radio" 
-                                    name="doc_type" value="tool" id="tool" 
-                                    {% if config.doc_type == 'tool' %}checked{% endif %}
-                                    >
-                            <label class="form-check-label" for="tool">
-                                Tool
-                            </label>
-                        </div>
+                    <div class="tw-flex tw-flex-col tw-w-full tw-gap-1 tw-text-lg tw-place-items-start  tw-text-left">
+                        <select name="doc_type" class="form-select" id="">
+                            <option value="0" {% if config.doc_type == '0' or config.doc_type == 'pgm_lang' %}selected{% endif %}>
+                                Programming Language (eg: libraries, frameworks, etc)
+                            </option>
+                            <option value="1" {% if config.doc_type == '1' or config.doc_type == 'tool' %}selected{% endif %}>
+                                Tool (eg: Blender, Figma, etc)
+                            </option>
+                        </select>
                     </div>
                     
                     <div class="tw-text-2xl tw-font-semibold tw-text-center tw-mt-[5%]">

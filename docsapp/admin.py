@@ -1,3 +1,31 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Project, Social, Sponsor, AdditionalLink 
+
+
+class InlineSocial(admin.StackedInline):
+
+    model = Social
+    extra = 0
+
+class InlineSponsor(admin.StackedInline):
+
+    model = Sponsor
+    extra = 0
+
+
+class InlineLink(admin.StackedInline):
+
+    model = AdditionalLink
+    extra = 1
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'name', 'unique_name', 'user', 'datetime']
+    search_fields = ['name', 'unique_name']
+
+    list_filter = ['datetime']
+
+    inlines = [InlineSocial, InlineSponsor, InlineLink]

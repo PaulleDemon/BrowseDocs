@@ -74,10 +74,10 @@ function enableBtn(btn){
 }
 
 function isNameValid(text){
-    const regex = /^[a-zA-Z0-9_-]+$/;
+    const regex = /^[a-zA-Z0-9_-]+$/
 
     // Example usage
-    return regex.test(text);
+    return regex.test(text)
 }
 
 

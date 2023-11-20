@@ -34,7 +34,7 @@ class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     name = models.CharField(max_length=100)
-    unique_name = models.CharField(max_length=40)
+    unique_name = models.CharField(max_length=40, unique=True, validators=[name_validator])
     version = models.CharField(max_length=10)
     about = models.TextField(max_length=500)
 
@@ -68,3 +68,12 @@ class Sponsor(models.Model):
     name = models.PositiveSmallIntegerField(choices=SPONSORS.choices, default=SPONSORS.GITHUB)
     username = models.CharField(max_length=45, validators=[name_validator])
 
+
+class AdditionalLink(models.Model):
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=30)
+    url = models.URLField()
+
+    
