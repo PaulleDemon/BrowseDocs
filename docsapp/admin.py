@@ -23,8 +23,8 @@ class InlineLink(admin.StackedInline):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
 
-    list_display = ['id', 'name', 'unique_name', 'user', 'datetime']
-    search_fields = ['name', 'unique_name']
+    list_display = ['id', 'name', 'unique_id', 'unique_name', 'user', 'datetime']
+    search_fields = ['name', 'unique_name', 'unique_id']
 
     list_filter = ['datetime']
 

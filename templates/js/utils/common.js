@@ -377,3 +377,8 @@ function setContextMenuPosition(event, contextMenu) {
 
     return menuPosition;
 }
+
+
+function updateUrl(url){
+    window.location = url
+}

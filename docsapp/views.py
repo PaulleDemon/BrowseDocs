@@ -1,12 +1,13 @@
 import json
-
+from functools import wraps
 from asgiref.sync import sync_to_async
 
 from django.views import View
 from django.urls import reverse
-from django.http import JsonResponse
+from django.template import loader
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -216,13 +217,6 @@ class ImportRepoView(LoginRequiredMixin, View):
         return JsonResponse(doc_files, status=200)
 
 
-def explore_docs(request):
-
-    """
-        returns the docs for the user to explore new docs
-    """
-
-
 @login_required_rest_api
 @require_http_methods(['POST'])
 @ratelimit(key='ip', rate='200/min', method=ratelimit.ALL, block=True)
@@ -250,10 +244,81 @@ def project_list(request):
     if my == 'true':
         projects = projects.filter(user=request.user)
 
-    paginator = Paginator(projects, per_page=2)
+    paginator = Paginator(projects, per_page=20)
     page = paginator.get_page(page_number)
 
     return render(request, 'doc-list.html', {
         'projects': page
     })
+
+
+
+
+@require_http_methods(['GET'])
+def get_docs(request, name, unique_id):
+
+    try:
+        project = Project.objects.get(unique_id=unique_id)
+        return render(request, 'docs-view.html', {
+            'project': project,
+            'base': project
+        })
+
+    except Project.DoesNotExist:
+        return render(request, '404.html')
+    
+
+@require_http_methods(['GET'])
+def get_project_about(request, name, unique_id):
+    try:
+        project = Project.objects.get(unique_id=unique_id)
+
+        social_obj = Social.objects.filter(project=project)
+        sponsor_obj = Sponsor.objects.filter(project=project)
+
+        social = {}
+        sponsor = {}
+
+        for x in social_obj:
+            if x.name == SOCIAL.DISCORD:
+                social[f'https://discord.gg/8xm7PxW4'] = "bi bi-discord"
+            
+            elif x.name == SOCIAL.REDDIT:
+                social[f'https://reddit.com/r/{x.username}'] = "bi bi-reddit"
+
+            elif x.name == SOCIAL.MASTODON:
+                social[f'https://mastodon.social/{x.username}'] = "bi bi-mastodon"
+
+            elif x.name == SOCIAL.STACKOVERFLOW:
+                social[f'https://stackoverflow.com/questions/tagged/{x.username}'] = "bi bi-stackoverflow"
+
+            elif x.name == SOCIAL.TWITTER:
+                social[f'https://twitter.com/{x.username}'] = "bi bi-twitter"
+
+        for x in sponsor_obj:
+            if x.name == SPONSORS.GITHUB:
+                sponsor[f'https://github.com/sponsors/{x.username}'] = "bi bi-github"
+            
+            elif x.name == SPONSORS.OPEN_COLLECTIVE:
+                sponsor[f'https://opencollective.com/{x.username}'] = "bi bi-opencollective"
+
+            elif x.name == SPONSORS.PATREON:
+                sponsor[f'https://www.patreon.com/{x.username}'] = "bi bi-coin"
+
+            elif x.name == SPONSORS.BUYMEACOFFEE:
+                sponsor[f'https://buymeacoffee.com/{x.username}'] = "bi bi-coin"
+
+
+        links = AdditionalLink.objects.filter(project=project)
+
+        return render(request, 'docs-about.html', {
+            'project': project,
+            'base': project,
+            'social': social,
+            'sponsor': sponsor,
+            'links': links
+        })
+
+    except Project.DoesNotExist:
+        return render(request, '404.html')
 

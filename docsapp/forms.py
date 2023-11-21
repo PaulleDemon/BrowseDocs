@@ -9,13 +9,16 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        exclude = ('datetime', 'user')
+        exclude = ('datetime', 'user', 'unique_id')
 
     def clean(self):
         cleaned_data = super().clean()
 
         if self.instance.pk and cleaned_data.get('unqiue_name') != self.instance.unique_name:  # If the instance is being created for the first time
             raise ValidationError({"unique_name": "Unique name cannot be updated"})
+
+        if len(cleaned_data.get('name')) < 3:
+            raise ValidationError({"name": "Name must be atleast 3 characters long"})
 
         return cleaned_data
     

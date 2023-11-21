@@ -1,7 +1,7 @@
 
+from django.db import models
+from django.utils.crypto import get_random_string
 from django.core.files.uploadedfile import UploadedFile
-
-
 """
 resused functionss
 """
@@ -29,4 +29,11 @@ def get_file_size(request_file: UploadedFile, unit: str='MB'):
     return file_size
 
 
+def generate_uniqueid(table: models.Model, field: str, length=12):
 
+    unique_id = get_random_string(length=length)    
+
+    # while table.objects.filter(**{field: unique_id}).exists():
+    #     unique_id = get_random_string(length=length)    
+
+    return unique_id

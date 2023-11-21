@@ -1,0 +1,81 @@
+{% extends './html/base.html' %}
+
+{% load tz %}
+{% load static %}
+
+{% block content %}
+    <div class="tw-h-full tw-w-full tw-flex tw-flex-col tw-p-3">
+
+        <div class="tw-mx-[30%] max-md:tw-mx-5">
+            <div class="tw-text-4xl tw-font-semibold tw-flex">
+                <div>{{project.name}}</div>
+                {% if project.source_code %}
+                    <a href="{{project.source_code}}" class="tw-ml-2 tw-text-3xl">
+                        <i class="bi bi-github"></i>
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="tw-mt-[10px] tw-text-lg">
+                {{project.about}}
+            </div>
+
+            {% if project.source_code %}
+                <div>
+                    <div class="tw-mt-[5%] tw-font-semibold tw-text-3xl">
+                        Source code
+                    </div>
+                    <a href="{{project.source_code}}" target="_blank" rel="noreferrer"
+                        class="tw-mt-4 tw-text-blue-500">
+                        {{project.source_code}}
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if social %}
+                <div>
+                    <div class="tw-mt-[10%] tw-font-semibold tw-text-3xl">
+                        Social
+                    </div>
+                    <div class="tw-text-3xl tw-mt-4">
+                        {% for link, icon in social.items %}
+                            <a href="{{link}}" target="_blank" rel="noreferrer" class="{{icon}}"></a>
+                        {% endfor %}
+                        {% if project.social %}{% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if sponsor %}
+                <div>
+                    <div class="tw-mt-[10%] tw-font-semibold tw-text-3xl">
+                        Sponsor
+                    </div>
+                    <div class="tw-text-3xl tw-mt-6">
+                        {% for link, icon in sponsor.items %}
+                            <a href="{{link}}" target="_blank" rel="noreferrer" class="{{icon}}"></a>
+                        {% endfor %}
+                        {% if project.social %}{% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if links %}
+                <div>
+                    <div class="tw-mt-[10%] tw-font-semibold tw-text-3xl">
+                        Helpful Links
+                    </div>
+                    <div class="tw-text-xl tw-mt-4 tw-text-blue-600">
+                        {% for link in links %}
+                            <a href="{{link.url}}" class="{{icon}}" target="_blank" rel="noreferrer">
+                                {{link.name}}
+                            </a>
+                        {% endfor %}
+                        {% if project.social %}{% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock content %}

@@ -80,16 +80,26 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
           <a class="navbar-brand tw-flex tw-gap-1 tw-justify-center tw-place-items-center" href="/">
-            {% comment %} <img src="{% static ''%}" alt="Logo" 
-                width="40" height="40" class="d-inline-block align-text-top !tw-fill-slate-400"> {% endcomment %}
-            <span> {% if project %}{{project}}{% else %}BrowseDocs{% endif %}</span> 
+                
+                {% if base.project_logo %}
+                    <img src="{{base.project_logo}}" alt="Logo" 
+                        width="25" height="25" class="tw-m-2">
+                {% endif %}
+            <span> {% if base %}{{base.name}}{% else %}BrowseDocs{% endif %}</span> 
           </a>
           <div class="tw-justify-self-center collapse navbar-collapse" id="navbarTogglerDemo01">
             <div class="navbar-nav">
-                <a class="nav-link hover:tw-text-blue-400" href="">About</a>
-                <a class="nav-link hover:tw-text-blue-400" href="">Docs</a>
+                
+                {% if base.name and base.unique_id %}
+                    <a class="nav-link hover:tw-text-blue-400" href="{% url 'project-about' name=base.name unique_id=base.unique_id %}">About</a>
+                {% endif %}
+                
+                {% if base.name and base.unique_id %}
+                    <a class="nav-link hover:tw-text-blue-400" href="{% url 'get-docs' name=base.name unique_id=base.unique_id %}">Docs</a>
+                {% endif %}
+                
                 <a class="nav-link hover:tw-text-blue-400" 
-                    href="{% if project.url %}{{project.url}}{% else %}{% url "list-tutorials" %}{% endif %}">
+                    href="{% if base.url %}{{base.url}}{% else %}{% url "list-tutorials" %}{% endif %}">
                         Tutorials
                 </a>
                 <a class="nav-link hover:tw-text-blue-400" href="">Blogs</a>
@@ -114,23 +124,35 @@
                     <i></i>
                 </button>
                 {% if user.is_authenticated %}
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="profile" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="https://github.com/{{request.user.username}}.png" class="tw-w-[30px] tw-h-[30px] tw-rounded-full" alt="" srcset="">
-                    </button>
-                    <div class="dropdown-menu" style="right: 0; left: auto;" aria-labelledby="profile">
-                        <a class="dropdown-item" href="{% url "docs-create" %}">Create Documentation</a>
-                        <a class="dropdown-item" href="{% url "create-tutorial" %}">Write tutorial</a>
-                        <hr class="dropdown-divider">
-                        <a class="dropdown-item" href="#">My Documentations</a>
-                        <a class="dropdown-item" href="{% url "list-tutorials" %}?my=true">My tutorials</a>
-                        <hr class="dropdown-divider">
-                        <a class="dropdown-item tw-flex tw-gap-4" href="{% url "logout" %}">
-                            <span>Logout</span>
-                            <i class="bi bi-power !tw-ml-auto"></i>
-                        </a>
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="profile" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if request.user.username %}
+                                <img src="https://github.com/{{request.user.username}}.png" class="tw-w-[30px] tw-h-[30px] tw-rounded-full" alt="" srcset="">
+                            
+                            {% else %}
+                                <img class="tw-w-[30px] tw-h-[30px] tw-rounded-full" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIH
+                                            dpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2ZXJzaW9uPSIxLjEiPgogICAgICA8cmVjdCBmaWxsPSIj
+                                            Y2NjY2NjIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIvPgogICAgICAKICAgICA
+                                            gCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5QTJGRiIgeD0iMCIgeT0iMCIgd2lkdGg9IjE2LjY2NjY2Nj
+                                            Y2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY
+                                            3QgZmlsbD0iIzk5QTdGRiIgeD0iMCIgeT0iMTYuNjY2NjY2NjY2NjY2NjY4IiB3aWR0aD0iMTYuNjY2
+                                            NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA
+                                            8cmVjdCBmaWxsPSIjQjQ5OUZGIiB4PSIwIiB5PSIzMy4zMzMzMzMzMzMzMzMzMzYiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkZBQSIgeD0iMCIgeT0iNTAiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiNCNDk5RkYiIHg9IjAiIHk9IjY2LjY2NjY2NjY2NjY2NjY3IiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjQTA5OUZGIiB4PSIwIiB5PSI4My4zMzMzMzMzMzMzMzMzNCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0I0OTlGRiIgeD0iMTYuNjY2NjY2NjY2NjY2NjY4IiB5PSIwIiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjOTlCM0ZGIiB4PSIxNi42NjY2NjY2NjY2NjY2NjgiIHk9IjE2LjY2NjY2NjY2NjY2NjY2OCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0EwOTlGRiIgeD0iMTYuNjY2NjY2NjY2NjY2NjY4IiB5PSIzMy4zMzMzMzMzMzMzMzMzMzYiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiM5OTlFRkYiIHg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgeT0iNTAiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkZBQSIgeD0iMTYuNjY2NjY2NjY2NjY2NjY4IiB5PSI2Ni42NjY2NjY2NjY2NjY2NyIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5OUJGRiIgeD0iMTYuNjY2NjY2NjY2NjY2NjY4IiB5PSI4My4zMzMzMzMzMzMzMzMzNCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5QTVGRiIgeD0iMzMuMzMzMzMzMzMzMzMzMzM2IiB5PSIwIiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjQjQ5OUZGIiB4PSIzMy4zMzMzMzMzMzMzMzMzMzYiIHk9IjE2LjY2NjY2NjY2NjY2NjY2OCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5QUFGRiIgeD0iMzMuMzMzMzMzMzMzMzMzMzM2IiB5PSIzMy4zMzMzMzMzMzMzMzMzMzYiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkZBQSIgeD0iMzMuMzMzMzMzMzMzMzMzMzM2IiB5PSI1MCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0I0OTlGRiIgeD0iMzMuMzMzMzMzMzMzMzMzMzM2IiB5PSI2Ni42NjY2NjY2NjY2NjY2NyIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0ZGRkZGRkFBIiB4PSIzMy4zMzMzMzMzMzMzMzMzMzYiIHk9IjgzLjMzMzMzMzMzMzMzMzM0IiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjOTlBMkZGIiB4PSI4My4zMzMzMzMzMzMzMzMzNCIgeT0iMCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5QTdGRiIgeD0iODMuMzMzMzMzMzMzMzMzMzQiIHk9IjE2LjY2NjY2NjY2NjY2NjY2OCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0I0OTlGRiIgeD0iODMuMzMzMzMzMzMzMzMzMzQiIHk9IjMzLjMzMzMzMzMzMzMzMzMzNiIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0ZGRkZGRkFBIiB4PSI4My4zMzMzMzMzMzMzMzMzNCIgeT0iNTAiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiNCNDk5RkYiIHg9IjgzLjMzMzMzMzMzMzMzMzM0IiB5PSI2Ni42NjY2NjY2NjY2NjY2NyIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0EwOTlGRiIgeD0iODMuMzMzMzMzMzMzMzMzMzQiIHk9IjgzLjMzMzMzMzMzMzMzMzM0IiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjQjQ5OUZGIiB4PSI2Ni42NjY2NjY2NjY2NjY2NyIgeT0iMCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5QjNGRiIgeD0iNjYuNjY2NjY2NjY2NjY2NjciIHk9IjE2LjY2NjY2NjY2NjY2NjY2OCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0EwOTlGRiIgeD0iNjYuNjY2NjY2NjY2NjY2NjciIHk9IjMzLjMzMzMzMzMzMzMzMzMzNiIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5OUVGRiIgeD0iNjYuNjY2NjY2NjY2NjY2NjciIHk9IjUwIiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjRkZGRkZGQUEiIHg9IjY2LjY2NjY2NjY2NjY2NjY3IiB5PSI2Ni42NjY2NjY2NjY2NjY2NyIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5OUJGRiIgeD0iNjYuNjY2NjY2NjY2NjY2NjciIHk9IjgzLjMzMzMzMzMzMzMzMzM0IiB3aWR0aD0iMTYuNjY2NjY2NjY2NjY2NjY4IiBoZWlnaHQ9IjE2LjY2NjY2NjY2NjY2NjY2OCIvPgogICAgICAKICAgICAgICA8cmVjdCBmaWxsPSIjOTlBNUZGIiB4PSI1MCIgeT0iMCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0I0OTlGRiIgeD0iNTAiIHk9IjE2LjY2NjY2NjY2NjY2NjY2OCIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iIzk5QUFGRiIgeD0iNTAiIHk9IjMzLjMzMzMzMzMzMzMzMzMzNiIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0ZGRkZGRkFBIiB4PSI1MCIgeT0iNTAiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgICAgIDxyZWN0IGZpbGw9IiNCNDk5RkYiIHg9IjUwIiB5PSI2Ni42NjY2NjY2NjY2NjY2NyIgd2lkdGg9IjE2LjY2NjY2NjY2NjY2NjY2OCIgaGVpZ2h0PSIxNi42NjY2NjY2NjY2NjY2NjgiLz4KICAgICAgCiAgICAgICAgPHJlY3QgZmlsbD0iI0ZGRkZGRkFBIiB4PSI1MCIgeT0iODMuMzMzMzMzMzMzMzMzMzQiIHdpZHRoPSIxNi42NjY2NjY2NjY2NjY2NjgiIGhlaWdodD0iMTYuNjY2NjY2NjY2NjY2NjY4Ii8+CiAgICAgIAogICAgPC9zdmc+" alt="" srcset="">
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu" style="right: 0; left: auto;" aria-labelledby="profile">
+                            <a class="dropdown-item" href="{% url "docs-create" %}">Create Documentation</a>
+                            <a class="dropdown-item" href="{% url "create-tutorial" %}">Write tutorial</a>
+                            <hr class="dropdown-divider">
+                            <a class="dropdown-item" href="#">My Documentations</a>
+                            <a class="dropdown-item" href="{% url "list-tutorials" %}?my=true">My tutorials</a>
+                            <hr class="dropdown-divider">
+                            <a class="dropdown-item tw-flex tw-gap-4" href="{% url "logout" %}">
+                                <span>Logout</span>
+                                <i class="bi bi-power !tw-ml-auto"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
                 {% else %}
                     <a class="browserdoc-btn" href="{% url "login" %}">
                         Login
@@ -175,9 +197,9 @@
     </div>
 
     <div class="tw-h-[100%] tw-min-h-[100vh] tw-mt-[70px]">
-
+        
         {% block content %}
-            
+        
         {% endblock content %}
     </div>
 

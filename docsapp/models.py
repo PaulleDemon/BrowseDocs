@@ -2,9 +2,9 @@ from django.db import models
 
 from user.models import User
 
+from utils.common import generate_uniqueid
 from utils.validators import name_validator, tag_validator
 from utils.constraint_fields import ContentTypeRestrictedFileField
-
 
 class SOCIAL(models.IntegerChoices):
 
@@ -28,12 +28,17 @@ class SPONSORS(models.IntegerChoices):
     BUYMEACOFFEE = (2, 'Buy me a coffee')
     PATREON = (3, 'Patreon')
 
+def generate_id():
+    return generate_uniqueid(Project, 'unique_id')
 
 class Project(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     name = models.CharField(max_length=100)
+
+    unique_id = models.CharField(max_length=20, unique=True, default=generate_id)
+
     unique_name = models.CharField(max_length=40, unique=True, validators=[name_validator])
     version = models.CharField(max_length=10)
     about = models.TextField(max_length=500)
