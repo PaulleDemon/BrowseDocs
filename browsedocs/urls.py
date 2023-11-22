@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),    
 
     
-    path("", include('docsapp.urls')),
     # path('docs/', include('docsapp.urls')),
     
     path("", lambda r: redirect("home")),
@@ -40,6 +39,8 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('tutorial/', include('tutorial.urls')),
     
+    path("", include('docsapp.urls')),
+
 
 
     path("__reload__/", include("django_browser_reload.urls")),

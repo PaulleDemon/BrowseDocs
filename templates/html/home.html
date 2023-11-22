@@ -2,8 +2,39 @@
 {% load static %}
 
 {% block content %}
-<div class="tw-min-h-[100vh] tw-w-full tw-overflow-x-hidden tw-flex tw-flex-col tw-leading-8 tw-items-center">
+<div class="tw-min-h-[100vh] tw-w-full tw-overflow-x-hidden tw-flex tw-flex-col 
+            tw-leading-8 tw-items-center tw-p-4">
 
+    <div class="tw-text-4xl">
+        OpenSource Documentation
+    </div>
+
+    <div class="tw-text-base md:tw-mx-[30%] tw-mt-6">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident atque dolores quod odio rem necessitatibus in molestiae repellat animi amet dolore expedita, cumque dolor magnam quidem corporis eius maxime nesciunt.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum magni blanditiis explicabo labore laudantium minus eligendi expedita incidunt distinctio sunt velit, aspernatur soluta est sequi culpa aliquid ratione, fuga vitae?
+    </div>
+
+    <div class="tw-w-full tw-flex tw-place-content-center tw-mt-10">
+        <a href="{% url "docs-create" %}" class="browserdoc-btn">Create documentation</a>
+    </div>
+
+    <div class="tw-text-4xl tw-mt-[5%]">
+        Popular projects
+    </div>
+
+    <div class="tw-w-full tw-flex tw-place-content-center tw-mt-[2%]">
+        <input type="text" class="input tw-w-full tw-max-w-lg"
+                placeholder="search projects"
+                >
+    </div>
+
+    <div class="tw-flex tw-flex-wrap tw-gap-4">
+
+        <div class="tw-w-">
+
+        </div>
+
+    </div>
 
 </div>
 {% endblock content %}

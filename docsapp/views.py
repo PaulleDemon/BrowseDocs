@@ -255,7 +255,7 @@ def project_list(request):
 
 
 @require_http_methods(['GET'])
-def get_docs(request, name, unique_id):
+def get_docs(request, unique_id, name=None):
 
     try:
         project = Project.objects.get(unique_id=unique_id)

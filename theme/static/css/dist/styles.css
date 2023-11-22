@@ -312,9 +312,11 @@ select{
 .browserdoc-btn{
   border: 2px solid #717070;
   cursor: pointer;
-  padding: 4px 12px;
+  padding: 2px 20px;
   border-radius: 6px;
   background-color: inherit;
+  display: flex;
+  align-items: center;
 }
 
 .browserdoc-btn:hover{
@@ -360,6 +362,18 @@ select{
   top: 5%;
 }
 
+.tw-left-2{
+  left: 0.5rem;
+}
+
+.tw-top-\[20\%\]{
+  top: 20%;
+}
+
+.tw-left-\[4\%\]{
+  left: 4%;
+}
+
 .tw-z-10{
   z-index: 10;
 }
@@ -400,6 +414,11 @@ select{
   margin: 2%;
 }
 
+.tw-mx-\[30\%\]{
+  margin-left: 30%;
+  margin-right: 30%;
+}
+
 .tw-mx-auto{
   margin-left: auto;
   margin-right: auto;
@@ -415,17 +434,20 @@ select{
   margin-right: 40%;
 }
 
-.tw-mx-\[30\%\]{
-  margin-left: 30%;
-  margin-right: 30%;
-}
-
 .\!tw-ml-auto{
   margin-left: auto !important;
 }
 
 .tw-mb-\[5\%\]{
   margin-bottom: 5%;
+}
+
+.tw-ml-2{
+  margin-left: 0.5rem;
+}
+
+.tw-ml-\[4\%\]{
+  margin-left: 4%;
 }
 
 .tw-ml-auto{
@@ -460,6 +482,10 @@ select{
   margin-top: 10%;
 }
 
+.tw-mt-\[10px\]{
+  margin-top: 10px;
+}
+
 .tw-mt-\[2\%\]{
   margin-top: 2%;
 }
@@ -476,24 +502,16 @@ select{
   margin-top: 70px;
 }
 
-.tw-ml-1{
-  margin-left: 0.25rem;
-}
-
-.tw-ml-2{
-  margin-left: 0.5rem;
-}
-
-.tw-ml-\[4\%\]{
-  margin-left: 4%;
+.tw-mt-\[1\%\]{
+  margin-top: 1%;
 }
 
 .tw-mt-\[4\%\]{
   margin-top: 4%;
 }
 
-.tw-mt-\[10px\]{
-  margin-top: 10px;
+.tw-mt-10{
+  margin-top: 2.5rem;
 }
 
 .tw-flex{
@@ -512,6 +530,10 @@ select{
   height: 100px;
 }
 
+.tw-h-\[200px\]{
+  height: 200px;
+}
+
 .tw-h-\[300px\]{
   height: 300px;
 }
@@ -528,6 +550,10 @@ select{
   height: 40px;
 }
 
+.tw-h-\[50px\]{
+  height: 50px;
+}
+
 .tw-h-\[80\%\]{
   height: 80%;
 }
@@ -539,22 +565,6 @@ select{
 .tw-h-max{
   height: -moz-max-content;
   height: max-content;
-}
-
-.tw-h-\[150px\]{
-  height: 150px;
-}
-
-.tw-h-\[220px\]{
-  height: 220px;
-}
-
-.tw-h-\[50px\]{
-  height: 50px;
-}
-
-.tw-h-\[200px\]{
-  height: 200px;
 }
 
 .tw-max-h-\[100px\]{
@@ -569,6 +579,10 @@ select{
   max-height: 350px;
 }
 
+.tw-max-h-\[40\%\]{
+  max-height: 40%;
+}
+
 .tw-max-h-\[400px\]{
   max-height: 400px;
 }
@@ -579,18 +593,6 @@ select{
 
 .tw-max-h-full{
   max-height: 100%;
-}
-
-.tw-max-h-\[300px\]{
-  max-height: 300px;
-}
-
-.tw-max-h-\[200px\]{
-  max-height: 200px;
-}
-
-.tw-max-h-\[40\%\]{
-  max-height: 40%;
 }
 
 .tw-min-h-\[100px\]{
@@ -645,20 +647,16 @@ select{
   width: 35px;
 }
 
-.tw-w-full{
-  width: 100%;
-}
-
-.tw-w-\[40\%\]{
-  width: 40%;
+.tw-w-\[50px\]{
+  width: 50px;
 }
 
 .tw-w-\[60\%\]{
   width: 60%;
 }
 
-.tw-w-\[50px\]{
-  width: 50px;
+.tw-w-full{
+  width: 100%;
 }
 
 .tw-min-w-\[200px\]{
@@ -697,14 +695,6 @@ select{
   max-width: 20rem;
 }
 
-.tw-max-w-\[350px\]{
-  max-width: 350px;
-}
-
-.tw-max-w-\[450px\]{
-  max-width: 450px;
-}
-
 .tw-translate-x-\[-50\%\]{
   --tw-translate-x: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -721,6 +711,10 @@ select{
 
 .tw-resize-none{
   resize: none;
+}
+
+.tw-list-none{
+  list-style-type: none;
 }
 
 .tw-flex-col{
@@ -908,6 +902,11 @@ select{
   background-color: rgb(55 65 81 / var(--tw-bg-opacity));
 }
 
+.tw-bg-gray-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+
 .tw-bg-inherit{
   background-color: inherit;
 }
@@ -921,33 +920,19 @@ select{
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.tw-bg-slate-400{
+.tw-bg-red-500{
   --tw-bg-opacity: 1;
-  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 
-.tw-bg-slate-900{
+.tw-bg-red-200{
   --tw-bg-opacity: 1;
-  background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
 }
 
-.tw-bg-slate-700{
+.tw-bg-gray-600{
   --tw-bg-opacity: 1;
-  background-color: rgb(51 65 85 / var(--tw-bg-opacity));
-}
-
-.tw-bg-slate-600{
-  --tw-bg-opacity: 1;
-  background-color: rgb(71 85 105 / var(--tw-bg-opacity));
-}
-
-.tw-bg-gray-800{
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-}
-
-.\!tw-fill-slate-400{
-  fill: #94a3b8 !important;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
 .tw-object-contain{
@@ -1064,6 +1049,18 @@ select{
   line-height: 1.375;
 }
 
+.tw-leading-10{
+  line-height: 2.5rem;
+}
+
+.tw-leading-5{
+  line-height: 1.25rem;
+}
+
+.tw-leading-9{
+  line-height: 2.25rem;
+}
+
 .\!tw-text-white{
   --tw-text-opacity: 1 !important;
   color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
@@ -1127,6 +1124,10 @@ select{
   text-decoration-line: underline;
 }
 
+.tw-opacity-60{
+  opacity: 0.6;
+}
+
 .tw-shadow-lg{
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
@@ -1176,24 +1177,19 @@ select{
   outline-offset: 2px;
 }
 
-@media not all and (min-width: 1024px){
-  .max-lg\:tw-flex-wrap{
-    flex-wrap: wrap;
-  }
-}
-
 @media not all and (min-width: 768px){
   .max-md\:tw-mx-5{
     margin-left: 1.25rem;
     margin-right: 1.25rem;
   }
 
-  .max-md\:tw-hidden{
-    display: none;
+  .max-md\:tw-mx-\[30\%\]{
+    margin-left: 30%;
+    margin-right: 30%;
   }
 
-  .max-md\:tw-w-\[80\%\]{
-    width: 80%;
+  .max-md\:tw-hidden{
+    display: none;
   }
 
   .max-md\:tw-w-\[100\%\]{
@@ -1254,14 +1250,6 @@ select{
   .sm\:tw-hidden{
     display: none;
   }
-
-  .sm\:tw-h-\[220px\]{
-    height: 220px;
-  }
-
-  .sm\:tw-flex-col{
-    flex-direction: column;
-  }
 }
 
 @media (min-width: 768px){
@@ -1292,8 +1280,9 @@ select{
     margin-right: 20%;
   }
 
-  .md\:tw-max-h-\[200px\]{
-    max-height: 200px;
+  .md\:tw-mx-\[30\%\]{
+    margin-left: 30%;
+    margin-right: 30%;
   }
 
   .md\:tw-max-w-\[450px\]{
@@ -1302,10 +1291,6 @@ select{
 
   .md\:tw-flex-col{
     flex-direction: column;
-  }
-
-  .md\:tw-flex-wrap{
-    flex-wrap: wrap;
   }
 
   .md\:tw-place-items-center{
@@ -1354,10 +1339,6 @@ select{
 
   .lg\:tw-mr-\[20\%\]{
     margin-right: 20%;
-  }
-
-  .lg\:tw-flex-wrap{
-    flex-wrap: wrap;
   }
 
   .lg\:tw-text-\[16px\]{

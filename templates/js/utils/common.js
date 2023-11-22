@@ -382,3 +382,16 @@ function setContextMenuPosition(event, contextMenu) {
 function updateUrl(url){
     window.location = url
 }
+
+function isElementInViewport(el) {
+    // tells  if the element is in the viewport
+    var rect = el.getBoundingClientRect();
+  
+    return (
+      rect.top >= -1 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }

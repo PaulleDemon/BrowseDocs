@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Project, Social, Sponsor, AdditionalLink 
+from .models import (Project, Social, Sponsor, AdditionalLink,
+                        Documentation, DocPage)
 
 
 class InlineSocial(admin.StackedInline):
@@ -29,3 +30,11 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ['datetime']
 
     inlines = [InlineSocial, InlineSponsor, InlineLink]
+
+
+@admin.register(Documentation)
+class ProjectAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'project', 'lang', 'version',]
+
+    list_filter = ['datetime']

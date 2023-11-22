@@ -6,7 +6,7 @@
 {% load custom_tags %}
 
 {% block content %}
-<div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-3">
+<div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-4">
 
     {% if request.user == tutorial.user %}
 
@@ -17,7 +17,11 @@
 
     {% endif %}
 
-    
+    <div class="tw-w-[250px] tw-min-h-[100px] tw-gap-4 tw-list-none
+                tw-text-sm tw-leading-9 max-md:tw-hidden
+                tw-fixed tw-top-[20%] tw-left-[4%]" id="toc-container">
+    </div>
+
     <div class="tw-text-4xl max-sm:tw-text-3xl tw-font-semibold tw-leading-snug tw-w-full">
         {{tutorial.title}}
     </div>
@@ -86,6 +90,8 @@
     }
 
 </script>
+
+<script src="{% static "./js/editor/blog-view.js" %}"></script>
 
 {% endblock content %}
 

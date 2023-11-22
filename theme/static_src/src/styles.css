@@ -51,9 +51,11 @@
     .browserdoc-btn{
         border: 2px solid #717070;
         cursor: pointer;
-        padding: 4px 12px;
+        padding: 2px 20px;
         border-radius: 6px;
         background-color: inherit;
+        display: flex;
+        align-items: center;
     }
 
     .browserdoc-btn:hover{

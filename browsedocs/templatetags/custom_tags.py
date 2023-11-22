@@ -25,7 +25,7 @@ def subtract(value, arg):
 @register.simple_tag
 def utc_to_local(utc_datetime, user_timezone, date_format="%b. %d, %Y, %I:%M %p"):
     
-    if utc_datetime:
+    if utc_datetime and user_timezone:
         if not isinstance(utc_datetime, str):
             utc_datetime = str(utc_datetime)
 
@@ -42,6 +42,8 @@ def utc_to_local(utc_datetime, user_timezone, date_format="%b. %d, %Y, %I:%M %p"
         # print("date: ", specific_datetime, specific_datetime.strftime(date_format), date_format)
         return specific_datetime.strftime(date_format)
     
+    else:
+        return utc_datetime.strftime(date_format)
 
 @register.filter
 def get_key(items: dict, index=0):

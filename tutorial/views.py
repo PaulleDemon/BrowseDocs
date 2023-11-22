@@ -125,7 +125,7 @@ def list_tutorials(request):
     page_number = request.GET.get("page", 1)
 
     tutorials = Tutorial.objects.filter(published=True).order_by('-datetime')
-
+    print("tutorials: ", tutorials)
     if my == 'true':
         tutorials = Tutorial.objects.filter(user=request.user).order_by('-datetime')
 

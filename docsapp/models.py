@@ -1,10 +1,13 @@
 from django.db import models
 
+from django_quill.fields import QuillField
+
 from user.models import User
 
 from utils.common import generate_uniqueid
 from utils.validators import name_validator, tag_validator
 from utils.constraint_fields import ContentTypeRestrictedFileField
+
 
 class SOCIAL(models.IntegerChoices):
 
@@ -27,6 +30,14 @@ class SPONSORS(models.IntegerChoices):
     GITHUB = (1, 'Github')
     BUYMEACOFFEE = (2, 'Buy me a coffee')
     PATREON = (3, 'Patreon')
+
+
+class LANG(models.IntegerChoices):
+
+    EN = (0, 'English')
+    FR = (1, 'French')
+    DE = (2, 'German')
+
 
 def generate_id():
     return generate_uniqueid(Project, 'unique_id')
@@ -81,4 +92,22 @@ class AdditionalLink(models.Model):
     name = models.CharField(max_length=30)
     url = models.URLField()
 
-    
+
+class Documentation(models.Model):
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    version = models.CharField(max_length=10)
+    lang = models.PositiveSmallIntegerField(choices=LANG.choices, default=LANG.EN)
+
+    datetime = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+
+class DocPage(models.Model):
+
+    name = models.CharField(max_length=80)
+    page_url = models.CharField(max_length=250)
+
+    documentation = models.ForeignKey(Documentation, on_delete=models.CASCADE)
+    body = QuillField(null=True, blank=True)

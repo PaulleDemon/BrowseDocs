@@ -102,7 +102,6 @@ def read_config_file(user: User, owner, repo) -> dict:
         # Extract and decode the file content
         if 'content' in file_data:
             file_content = base64.b64decode(file_data['content']).decode('utf-8')
-            print("file: ", json.loads(file_content))
             try:
                 return json.loads(file_content)
 
@@ -173,3 +172,21 @@ def scan_for_doc(user: User, owner, repo):
 
     
 
+def get_file(user: User, owner, repo, file_path):
+    headers = get_headers(user)
+
+    api_url = f'https://api.github.com/repos/{owner}/{repo}/contents/{file_path}'
+    
+    response = requests.get(api_url, headers=headers)
+
+    if response.status_code == 200:
+        file_data = response.json()
+
+        # Extract and decode the file content
+        if 'content' in file_data:
+            file_content = base64.b64decode(file_data['content']).decode('utf-8')
+            
+            return file_content
+
+        else:
+            return {'error': f'Failed to retrieve content for {file_path}.'}

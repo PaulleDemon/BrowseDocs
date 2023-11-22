@@ -37,3 +37,13 @@ def generate_uniqueid(table: models.Model, field: str, length=12):
     #     unique_id = get_random_string(length=length)    
 
     return unique_id
+
+
+def get_file_name(file_path: str):
+    """
+        given a string path returns the file name
+    """
+
+    name = file_path.split("/")
+
+    return name[0].split(".")[0]
