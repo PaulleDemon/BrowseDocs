@@ -76,7 +76,7 @@ function searchProject(){
                                         editable: i.is_owner, project_logo: i.project_logo, 
                                         project_id:i.unique_id, source: source_path,
                                         unique_name: i.unique_name,
-                                        project_name: i.name, create_url: "/docs/create/"
+                                        project_name: i.name, create_url: "/project/create/"
                                     })
             })
             

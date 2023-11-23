@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (DocsCreateView, ImportRepoView, 
+from .views import (ProjectCreateView, ImportRepoView, 
                     check_name_exists, project_list,
                     get_docs, get_project_about, SearchView
                     )
@@ -9,7 +9,7 @@ urlpatterns = [
 
     
     path('search/', SearchView.as_view(), name='search'),
-    path('docs/create/', DocsCreateView.as_view(), name='docs-create'),
+    path('project/create/', ProjectCreateView.as_view(), name='project-create'),
     path('repo/import/', ImportRepoView.as_view(), name='import-repo'),
     path('docs/list/', project_list, name='doc-list'),
     

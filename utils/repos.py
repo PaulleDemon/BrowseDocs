@@ -140,7 +140,12 @@ def scan_for_doc(user: User, owner, repo):
 
     path = config.get('source')
 
-    default_branch = get_repo_info(user, owner, repo).get('default_branch')
+    repo_info = get_repo_info(user, owner, repo)
+
+    if not repo_info:
+        return {'error': 'repo not found'}
+
+    default_branch = repo_info.get('default_branch')
     # print("defaul branch" , default_branch)
     if not default_branch:
         return {'error': 'repo not found'}

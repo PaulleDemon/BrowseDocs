@@ -3,6 +3,8 @@ import markdown
 from . import repos
 from .common import get_file_name
 
+from .quill_delta import convert_html_to_delta
+
 from docsapp.models import Project, Documentation, DocPage, LANG
 
 
@@ -31,7 +33,16 @@ def generate_docs(user, owner, repo, config, project_id):
         doc = doc.last()
 
     else:
-        doc = Documentation.objects.filter(project=project_id, version=config.get("version"))
+        try:
+            project = Project.objects.get(id=project_id)
+
+        except Project.DoesNotExist:
+            error.append("Project does not exists")
+            return error
+        
+        doc = Documentation.objects.create(project=project, version=config.get("version"))
+
+    print("Config", config.get("sidebar"))
 
     for x in config.get("sidebar") or []:
 
@@ -44,14 +55,17 @@ def generate_docs(user, owner, repo, config, project_id):
         name = x.get("name") or get_file_name(path)
         url = x.get("url") or path
 
-        file_content = repos.get_file(user, owner, repo, )
+        file_content = repos.get_file(user, owner, repo, path)
 
         if isinstance(file_content, dict):
             return file_content.get("error")
-      
-        content = {'delta': '', 'html': markdown.markdown(file_content, extensions=['markdown.extensions.toc'])}
 
-        DocPage.objects.update_or_create(documentation=doc, page_url=url, defaults={'page': url, 'name': name, 'body': content})
+        html_content =  markdown.markdown(file_content, extensions=['markdown.extensions.toc'])
+
+        content = {'delta': convert_html_to_delta(html_content), 'html': html_content}
+
+        DocPage.objects.update_or_create(documentation=doc, page_url=url, 
+                                            defaults={'page_url': url, 'name': name, 'body': content})
 
 
     return True

@@ -15,7 +15,9 @@ dj-database-url==2.1.0
 social-auth-app-django==5.4.0
 
 django-quill-editor==0.1.40
+djangorestframework==3.14.0
 
+beautifulsoup4==4.12.2
 celery==5.3.4
 redis==5.0.0
 
@@ -29,5 +31,4 @@ markdown==3.5.1
 docutils==0.20.1
 typeguard==4.1.5
 
-djangorestframework==3.14.0
 pytz==2023.3.post1

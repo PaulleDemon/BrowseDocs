@@ -55,7 +55,7 @@
                                 {{project.about}}
                             </div>
                             {% if project.user == request.user %}
-                                <a class="btn btn-success bi bi-pencil-square tw-m-1" href="{% url "docs-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
+                                <a class="btn btn-success bi bi-pencil-square tw-m-1" href="{% url "project-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
                                     Edit    
                                 </a>
                             {% endif %}

@@ -38,3 +38,11 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ['id', 'project', 'lang', 'version',]
 
     list_filter = ['datetime']
+
+
+@admin.register(DocPage)
+class ProjectAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'page_url', 'documentation', 'body',]
+
+    list_filter = ['datetime']

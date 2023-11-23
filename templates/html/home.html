@@ -17,7 +17,7 @@
     </div>
 
     <div class="tw-w-full tw-flex tw-place-content-center tw-mt-10">
-        <a href="{% url "docs-create" %}" class="browserdoc-btn">Create documentation</a>
+        <a href="{% url "project-create" %}" class="browserdoc-btn">Create documentation</a>
     </div>
 
     <div class="tw-text-4xl tw-mt-[5%]">
@@ -50,7 +50,7 @@
                         {{project.about}}
                     </div>
                     {% if project.user == request.user %}
-                        <a class="btn btn-success bi bi-pencil-square tw-m-1" href="{% url "docs-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
+                        <a class="btn btn-success bi bi-pencil-square tw-m-1" href="{% url "project-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
                             Edit    
                         </a>
                     {% endif %}

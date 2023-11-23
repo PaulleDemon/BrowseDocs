@@ -36,7 +36,7 @@
                             {% comment %} <img src="{{repo.owner.avatar_url}}" class="tw-w-[35px] tw-h-[35px] tw-rounded-full" alt="" srcset=""> {% endcomment %}
                             <span class="tw-max-w-[80%] tw-text-sm md:tw-text-lg tw-text-left tw-overflow-hidden">{{repo.full_name}}</span>
                             {% comment %} <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository('{{repo.full_name}}')">import</button> {% endcomment %}
-                            <a href="{% url "docs-create" %}?step=2&repo_name={{repo.full_name}}" class="btn btn-success !tw-ml-auto" name="import-repo">import</a>
+                            <a href="{% url "project-create" %}?step=2&repo_name={{repo.full_name}}" class="btn btn-success !tw-ml-auto" name="import-repo">import</a>
                         </div>
                     {% endfor %}
                 </div>

@@ -31,8 +31,8 @@ from utils.decorators import login_required_for_post, login_required_rest_api
 from .serializers import ProjectSerializer, SearchThrottle
 
 
-class DocsCreateView(LoginRequiredMixin, View):
-    template_name = 'docs-create.html'
+class ProjectCreateView(LoginRequiredMixin, View):
+    template_name = 'project-create.html'
 
     def get(self, request):
         
@@ -54,7 +54,6 @@ class DocsCreateView(LoginRequiredMixin, View):
 
             except (ValueError, AttributeError):
                 return JsonResponse({'error': 'required repo in the format Owner/Reponame'}, status=400)
-
 
             doc_files = scan_for_doc(request.user, owner, repo)
             doc_files['project'] = repo
@@ -95,7 +94,7 @@ class DocsCreateView(LoginRequiredMixin, View):
 
                     print("instance: ", instance.social)
 
-                    return render(request, 'docs-create.html', {
+                    return render(request, 'project-create.html', {
                         'docs': doc_files.get('docs'),
                         'project': repo,
                         'source': doc_files.get('source'),
@@ -105,7 +104,7 @@ class DocsCreateView(LoginRequiredMixin, View):
                 except (Project.DoesNotExist, ValueError):
                     return render(request, '404.html') 
 
-            return render(request, 'docs-create.html', context={
+            return render(request, 'project-create.html', context={
                                     'config': doc_files.get('config'),
                                     'docs': doc_files.get('docs'),
                                     'project': repo,

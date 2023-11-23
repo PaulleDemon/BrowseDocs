@@ -37,6 +37,7 @@ class LANG(models.IntegerChoices):
     EN = (0, 'English')
     FR = (1, 'French')
     DE = (2, 'German')
+    RU = (3, 'Russian')
 
 
 def generate_id():
@@ -111,3 +112,5 @@ class DocPage(models.Model):
 
     documentation = models.ForeignKey(Documentation, on_delete=models.CASCADE)
     body = QuillField(null=True, blank=True)
+
+    datetime = models.DateTimeField(auto_now_add=True)
