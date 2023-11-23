@@ -49,7 +49,7 @@ def generate_docs(user, owner, repo, config, project_id):
         if isinstance(file_content, dict):
             return file_content.get("error")
       
-        content = {'delta': '', 'html': markdown.markdown(file_content)}
+        content = {'delta': '', 'html': markdown.markdown(file_content, extensions=['markdown.extensions.toc'])}
 
         DocPage.objects.update_or_create(documentation=doc, page_url=url, defaults={'page': url, 'name': name, 'body': content})
 

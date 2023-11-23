@@ -3,9 +3,12 @@ from functools import wraps
 from asgiref.sync import sync_to_async
 
 from django.views import View
+from django.db.models import Q
 from django.urls import reverse
 from django.template import loader
+from django.core import serializers
 from django.core.paginator import Paginator
+from django.forms.models import model_to_dict
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 
@@ -15,12 +18,17 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import  ListModelMixin, RetrieveModelMixin
+
 
 from .forms import ProjectForm, LinkForm, SponsorForm, SocialForm
 from .models import Project, AdditionalLink, Sponsor, Social, SOCIAL, SPONSORS
 
 from utils.repos import get_github_repo, read_config_file, scan_for_doc
 from utils.decorators import login_required_for_post, login_required_rest_api
+
+from .serializers import ProjectSerializer, SearchThrottle
 
 
 class DocsCreateView(LoginRequiredMixin, View):
@@ -217,6 +225,30 @@ class ImportRepoView(LoginRequiredMixin, View):
         return JsonResponse(doc_files, status=200)
 
 
+
+class SearchView(GenericAPIView, ListModelMixin):
+
+    throttle_classes = [SearchThrottle]
+
+    def get_serializer_class(self):
+
+        project = self.request.query_params.get('project')
+
+        if project:
+            return ProjectSerializer
+        
+        return ProjectSerializer
+    
+    def get_queryset(self):
+        project = self.request.query_params.get('project')
+
+        pro_obj = Project.objects.filter(Q(name__istartswith=project)|Q(unique_name__istartswith=project))[:20]
+        return pro_obj
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
 @login_required_rest_api
 @require_http_methods(['POST'])
 @ratelimit(key='ip', rate='200/min', method=ratelimit.ALL, block=True)
@@ -244,7 +276,7 @@ def project_list(request):
     if my == 'true':
         projects = projects.filter(user=request.user)
 
-    paginator = Paginator(projects, per_page=20)
+    paginator = Paginator(projects.order_by('-datetime'), per_page=20)
     page = paginator.get_page(page_number)
 
     return render(request, 'doc-list.html', {

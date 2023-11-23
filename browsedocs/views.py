@@ -3,9 +3,16 @@ from django.shortcuts import render, HttpResponse
 
 from django_ratelimit.exceptions import Ratelimited
 
+from docsapp.models import Project
+
 
 def home_view(request):
-    return render(request, 'home.html')
+
+    projects = Project.objects.all().order_by('-datetime')[:30]
+
+    return render(request, 'home.html', {
+        'projects': projects
+    })
 
 def support_view(request):
     return render(request, 'support-opensource.html')

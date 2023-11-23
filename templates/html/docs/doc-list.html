@@ -11,8 +11,26 @@
             tw-w-full 
             tw-p-3 tw-gap-4">
 
-    <div class="tw-flex tw-mx-auto tw-w-full">
-        <div class="tw-flex max-sm:tw-flex-col tw-place-content-center tw-flex-wrap tw-content-start  tw-gap-4 tw-w-full tw-min-h-[100vh]">
+    <div class="tw-flex tw-flex-col tw-mx-auto tw-w-full">
+
+        <div class="tw-text-4xl tw-text-center">
+            Find Projects
+        </div>
+
+        <div class="tw-w-full tw-flex tw-place-content-center tw-mt-[2%]">
+            <input type="text" class="input tw-w-full tw-max-w-lg"
+                    placeholder="search projects" oninput="searchProject()"
+                    >
+        </div>
+
+        {% comment %} if there's something in the searchbar show below, once the searchbar
+                         is empty then show the project-list {% endcomment %}
+        <div class="tw-flex max-sm:tw-flex-col tw-place-content-center tw-flex-wrap tw-content-start  
+                tw-gap-8 tw-w-full tw-min-h-[100vh] md:tw-p-9 tw-hidden" id="search-list">
+
+        </div>
+        <div class="tw-flex max-sm:tw-flex-col tw-place-content-center tw-flex-wrap tw-content-start  
+                    tw-gap-8 tw-w-full tw-min-h-[100vh] md:tw-p-9" id="project-list">
             {% for project in projects  %}
                 <div class="tw-border-solid tw-border-[1px] tw-bg-gray-800
                             tw-rounded-lg tw-w-[60%] md:tw-max-w-[450px] tw-h-[200px] max-md:tw-w-[100%] 
@@ -74,7 +92,7 @@
     {% endif %}
 
 
-
+<script src="{% static "./js/docs/doc-list.js" %}"></script>
 </div>
 
 {% endblock content %}

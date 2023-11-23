@@ -385,7 +385,7 @@ function updateUrl(url){
 
 function isElementInViewport(el) {
     // tells  if the element is in the viewport
-    var rect = el.getBoundingClientRect();
+    var rect = el.getBoundingClientRect()
   
     return (
       rect.top >= -1 &&
@@ -393,5 +393,40 @@ function isElementInViewport(el) {
       rect.bottom <=
         (window.innerHeight || document.documentElement.clientHeight) &&
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
+    )
+}
+
+
+
+  /**
+ * 
+ * @param {string} text 
+ * @param {"project"|"headings"} type 
+ */
+async function search(text, type){
+
+
+    const res = await fetch(`/search/?${type}=${text}`, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": Cookies.get('csrftoken'),
+            // "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryABC123"
+            }, 
+    })
+
+    let res_data = {}
+
+    try {
+        if (res.headers.get('content-type') === 'application/json') {
+            res_data = await res.json();
+            responseBody = JSON.stringify(data); // Store the JSON response body
+        } else {
+            res_data = await res.text();
+            responseBody = data; // Store the text response body
+        }
+    } catch (e) {
+        data = await res;
+    }
+    return [res.status, res_data]
+
+}

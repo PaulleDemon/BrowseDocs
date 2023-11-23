@@ -434,6 +434,11 @@ select{
   margin-right: 40%;
 }
 
+.tw-mx-\[10\%\]{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 .\!tw-ml-auto{
   margin-left: auto !important;
 }
@@ -512,6 +517,10 @@ select{
 
 .tw-mt-10{
   margin-top: 2.5rem;
+}
+
+.tw-mr-auto{
+  margin-right: auto;
 }
 
 .tw-flex{
@@ -781,6 +790,14 @@ select{
   gap: 5%;
 }
 
+.tw-gap-10{
+  gap: 2.5rem;
+}
+
+.tw-gap-8{
+  gap: 2rem;
+}
+
 .tw-space-x-2 > :not([hidden]) ~ :not([hidden]){
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
@@ -966,6 +983,10 @@ select{
 
 .tw-p-\[10px\]{
   padding: 10px;
+}
+
+.tw-p-9{
+  padding: 2.25rem;
 }
 
 .tw-px-3{
@@ -1295,6 +1316,10 @@ select{
 
   .md\:tw-place-items-center{
     place-items: center;
+  }
+
+  .md\:tw-p-9{
+    padding: 2.25rem;
   }
 
   .md\:tw-px-\[25\%\]{

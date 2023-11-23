@@ -225,7 +225,7 @@ function checkProjectNameAvailabilty(name){
     }
 
     projectNameTimeout = setTimeout(async () => {
-            console.log("triggered")
+            // console.log("triggered")
             const res = await fetch("/docs/check-name-availability/", {
                 method: "POST",
                 headers: {
