@@ -123,7 +123,7 @@
                                 required 
                                 name="unique_name" 
                                 maxlength="30" 
-                                {% if update %}disabled{% endif %}
+                                {% if update %}readonly{% endif %}
                                 value="{{config.unique_name}}" placeholder="unique project name" 
                                 id="unique-name">
                         <div class="tw-text-sm">This name is subject to availability. (Avoid using well-known project names to prevent potential conflicts with original authors.)</div>

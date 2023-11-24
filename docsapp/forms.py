@@ -14,7 +14,7 @@ class ProjectForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if self.instance.pk and cleaned_data.get('unqiue_name') != self.instance.unique_name:  # If the instance is being created for the first time
+        if self.instance.pk and cleaned_data.get('unique_name') != self.instance.unique_name:  # If the instance is being created for the first time
             raise ValidationError({"unique_name": "Unique name cannot be updated"})
 
         if len(cleaned_data.get('name')) < 3:
@@ -32,7 +32,7 @@ class LinkForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if Project.objects.filter(project=self.instance.project).count() >= 2:
+        if AdditionalLink.objects.filter(project=cleaned_data.get('project')).count() >= 2:
             raise ValidationError({"link": "Only 2 additional links can be added at this time"})
 
         return cleaned_data

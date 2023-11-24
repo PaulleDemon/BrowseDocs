@@ -2,13 +2,15 @@ from django.urls import path
 
 from .views import (ProjectCreateView, ImportRepoView, 
                     check_name_exists, project_list,
-                    get_docs, get_project_about, SearchView
+                    get_docs, get_project_about, SearchView,
+                    DocCreateView
                     )
 
 urlpatterns = [
 
     
     path('search/', SearchView.as_view(), name='search'),
+    path('doc/create/', DocCreateView.as_view(), name='doc-create'),
     path('project/create/', ProjectCreateView.as_view(), name='project-create'),
     path('repo/import/', ImportRepoView.as_view(), name='import-repo'),
     path('docs/list/', project_list, name='doc-list'),

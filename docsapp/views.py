@@ -56,11 +56,15 @@ class ProjectCreateView(LoginRequiredMixin, View):
                 return JsonResponse({'error': 'required repo in the format Owner/Reponame'}, status=400)
 
             doc_files = scan_for_doc(request.user, owner, repo)
+
+            if doc_files.get("error"):
+                doc_files['error'] = {'error': [doc_files.get("error")]}
+
             doc_files['project'] = repo
             doc_files['source'] = f'https://github.com/{repo_name}'
 
             # doc_files['config']
-
+            print("config: ", doc_files)
             if edit:
                 try:
                     id = int(edit)
@@ -85,30 +89,30 @@ class ProjectCreateView(LoginRequiredMixin, View):
                         'patreon': sponsor.get(name=SPONSORS.PATREON).username if sponsor.filter(name=SPONSORS.PATREON).exists() else '',
                         'buymeacoffee': sponsor.get(name=SPONSORS.BUYMEACOFFEE).username if sponsor.filter(name=SPONSORS.BUYMEACOFFEE).exists() else '',
                     }
-                    additional_links = []
+                    additional_links = {}
 
                     for x in links:
-                        additional_links.appned({x.name: x.url})
+                        additional_links.update({x.name: x.url})
 
                     instance.additional_links = additional_links
-
-                    print("instance: ", instance.social)
 
                     return render(request, 'project-create.html', {
                         'docs': doc_files.get('docs'),
                         'project': repo,
                         'source': doc_files.get('source'),
-                        'config': instance
+                        'config': instance,
+                        'update': True
                     })
 
                 except (Project.DoesNotExist, ValueError):
                     return render(request, '404.html') 
 
             return render(request, 'project-create.html', context={
-                                    'config': doc_files.get('config'),
-                                    'docs': doc_files.get('docs'),
-                                    'project': repo,
-                                    'source': doc_files.get('source')
+                                        'config': doc_files.get('config'),
+                                        'errors': doc_files.get('error'),
+                                        'docs': doc_files.get('docs'),
+                                        'project': repo,
+                                        'source': doc_files.get('source')
                                 })
 
     def post(self, request):
@@ -116,11 +120,22 @@ class ProjectCreateView(LoginRequiredMixin, View):
         step = request.GET.get("step")
         repo_name = request.GET.get("repo_name") # must be of the format paulledemon/browserdocs
 
+        edit = request.GET.get('edit')
+
+        print('request: ', request.POST)
+
         if step != '2':
             return render(request, '404.html')
 
+        instance = None
+        if edit:
+            try:
+                instance = Project.objects.get(id=int(edit), user=request.user)
 
-        form = ProjectForm(request.POST)
+            except Project.DoesNotExist:
+                return render(request, '404.html')
+
+        form = ProjectForm(request.POST, instance=instance)
 
         if form.is_valid():
 
@@ -143,10 +158,12 @@ class ProjectCreateView(LoginRequiredMixin, View):
                 SPONSORS.BUYMEACOFFEE: request.POST.get('buymeacoffee'),
             }
 
-            link_name = request.POST.get('link_name') or []
-            link_url = request.POST.get('link_url') or []
+            link_name = request.POST.getlist('link_name') or []
+            link_url = request.POST.getlist('link_url') or []
 
-            print("Link: ", link_name, link_url)
+            Social.objects.filter(project=instance).delete()
+            Sponsor.objects.filter(project=instance).delete()
+            AdditionalLink.objects.filter(project=instance).delete()
 
             for key, val in social.items():
                 if val:
@@ -161,14 +178,13 @@ class ProjectCreateView(LoginRequiredMixin, View):
                         sponsor_form.save(commit=True)     
 
             for name, link in zip(link_name, link_url):
-
                 if name and link:
                     link_form = LinkForm({'project': instance, 'name': name, 'url': link})
 
-                    if link_form:
+                    if link_form.is_valid():
                         link_form.save(commit=True)
 
-            destination_url = reverse('list-tutorials')
+            destination_url = reverse('doc-list')
             full_url = f"{destination_url}?my=true"
             return redirect(full_url)
 
@@ -196,6 +212,14 @@ class ProjectCreateView(LoginRequiredMixin, View):
             })
 
        
+class DocCreateView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        return render(request, 'doc-create.html')
+
+    def post(self, request):
+
+        return render(request, 'doc-create.html')
 
 
 

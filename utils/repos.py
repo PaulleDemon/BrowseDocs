@@ -138,6 +138,9 @@ def scan_for_doc(user: User, owner, repo):
 
     config = read_config_file(user, owner, repo)
 
+    if config.get('error'):
+        return config
+
     path = config.get('source')
 
     repo_info = get_repo_info(user, owner, repo)

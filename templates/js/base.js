@@ -97,12 +97,12 @@ intializeQuickSearch()
 initializePasswordInputs()
 
 
-const codeBlocks = Array.from(document.querySelectorAll(".ql-code-block-container, pre"))
+// const codeBlocks = Array.from(document.querySelectorAll(".ql-code-block-container, pre"))
 
-console.log("AA: ", codeBlocks)
-codeBlocks.forEach(ele => {
-	ele.innerHTML = `<button class="tw-p-4 btn"><i class="bi bi-copy"/></button>`
-})
+// console.log("AA: ", codeBlocks)
+// codeBlocks.forEach(ele => {
+// 	ele.innerHTML = `<button class="tw-p-4 btn"><i class="bi bi-copy"/></button>`
+// })
 
 function addCopyBtn(){
 

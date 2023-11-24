@@ -261,7 +261,7 @@ function validateFields(){
 
         let field_name = x.name
         if (field_name == 'unique_name' && (!isNameValid(x.value) || x.value.trim().length < 3)){
-            toastAlert(null, `name can contain only alpha-numeric, _, -`, 'danger')
+            toastAlert(null, `unique_name can contain only alpha-numeric, _, -`, 'danger')
             return false
         }
 

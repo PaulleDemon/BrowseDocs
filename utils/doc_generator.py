@@ -1,5 +1,5 @@
+import json
 import markdown
-
 from . import repos
 from .common import get_file_name
 
@@ -42,7 +42,7 @@ def generate_docs(user, owner, repo, config, project_id):
         
         doc = Documentation.objects.create(project=project, version=config.get("version"))
 
-    print("Config", config.get("sidebar"))
+    print("Config", config)
 
     for x in config.get("sidebar") or []:
 
@@ -61,8 +61,9 @@ def generate_docs(user, owner, repo, config, project_id):
             return file_content.get("error")
 
         html_content =  markdown.markdown(file_content, extensions=['markdown.extensions.toc'])
+        print("content: ", convert_html_to_delta(html_content))
 
-        content = {'delta': convert_html_to_delta(html_content), 'html': html_content}
+        content = json.dumps({'delta': json.dumps(convert_html_to_delta(html_content)), 'html': html_content})
 
         DocPage.objects.update_or_create(documentation=doc, page_url=url, 
                                             defaults={'page_url': url, 'name': name, 'body': content})

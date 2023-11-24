@@ -15,11 +15,12 @@ const body_data = JSON.parse(document.getElementById('body-data').textContent)
 
 
 if (body_data){
-    editor.setContents(
-        JSON.parse((body_data))
-    )
+   
+    setTimeout(() => editor.setContents(
+            JSON.parse(body_data)
+        ), 100)
+    console.log("body data: ", body_data, JSON.parse(body_data))
 }
-
 
 if (editor.getLength() > 250 && title.value.length > 10){
     publishButton.disabled = false
