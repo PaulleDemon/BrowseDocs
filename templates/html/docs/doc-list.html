@@ -55,9 +55,15 @@
                                 {{project.about}}
                             </div>
                             {% if project.user == request.user %}
-                                <a class="btn btn-success bi bi-pencil-square tw-m-1" href="{% url "project-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
-                                    Edit    
-                                </a>
+                                <div class="tw-flex tw-justify-between tw-mt-2 tw">
+                                    <a class="btn btn-success w-50 bi bi-pencil-square" 
+                                        href="{% url "project-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
+                                        Edit    
+                                    </a>
+                                    <button type="button" class="btn btn-primary bi bi-arrow-clockwise" onclick="updateDocument({{project.id}})">
+                                        Update
+                                    </button>
+                                </div>
                             {% endif %}
                         </div>
                 </div>

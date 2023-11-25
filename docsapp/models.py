@@ -65,7 +65,8 @@ class Project(models.Model):
 
     datetime = models.DateTimeField(auto_now_add=True)
 
-
+    doc_path = models.CharField(max_length=250, null=True, blank=True)
+    
     def __str__(self):
         return self.name
     

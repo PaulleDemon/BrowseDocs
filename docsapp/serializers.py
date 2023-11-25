@@ -4,10 +4,6 @@ from rest_framework.throttling import UserRateThrottle
 from .models import Project
 
 
-class SearchThrottle(UserRateThrottle):
-    rate = '200/min'
-
-
 class ProjectSerializer(serializers.ModelSerializer):
 
     is_owner = serializers.SerializerMethodField()

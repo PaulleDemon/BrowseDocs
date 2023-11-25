@@ -1,8 +1,13 @@
 import json
 import markdown
+from urllib.parse import urlparse
+
+
 from . import repos
 from .common import get_file_name
 
+from .repos import read_config_file
+from .markdown_extension import CodeDivExtension
 from .quill_delta import convert_html_to_delta
 
 from docsapp.models import Project, Documentation, DocPage, LANG
@@ -12,9 +17,20 @@ def sidebar_generator():
     pass
 
 
-def generate_docs(user, owner, repo, config, project_id):
+def generate_docs(user, project_id):
 
     error = []
+
+    try:
+        project = Project.objects.get(id=project_id)
+        owner, repo = str(urlparse(project.source).path).split('/')[1:]
+        path = project.doc_path
+
+    except Project.DoesNotExist:
+        error.append("Project does not exists")
+        return error
+
+    config = read_config_file(user, owner, repo)
 
     url_set = set()
     for item in config.get("sidebar") or []:
@@ -33,12 +49,6 @@ def generate_docs(user, owner, repo, config, project_id):
         doc = doc.last()
 
     else:
-        try:
-            project = Project.objects.get(id=project_id)
-
-        except Project.DoesNotExist:
-            error.append("Project does not exists")
-            return error
         
         doc = Documentation.objects.create(project=project, version=config.get("version"))
 
@@ -46,7 +56,7 @@ def generate_docs(user, owner, repo, config, project_id):
 
     for x in config.get("sidebar") or []:
 
-        path = x.get("path")
+        path = path or x.get("path")
 
         if not path:
             # error.append("sidebar path missing")
@@ -55,13 +65,20 @@ def generate_docs(user, owner, repo, config, project_id):
         name = x.get("name") or get_file_name(path)
         url = x.get("url") or path
 
+        print("path: ", path)
         file_content = repos.get_file(user, owner, repo, path)
 
         if isinstance(file_content, dict):
             return file_content.get("error")
 
-        html_content =  markdown.markdown(file_content, extensions=['markdown.extensions.toc'])
-        print("content: ", convert_html_to_delta(html_content))
+        print("file content: ", file_content)
+
+        html_content =  markdown.markdown(file_content, extensions=[
+                                                                    CodeDivExtension(),
+                                                                    'markdown.extensions.toc',
+                                                                    'markdown.extensions.tables', 
+                                                                    'markdown.extensions.meta'])
+        print("content: ", convert_html_to_delta(html_content), html_content)
 
         content = json.dumps({'delta': json.dumps(convert_html_to_delta(html_content)), 'html': html_content})
 

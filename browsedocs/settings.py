@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'corsheaders',
-    'django_celery_beat',
+    # 'django_celery_beat',
     'django_browser_reload',
     'django_quill',
 
@@ -123,7 +123,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 
-CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+# CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 CELERY_IMPORTS = ['utils.tasks',]
 
 
@@ -150,6 +150,24 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'browsedocs.urls'
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # This is only for development
+    # EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+   
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # for production
+
+    EMAIL_HOST = env('EMAIL_HOST')
+    EMAIL_PORT = 465
+
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+    DEFAULT_FROM_EMAIL = Address(display_name="AtMailWin", addr_spec=EMAIL_HOST_USER)
+
+    # EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = True
 
 TEMPLATES = [
     {

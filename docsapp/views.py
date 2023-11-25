@@ -1,5 +1,6 @@
 import json
 from functools import wraps
+from urllib.parse import urlparse
 from asgiref.sync import sync_to_async
 
 from django.views import View
@@ -18,17 +19,20 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 
+from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import  ListModelMixin, RetrieveModelMixin
+from rest_framework.mixins import  ListModelMixin, CreateModelMixin
 
 
 from .forms import ProjectForm, LinkForm, SponsorForm, SocialForm
 from .models import Project, AdditionalLink, Sponsor, Social, SOCIAL, SPONSORS
 
+from utils.tasks import generate_docs_celery
+from utils.throttle import SearchThrottle, UpdateThrottle
 from utils.repos import get_github_repo, read_config_file, scan_for_doc
 from utils.decorators import login_required_for_post, login_required_rest_api
 
-from .serializers import ProjectSerializer, SearchThrottle
+from .serializers import ProjectSerializer
 
 
 class ProjectCreateView(LoginRequiredMixin, View):
@@ -64,7 +68,6 @@ class ProjectCreateView(LoginRequiredMixin, View):
             doc_files['source'] = f'https://github.com/{repo_name}'
 
             # doc_files['config']
-            print("config: ", doc_files)
             if edit:
                 try:
                     id = int(edit)
@@ -122,12 +125,17 @@ class ProjectCreateView(LoginRequiredMixin, View):
 
         edit = request.GET.get('edit')
 
-        print('request: ', request.POST)
-
         if step != '2':
             return render(request, '404.html')
 
         instance = None
+
+        try:
+            owner, repo = repo_name.split('/')
+
+        except (ValueError, AttributeError):
+            return render(request, '404.html')
+
         if edit:
             try:
                 instance = Project.objects.get(id=int(edit), user=request.user)
@@ -142,6 +150,8 @@ class ProjectCreateView(LoginRequiredMixin, View):
             instance = form.save(commit=False)
             instance.user = request.user
             instance.save()
+
+            generate_docs_celery(request.user.id, owner, repo, instance.id, request.POST.get("docs"))
 
             social = {
                 SOCIAL.REDDIT: request.POST.get('reddit'),
@@ -192,12 +202,6 @@ class ProjectCreateView(LoginRequiredMixin, View):
 
             repo_name = request.GET.get("repo_name") # must be of the format paulledemon/browserdocs
 
-            try:
-                owner, repo = repo_name.split('/')
-
-            except (ValueError, AttributeError):
-                return render(request, '404.html')
-
 
             doc_files = scan_for_doc(request.user, owner, repo)
             doc_files['project'] = repo
@@ -212,6 +216,26 @@ class ProjectCreateView(LoginRequiredMixin, View):
             })
 
        
+class UpdateDocsView(GenericAPIView):
+
+    throttle_classes = [UpdateThrottle]
+
+    def post(self, request):
+        print("GE: ", request.data)
+        try:
+            project = Project.objects.get(id=int(request.data.get('projectid')), user=request.user)
+
+            generate_docs_celery(request.user.id, project.id)
+
+        except (Project.DoesNotExist, TypeError):
+            return Response({'error': 'Permission denied'}, status=403)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+        return Response({'success': 'project is updating'}, status=200)
+
+
 class DocCreateView(LoginRequiredMixin, View):
 
     def get(self, request):

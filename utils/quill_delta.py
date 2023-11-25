@@ -39,7 +39,8 @@ def convert_html_to_delta(html_string):
 def convert_paragraph(element, ops):
     text = element.text
     if element.name in ("h1", "h2", "h3", "h4", "h5", "h6"):
-        ops.append({"insert": text, "attributes": {"header": int(element.name[1])}})
+        ops.append({"insert": text})
+        ops.append({"attributes": {"header": int(element.name[1])}, "insert": "\n"})
     else:
         for child in element.children:
             if child.name == "b":
@@ -100,14 +101,14 @@ def get_class_and_id_attributes(element):
             attributes["id"] = element["id"]
     return attributes
 
-html_string = '''
-<p class="paragraph" id="p1">This is a paragraph with class and id.</p>
-<p style="background: #121212; color: #eeeeee;" class="paragraph" id="p2">64&nbsp;Possibly a newbie question, so please bear with me.</p>
-<span style="font-size: 18px;" class="styled-text" id="span1">This is a span with a class and id.</span>
-<h1 id="header1">This is a header with an id.</h1>
-<a href="https://google.com">hello world</a>
-<i>world is not ending</i>
-<img src="image.png" alt="Image description" class="image" id="img1">
-'''
-delta = convert_html_to_delta(html_string)
-print(delta)
+# html_string = '''
+# <p class="paragraph" id="p1">This is a paragraph with class and id.</p>
+# <p style="background: #121212; color: #eeeeee;" class="paragraph" id="p2">64&nbsp;Possibly a newbie question, so please bear with me.</p>
+# <span style="font-size: 18px;" class="styled-text" id="span1">This is a span with a class and id.</span>
+# <h1 id="header1">This is a header with an id.</h1>
+# <a href="https://google.com">hello world</a>
+# <i>world is not ending</i>
+# <img src="image.png" alt="Image description" class="image" id="img1">
+# '''
+# delta = convert_html_to_delta(html_string)
+# print(delta)

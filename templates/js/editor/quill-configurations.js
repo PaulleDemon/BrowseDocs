@@ -186,17 +186,17 @@ inlineCodeButton.addEventListener('click', toggleInlineCode)
 // Function to toggle inline code format
 function toggleInlineCode() {
     const range = editor.getSelection()
-    const format = editor.getFormat(range)
+    const format = editor.getFormat(range.index, range.length)
 
-   
+    console.log("range: ", range, format)
     if (format['inline-code']) {
         // If inline code is already present, remove it
-        editor.format( 'inline-code', false);
+        editor.formatText(range.index, range.length, 'inline-code', false);
     } else {
         console.log("range: ", range.index + range.length, range.length)
         // If inline code is not present, insert it and add a space to the right
-        editor.formatText(range.index, range.index + range.length, 'inline-code', true);
-        editor.insertText(range.index + range.length + 2, ' ', true);
+        editor.formatText(range.index,  range.length, 'inline-code', true);
+        // editor.insertText(range.index + range.length + 2, ' ', true);
     }
     
 }

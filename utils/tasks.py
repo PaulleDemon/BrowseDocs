@@ -30,7 +30,7 @@ def send_mail_celery(subject, message, from_email=None, recipient_list=[]):
 
 
 @shared_task
-def generate_docs_celery(user_id, owner: str, repo: str, config: dict, project_id: int):
+def generate_docs_celery(user_id, project_id: int):
     
     try:
         user = User.objects.get(id=user_id)
@@ -38,7 +38,7 @@ def generate_docs_celery(user_id, owner: str, repo: str, config: dict, project_i
     except User.DoesNotExist:
         return 
 
-    generated = generate_docs(user, owner, repo, config, project_id)
+    generated = generate_docs(user, project_id)
 
     if generated != True:
 
@@ -47,6 +47,7 @@ def generate_docs_celery(user_id, owner: str, repo: str, config: dict, project_i
         send_mail_celery.delay("Docs creation failed", message, recipient_list=[user.email])
 
     else:
+        print("successful")
         message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation was successful. Please visit the following to .\n\n Best regards,\nBrowseDocs Team"
 
         send_mail_celery.delay("Docs creation Successful", message, recipient_list=[user.email])
