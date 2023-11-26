@@ -1,7 +1,9 @@
 import json
 import markdown
+from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
+from django.utils.text import slugify
 
 from . import repos
 from .common import get_file_name
@@ -47,14 +49,19 @@ def generate_docs(user, project_id):
 
     if doc.exists():
         doc = doc.last()
+        # doc.sidebar = config.get('sidebar')
+        # doc.save()
 
     else:
         
-        doc = Documentation.objects.create(project=project, version=config.get("version"))
+        doc = Documentation.objects.create(project=project, version=config.get("version"), 
+                                            sidebar=config.get('sidebar'))
 
     print("Config", config)
 
-    for x in config.get("sidebar") or []:
+    doc.sidebar = []
+
+    for x in config.get("sidebar") or [path]:
 
         path = path or x.get("path")
 
@@ -63,27 +70,37 @@ def generate_docs(user, project_id):
             return "sidebar path missing"
 
         name = x.get("name") or get_file_name(path)
-        url = x.get("url") or path
+        url = x.get("url") or slugify(path)
 
-        print("path: ", path)
         file_content = repos.get_file(user, owner, repo, path)
 
         if isinstance(file_content, dict):
             return file_content.get("error")
-
-        print("file content: ", file_content)
 
         html_content =  markdown.markdown(file_content, extensions=[
                                                                     CodeDivExtension(),
                                                                     'markdown.extensions.toc',
                                                                     'markdown.extensions.tables', 
                                                                     'markdown.extensions.meta'])
-        print("content: ", convert_html_to_delta(html_content), html_content)
 
-        content = json.dumps({'delta': json.dumps(convert_html_to_delta(html_content)), 'html': html_content})
+        # content = json.dumps({'delta': json.dumps(convert_html_to_delta(html_content)), 'html': html_content})
+        content = json.dumps({'delta': "['ops': []]", 'html': html_content})
+
+        soup = BeautifulSoup(html_content)
+
+        target = soup.find_all('h1')
+
+        doc.sidebar.append({
+            'name': name,
+            'url': url,
+            'path': path,
+            'headings': [x.text for x in target]
+        })
 
         DocPage.objects.update_or_create(documentation=doc, page_url=url, 
                                             defaults={'page_url': url, 'name': name, 'body': content})
 
+    
+    doc.save()
 
     return True

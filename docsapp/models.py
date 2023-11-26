@@ -105,6 +105,8 @@ class Documentation(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    sidebar = models.JSONField(null=True, blank=True)
+
 
 class DocPage(models.Model):
 

@@ -29,6 +29,7 @@ class CodeDivPreprocessor(Preprocessor):
                 else:
                     # Opening code block
                     in_code_block = True
+                    code_block_lines = []
 
             elif line.startswith("> "):
                 quote_content = line[2:].strip()
@@ -37,7 +38,7 @@ class CodeDivPreprocessor(Preprocessor):
             elif in_code_block:
                 # code_content = '\n'.join(code_block_lines)
                 code = f'<div class="ql-code-block">{line}</div>\n'
-                new_lines.append(code)
+                # new_lines.append(code)
                 code_block_lines.append(code)
             else:
                 line = self.convert_inline_code(line)
