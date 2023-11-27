@@ -47,7 +47,7 @@ class DocsAdmin(admin.ModelAdmin):
 @admin.register(DocPage)
 class DocPageAdmin(admin.ModelAdmin):
 
-    list_display = ['id', 'page_url', 'documentation', 'body',]
+    list_display = ['id', 'page_url', 'documentation', 'body', 'views']
 
     list_filter = ['datetime']
     readonly_fields = ['body_html', 'datetime', 'id']
@@ -64,5 +64,8 @@ class DocPageAdmin(admin.ModelAdmin):
 
 
     def body_html(self, obj):
-        return mark_safe(clean_html(obj.body.html))
         
+        if obj.body and obj.body.html:
+            return mark_safe(clean_html(obj.body.html))
+        
+        return ''

@@ -81,15 +81,32 @@ function highlightHandler(entries){
 
 // window.addEventListener("scroll", highLightCurrentIndex)
 
+document.querySelectorAll('pre, .ql-code-block-container').forEach((el) => {
+    hljs.highlightElement(el);
+})
+
 const codeBlocks = Array.from(document.querySelectorAll(".ql-code-block-container, pre"))
 
 
 codeBlocks.forEach(ele => {
     const button = document.createElement('button')
     button.className = 'tw-p-4 btn copy-btn'
+    button.setAttribute("title", "copy")
+    button.setAttribute("data-bs-toggle", "tooltip")
     button.innerHTML = '<i class="bi bi-copy"></i>'
     button.onclick = () => copyCodeToClipboard(ele)
-    ele.appendChild(button);
+    ele.appendChild(button)
+
+    ele.onscroll = () => {
+        
+        if (ele.scrollLeft > 10){
+            button.style.display = "none"
+        }else{
+            button.style.display = "block"
+        }
+
+    }
+
 })
 
 
@@ -103,3 +120,4 @@ function copyCodeToClipboard(element){
 
     })
 }
+

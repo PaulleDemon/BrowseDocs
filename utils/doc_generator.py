@@ -92,21 +92,20 @@ def generate_docs(user, project_id):
 
     if doc.exists():
         doc = doc.last()
-        # doc.sidebar = config.get('sidebar')
         # doc.save()
 
     else:
         
         doc = Documentation.objects.create(project=project, version=config.get("version"), 
-                                            sidebar=config.get('sidebar'))
+                                            )
 
     print("Config", config)
 
-    doc.sidebar = []
+    sidebar = []
 
-    for x in config.get("sidebar") or [path]:
+    for x in config.get("sidebar") or [{'path': path}]:
 
-        path = path or x.get("path")
+        path = x.get("path", path)
 
         if not path:
             # error.append("sidebar path missing")
@@ -115,15 +114,19 @@ def generate_docs(user, project_id):
         if not path.endswith(".md"):
             return f"non markdown file {path}"
 
-        name = x.get("name") or get_file_name(path)
-        url = x.get("url") or slugify(path)
-        print("url: ", x.get("url"), path, slugify(path))
+        name = x.get("name", get_file_name(path))
+        url = x.get("url", slugify(path))
+        #FIXME: problem in creating url
         url = strip_path_slash(url)
+        print("url: ",  path)
 
         file_content = repos.get_file(user, owner, repo, path)
 
         if isinstance(file_content, dict):
             return file_content.get("error")
+
+        if not file_content or len(file_content) < 50:
+            return f"The document {path} is too small for document to be created. Add necessary details"
 
         html_content =  markdown.markdown(file_content, extensions=[
                                                                     CodeDivExtension(),
@@ -138,7 +141,7 @@ def generate_docs(user, project_id):
 
         target = soup.find_all(['h1', 'h2'])
 
-        doc.sidebar.append({
+        sidebar.append({
             'name': name,
             'url': url,
             'path': path,
@@ -148,7 +151,7 @@ def generate_docs(user, project_id):
         DocPage.objects.update_or_create(documentation=doc, page_url=url, 
                                             defaults={'page_url': url, 'name': name, 'body': content})
 
-    
+    doc.sidebar = sidebar
     doc.save()
 
     return True

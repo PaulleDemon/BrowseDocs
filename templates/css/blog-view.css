@@ -27,15 +27,20 @@
 /* -----------------utils -----------*/
 .copy-btn{
     position: absolute;
-    right: 1%;
+    right: 10px;
     top: 2%;
+    /* left: 0; */
 }
 
 .ql-code-block-container{
-    position: relative;
+    /* position: relative; */
     padding: 10px;
     border-radius: 10px;
     background-color: #080f1e;
+    width: 100%;
+    overflow: auto;
+    max-height: 1000px;
+    white-space: pre;
 }
 
 summary::after {

@@ -3,6 +3,7 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 from markdown.postprocessors import Postprocessor
 
+from .common import get_language_name
 
 class CodeDivExtension(Extension):
     def extendMarkdown(self, md):
@@ -19,11 +20,13 @@ class CodeDivPreprocessor(Preprocessor):
 
         for line in lines:
             if line.strip().startswith("```"):
+                extension = line.strip()[3:].strip() or ''
+                print("extension: ", line, extension)
                 if in_code_block:
                     # Closing code block
                     in_code_block = False
                     code_content = '\n'.join(code_block_lines)
-                    new_lines.append(f'<div class="ql-code-block-container" spellcheck="false">{code_content}</div>\n')
+                    new_lines.append(f'<div class="ql-code-block-container {"language-"+get_language_name(extension) if extension else ""}" spellcheck="false">{code_content}</div>\n')
                     code_block_lines = []
                 else:
                     # Opening code block

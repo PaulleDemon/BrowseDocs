@@ -360,8 +360,8 @@ def get_docs(request, unique_id, page_url=None, version=None, name=None):
 
         else:
             try:
-                print("page url: ", extract_path(page_url))
                 doc_page = doc_page.get(page_url=extract_path(page_url))
+                print("page url: ", doc_page)
 
             except DocPage.DoesNotExist:
                 return render(request, '404.html')

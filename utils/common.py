@@ -67,3 +67,19 @@ def extract_path(path: str):
         result_path += '/'
 
     return result_path
+
+
+def get_language_name(extension):
+    language_mapping = {
+        'py': 'python',
+        'js': 'javascript',
+        'html': 'html',
+        'css': 'css',
+        'java': 'java',
+        'c++': 'cpp',
+        'c#': 'csharp',
+        'plain': 'plaintext'
+        # Add more mappings as needed
+    }
+
+    return language_mapping.get(extension.lower(), extension)

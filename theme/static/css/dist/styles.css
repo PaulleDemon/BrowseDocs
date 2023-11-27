@@ -707,6 +707,10 @@ select{
   place-content: center;
 }
 
+.tw-place-content-start{
+  place-content: start;
+}
+
 .tw-place-items-start{
   place-items: start;
 }
@@ -948,8 +952,16 @@ select{
   text-align: left;
 }
 
+.\!tw-text-left{
+  text-align: left !important;
+}
+
 .tw-text-center{
   text-align: center;
+}
+
+.tw-text-right{
+  text-align: right;
 }
 
 .tw-text-justify{
