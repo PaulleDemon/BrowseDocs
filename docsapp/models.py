@@ -30,6 +30,7 @@ class SPONSORS(models.IntegerChoices):
     GITHUB = (1, 'Github')
     BUYMEACOFFEE = (2, 'Buy me a coffee')
     PATREON = (3, 'Patreon')
+    PAYPAL = (4, 'Paypal')
 
 
 class LANG(models.IntegerChoices):
@@ -60,12 +61,14 @@ class Project(models.Model):
     source = models.URLField()
     source_code = models.URLField(null=True, blank=True)
 
+    authors = models.TextField(max_length=2000, null=True, blank=True)
+
     doc_type = models.PositiveSmallIntegerField(choices=DOC_TYPE.choices, default=DOC_TYPE.PROGRAMMING_LANG)
     # source = models.
 
     datetime = models.DateTimeField(auto_now_add=True)
 
-    doc_path = models.CharField(max_length=250, null=True, blank=True)
+    doc_path = models.CharField(max_length=250, null=True, blank=True) # the source in the config file, ie the path
     
     def __str__(self):
         return self.name
@@ -117,3 +120,5 @@ class DocPage(models.Model):
     body = QuillField(null=True, blank=True)
 
     datetime = models.DateTimeField(auto_now_add=True)
+
+    views = models.BigIntegerField(default=0)

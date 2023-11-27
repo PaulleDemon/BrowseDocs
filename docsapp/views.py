@@ -6,12 +6,10 @@ from asgiref.sync import sync_to_async
 from django.views import View
 from django.db.models import Q
 from django.urls import reverse
-from django.template import loader
-from django.core import serializers
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -25,8 +23,11 @@ from rest_framework.mixins import  ListModelMixin, CreateModelMixin
 
 
 from .forms import ProjectForm, LinkForm, SponsorForm, SocialForm
-from .models import Project, AdditionalLink, Sponsor, Social, SOCIAL, SPONSORS
+from .models import (Project, AdditionalLink, Sponsor, Social, 
+                        Documentation, DocPage,
+                        SOCIAL, SPONSORS)
 
+from utils.common import extract_path
 from utils.tasks import generate_docs_celery
 from utils.throttle import SearchThrottle, UpdateThrottle
 from utils.repos import get_github_repo, read_config_file, scan_for_doc
@@ -90,6 +91,7 @@ class ProjectCreateView(LoginRequiredMixin, View):
                         'opencollective': sponsor.get(name=SPONSORS.OPEN_COLLECTIVE).username if sponsor.filter(name=SPONSORS.OPEN_COLLECTIVE).exists() else '',
                         'github': sponsor.get(name=SPONSORS.GITHUB).username if sponsor.filter(name=SPONSORS.GITHUB).exists() else '',
                         'patreon': sponsor.get(name=SPONSORS.PATREON).username if sponsor.filter(name=SPONSORS.PATREON).exists() else '',
+                        'paypal': sponsor.get(name=SPONSORS.PAYPAL).username if sponsor.filter(name=SPONSORS.PAYPAL).exists() else '',
                         'buymeacoffee': sponsor.get(name=SPONSORS.BUYMEACOFFEE).username if sponsor.filter(name=SPONSORS.BUYMEACOFFEE).exists() else '',
                     }
                     additional_links = {}
@@ -166,6 +168,7 @@ class ProjectCreateView(LoginRequiredMixin, View):
                 SPONSORS.OPEN_COLLECTIVE: request.POST.get('opencollective'),
                 SPONSORS.PATREON: request.POST.get('patreon'),
                 SPONSORS.BUYMEACOFFEE: request.POST.get('buymeacoffee'),
+                SPONSORS.PAYPAL: request.POST.get('paypal'),
             }
 
             link_name = request.POST.getlist('link_name') or []
@@ -221,17 +224,16 @@ class UpdateDocsView(GenericAPIView):
     throttle_classes = [UpdateThrottle]
 
     def post(self, request):
-        print("GE: ", request.data)
-        try:
-            project = Project.objects.get(id=int(request.data.get('projectid')), user=request.user)
+        # try:
+        project = Project.objects.get(id=int(request.data.get('projectid')), user=request.user)
 
-            generate_docs_celery(request.user.id, project.id)
+        generate_docs_celery(request.user.id, project.id)
 
-        except (Project.DoesNotExist, TypeError):
-            return Response({'error': 'Permission denied'}, status=403)
+        # except (Project.DoesNotExist, TypeError):
+        #     return Response({'error': 'Permission denied'}, status=403)
 
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
+        # except Exception as e:
+        #     return Response({'error': str(e)}, status=500)
 
         return Response({'success': 'project is updating'}, status=200)
 
@@ -244,7 +246,6 @@ class DocCreateView(LoginRequiredMixin, View):
     def post(self, request):
 
         return render(request, 'doc-create.html')
-
 
 
 class ImportRepoView(LoginRequiredMixin, View):
@@ -270,7 +271,6 @@ class ImportRepoView(LoginRequiredMixin, View):
         doc_files['source'] = f'https://github.com/{repo_name}'
 
         return JsonResponse(doc_files, status=200)
-
 
 
 class SearchView(GenericAPIView, ListModelMixin):
@@ -334,13 +334,43 @@ def project_list(request):
 
 
 @require_http_methods(['GET'])
-def get_docs(request, unique_id, name=None):
+def get_docs(request, unique_id, page_url=None, version=None, name=None):
 
     try:
         project = Project.objects.get(unique_id=unique_id)
+
+        doc = Documentation.objects.filter(project__unique_id=unique_id)
+
+        if not version:
+            doc = doc.last()
+
+        else:
+            try:
+                doc = doc.get(version=version)
+
+            except Documentation.DoesNotExist:
+                return render(request, '404.html')
+
+        print("Docs: ", doc)
+
+        doc_page = DocPage.objects.filter(documentation=doc)
+
+        if not page_url:
+            doc_page = doc_page.first()
+
+        else:
+            try:
+                print("page url: ", extract_path(page_url))
+                doc_page = doc_page.get(page_url=extract_path(page_url))
+
+            except DocPage.DoesNotExist:
+                return render(request, '404.html')
+
         return render(request, 'docs-view.html', {
             'project': project,
-            'base': project
+            'base': project,
+            'doc_page': doc_page,
+            'documentation': doc
         })
 
     except Project.DoesNotExist:
@@ -386,6 +416,9 @@ def get_project_about(request, name, unique_id):
 
             elif x.name == SPONSORS.BUYMEACOFFEE:
                 sponsor[f'https://buymeacoffee.com/{x.username}'] = "bi bi-coin"
+                
+            elif x.name == SPONSORS.PAYPAL:
+                sponsor[f'https://paypal.me/{x.username}'] = "bi bi-paypal"
 
 
         links = AdditionalLink.objects.filter(project=project)

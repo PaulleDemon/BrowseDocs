@@ -35,7 +35,8 @@ function generateTOC(){
 
 }
 
-generateTOC()
+if (tocContainer)
+    generateTOC()
 
 function highlightHandler(entries){
 
@@ -79,3 +80,26 @@ function highlightHandler(entries){
 // }
 
 // window.addEventListener("scroll", highLightCurrentIndex)
+
+const codeBlocks = Array.from(document.querySelectorAll(".ql-code-block-container, pre"))
+
+
+codeBlocks.forEach(ele => {
+    const button = document.createElement('button')
+    button.className = 'tw-p-4 btn copy-btn'
+    button.innerHTML = '<i class="bi bi-copy"></i>'
+    button.onclick = () => copyCodeToClipboard(ele)
+    ele.appendChild(button);
+})
+
+
+function copyCodeToClipboard(element){
+
+    navigator.clipboard.writeText(element.innerText).then(function() {
+        toastAlert(null, "Copied to clipboard")
+
+    }, function(err) {
+        toastAlert(null, "Error copying", "danger")
+
+    })
+}

@@ -6,13 +6,39 @@
 {% block content %}
 
     <div class="tw-h-full tw-w-full tw-flex-col tw-p-3">
-        {% comment %} {{project.name}} {% endcomment %}
-        {% comment %} <div class="tw-text-2xl">
-            {{project.name}}qwqw
-        </div>
-        {{base.about}} {% endcomment %}
+        
+        <div class="tw-fixed tw-top-[10%] tw-w-[250px] tw-flex tw-flex-col 
+                    tw-text-lg tw--h-[100vh] tw-overflow-y-auto sidebar">
 
-        wedwed
+            {% for side in documentation.sidebar %}
+                <a href="{% url "get-docs" name=project.name unique_id=project.unique_id page_url=side.url version=documentation.version %}" 
+                    class="tw-font-semi-bold tw-text-xl sidebar-header">
+                    {{side.name}}
+                </a> 
+                    
+                    {% for heading in side.headings %}
+                        <a href="#{{heading|slugify}}" class="sidebar-item">
+                            &emsp;{{heading}}
+                        </a>
+                    {% endfor %}
+            {% endfor %}
+        
+
+        </div>
+
+
+
+        <div class="tw-flex tw-w-full tw-gap-1">
+            
+            <div class="tw-w-full tw-x-[25%] md:tw-px-[25%] tw-place-items-center tw-p-4 doc-viewer">
+                {{doc_page.body.html|safe}}
+            </div>
+        
+        </div>
+
     </div>
 
+    <link rel="stylesheet" href="{% static "./css/quill-config.css" %} ">
+    <link rel="stylesheet" href="{% static "./css/blog-view.css" %} ">
+    <script src="{% static "./js/editor/blog-view.js" %}"></script>
 {% endblock content %}

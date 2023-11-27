@@ -140,7 +140,6 @@
         
         copy_link.onclick = () => {
             navigator.clipboard.writeText(window.location.href).then(function() {
-                console.log("callback: ", toast)
                 const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
                 toast_body.innerText = `Link copied to clipboard`
                 toastBootstrap.show()

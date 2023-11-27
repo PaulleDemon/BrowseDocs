@@ -47,3 +47,23 @@ def get_file_name(file_path: str):
     name = file_path.split("/")
 
     return name[0].split(".")[0]
+
+
+
+def extract_path(path: str):
+    """
+    Given path returns a proper path, e.g., /docs#heading1 -> docs/
+    """
+
+    path_parts = path.split("#", 1)
+    path_parts = path_parts[0].split("?", 1)
+
+    path_components = path_parts[0].split("/")
+    path_components = [component for component in path_components if component]
+
+    result_path = '/'.join(path_components)
+
+    if not path.endswith('/'):
+        result_path += '/'
+
+    return result_path

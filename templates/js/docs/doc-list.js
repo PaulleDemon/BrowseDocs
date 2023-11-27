@@ -86,12 +86,18 @@ function searchProject(){
         
 }
 
-
+/**
+ * 
+ * @param {*} projectid 
+ * @param {*} btn 
+ * @returns 
+ */
 async function updateDocument(projectid){
     event?.stopPropagation()
     event?.preventDefault()
 
-    console.log("updated: ", JSON.stringify({projectid}))
+    if (event)
+        event.target.disabled = true
 
     const res = await fetch(`/doc/update/`, {
         method: "POST",
@@ -125,7 +131,15 @@ async function updateDocument(projectid){
     else if (res.status == 200){
 
         toastAlert(null, "Document is updating please wait.")
+        return
     }
+    
+    else{
+        toastAlert(null, "Error updating document. Try again later.")
+    }
+
+    if (event)
+        event.target.disabled = false
     
 
 }

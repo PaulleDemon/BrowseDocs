@@ -61,3 +61,6 @@ def extract_path(url):
     """
     path = urlparse(url).path
     return path[1:]
+
+
+# def 

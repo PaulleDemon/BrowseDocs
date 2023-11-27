@@ -1,4 +1,8 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
+from django.utils.html import format_html
+
+from lxml.html.clean import clean_html
 
 from .models import (Project, Social, Sponsor, AdditionalLink,
                         Documentation, DocPage)
@@ -33,7 +37,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 @admin.register(Documentation)
-class ProjectAdmin(admin.ModelAdmin):
+class DocsAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'project', 'lang', 'version',]
 
@@ -41,8 +45,24 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 @admin.register(DocPage)
-class ProjectAdmin(admin.ModelAdmin):
+class DocPageAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'page_url', 'documentation', 'body',]
 
     list_filter = ['datetime']
+    readonly_fields = ['body_html', 'datetime', 'id']
+
+    fieldsets = (
+        (None, {
+            'fields': ('id', 'page_url', 'documentation', 'datetime')
+        }),
+        ('Body', {
+            'fields': ('body', 'body_html'),
+            'classes': ('wide',),
+        }),
+    )
+
+
+    def body_html(self, obj):
+        return mark_safe(clean_html(obj.body.html))
+        

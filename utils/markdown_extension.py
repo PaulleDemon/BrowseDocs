@@ -18,7 +18,6 @@ class CodeDivPreprocessor(Preprocessor):
         code_block_lines = []
 
         for line in lines:
-            print("line: ", line)
             if line.strip().startswith("```"):
                 if in_code_block:
                     # Closing code block

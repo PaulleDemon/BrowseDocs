@@ -1,0 +1,57 @@
+
+
+.doc-viewer img{
+    max-width: 100%;
+}
+
+.doc-viewer a{
+    color: #1e85ec;
+}
+
+/* ------------------ sidebar ------------------------ */
+.sidebar{
+    background-color: #0F172A;
+    z-index: 10;
+    padding: 10px;
+}
+
+.sidebar-header, .sidebar-item{
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.sidebar-header:hover,.sidebar-item:hover, .sidebar-active{
+    background-color: #1e85ec2f;
+}
+
+/* -----------------utils -----------*/
+.copy-btn{
+    position: absolute;
+    right: 1%;
+    top: 2%;
+}
+
+.ql-code-block-container{
+    position: relative;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #080f1e;
+}
+
+summary::after {
+    content: '▸'; 
+    margin-left: 10px; 
+    display: inline-block;
+    transform-origin: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+details[open] summary::after {
+    transform: rotate(90deg);
+}
+
+details{
+    padding: 10px;
+    list-style: none;
+    margin: 5px;
+}

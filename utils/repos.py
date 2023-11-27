@@ -26,32 +26,29 @@ def get_headers(user: User):
 
     
 
-def get_github_repo(user: User, access_token=None):
+def get_github_repo(user: User, private=False):
 
     """
         if access token is provided will fetch private repositories as well.
-        We'll limit to public repositories
+        We'll limit to public repositories. If private is set to True, displays private
+        repos as well
     """
 
     # Make the API request
     headers = get_headers(user)
 
-    if access_token:
-        # FIXME: nothow I imagined
-        headers.update({
-'           Authorization': f'token {access_token}',
-        })
-        response = requests.get('https://api.github.com/user/repos', headers=headers)
-
-    else:
-        response = requests.get(f'https://api.github.com/users/{user.username}/repos', headers=headers)
+    response = requests.get(f'https://api.github.com/users/{user.username}/repos', headers=headers)
 
     repos = []
 
     if response.status_code == 200:
         repositories = response.json()
         # sorts by latest commit
-        repos = list(sorted(repositories, key=lambda repo: repo['updated_at'], reverse=True))
+        repos = list(sorted(repositories, key=lambda repo: repo['pushed_at'], reverse=True))
+
+        # print('repos: ', repos[0])
+        if not private:
+            repos = filter(lambda a: a.get('private') == False, repos)
 
     return repos
 

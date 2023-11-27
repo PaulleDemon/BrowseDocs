@@ -2,7 +2,8 @@ from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Project, AdditionalLink, Sponsor, Social
+from .models import (Project, AdditionalLink, Sponsor, Social, 
+                        Documentation, DocPage)
 
 
 class ProjectForm(forms.ModelForm):
@@ -22,6 +23,19 @@ class ProjectForm(forms.ModelForm):
 
         return cleaned_data
     
+
+class DocumentationForm(forms.ModelForm):
+
+    class Meta:
+        model = Documentation
+        exclude = ('datetime', 'last_updated')
+
+
+class DocPageForm(forms.ModelForm):
+
+    class Meta:
+        model = DocPage
+        exclude = ('datetime', 'last_updated')
 
 class LinkForm(forms.ModelForm):
 
