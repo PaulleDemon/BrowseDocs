@@ -8,6 +8,7 @@ urlpatterns = [
     path('', lambda request: redirect('list-tutorials', permanent=True), name='list-tutorials'),
     path('<int:id>/', get_tutorial, name='get-tutorial'),
     path('<int:id>/<slug:title>/', get_tutorial, name='get-tutorial'),
+    path('<str:project_id>/list/', list_tutorials, name='list-tutorials'),
     path('list/', list_tutorials, name='list-tutorials'),
 
     path('create/', create_tutorial_view, name='create-tutorial'),

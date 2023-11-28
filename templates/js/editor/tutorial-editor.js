@@ -3,8 +3,10 @@ const draftBtn = document.getElementById("save-draft")
 const publishButton = document.getElementById("publish")
 const title = document.getElementById("tutorial-title")
 const tutorial_id = document.getElementById("tutorial-id") 
+const tutorialCreateContainer = document.getElementById("tutorial-editor")
 
-// TODO: insert copy code to all the code editor
+const projectId = document.getElementById("project_id")
+
 
 const quillEditorTextArea = document.getElementById("quill-textarea")
 
@@ -13,6 +15,12 @@ const titleInput = new TitleInput(title)
 
 const body_data = JSON.parse(document.getElementById('body-data').textContent)
 
+const params = new URLSearchParams(window.location.search)
+
+const project_id = params.get("project_id")
+if (project_id){
+    projectId.value = project_id
+}
 
 if (body_data){
    
@@ -35,6 +43,15 @@ editor.on('text-change', function(delta, oldDelta, source) {
         publishButton.disabled = true
     }
 
+})
+console.log("HNO: ", tutorialCreateContainer)
+tutorialCreateContainer.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault()
+  
+        saveDraft()
+        console.log("YAA")
+      }
 })
 
 
@@ -81,6 +98,7 @@ async function saveDraft(){
     data.append("title", heading)
     data.append("body", JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': editor.root.innerHTML}))
     data.append("tag", tags.value)
+    data.append("project", projectId.value)
 
     const res = await fetch(`/tutorial/save-draft/?edit=${id}`, {
         method: "POST",

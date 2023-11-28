@@ -18,10 +18,9 @@ class CodeDivPreprocessor(Preprocessor):
         in_code_block = False
         code_block_lines = []
 
+        extension = ''
         for line in lines:
             if line.strip().startswith("```"):
-                extension = line.strip()[3:].strip() or ''
-                print("extension: ", line, extension)
                 if in_code_block:
                     # Closing code block
                     in_code_block = False
@@ -29,8 +28,11 @@ class CodeDivPreprocessor(Preprocessor):
                     new_lines.append(f'<div class="ql-code-block-container {"language-"+get_language_name(extension) if extension else ""}" spellcheck="false">{code_content}</div>\n')
                     code_block_lines = []
                 else:
+                    extension = line.strip()[3:].strip() or ''
+
                     # Opening code block
                     in_code_block = True
+
                     code_block_lines = []
 
             elif line.startswith("> "):

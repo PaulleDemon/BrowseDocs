@@ -34,10 +34,10 @@ function toastAlert(toast, text="", type="normal"){
 
     if (type === "danger"){
         toast.classList.add("bg-danger")
-        toast.classList.remove("bg-dark")
+        toast.classList.remove("bg-primary")
     }else{
         toast.classList.remove("bg-danger")
-        toast.classList.add("bg-dark")
+        toast.classList.add("bg-primary")
     }
 
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)

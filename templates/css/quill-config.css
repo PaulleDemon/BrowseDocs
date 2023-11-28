@@ -12,7 +12,8 @@
     z-index: 10;
     top: 40px;
     background-color: #0F172A;
-
+    height: max-content;
+    flex-wrap: wrap;
 }
 
 .ql-toolbar .ql-picker-label, .ql-toolbar{

@@ -334,6 +334,10 @@ select{
   position: fixed;
 }
 
+.\!tw-fixed{
+  position: fixed !important;
+}
+
 .\!tw-left-auto{
   left: auto !important;
 }
@@ -368,6 +372,10 @@ select{
 
 .tw-top-\[5\%\]{
   top: 5%;
+}
+
+.tw-bottom-2{
+  bottom: 0.5rem;
 }
 
 .tw-z-10{
@@ -635,6 +643,19 @@ select{
 
 .tw-w-full{
   width: 100%;
+}
+
+.tw-w-max{
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.tw-w-\[80\%\]{
+  width: 80%;
+}
+
+.tw-w-\[400px\]{
+  width: 400px;
 }
 
 .tw-min-w-\[200px\]{
@@ -908,6 +929,11 @@ select{
 .tw-bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.\!tw-bg-slate-700{
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(51 65 85 / var(--tw-bg-opacity)) !important;
 }
 
 .tw-object-contain{

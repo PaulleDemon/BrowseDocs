@@ -7,7 +7,8 @@
 
 {% block content %}
 
-<div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-3">
+<div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-3"
+        id="tutorial-editor">
 
     {% if errors %}
         <div class="alert alert-danger">
@@ -105,7 +106,7 @@
                             active:tw-outline-none
                             tw-resize-none
                             " 
-                            maxlength="200"
+                            maxlength="150"
                             name="title"
                             placeholder="Title"
                             id="tutorial-title"
@@ -123,7 +124,7 @@
         <textarea name="body" style="display:none" id="quill-textarea"></textarea>
 
         {% comment %} Quill editor is below and quill text area is above for saving {% endcomment %}
-        <div id="editor" style="min-height: 10vh;" class="tw-w-full">
+        <div id="editor" style="min-height: 10vh; margin-top: 20px;" class="tw-w-full">
         </div>
 
         <div class="tw-flex tw-flex-col tw-place-content-center tw-place-items-center tw-mt-[3%]">
@@ -144,7 +145,8 @@
                     class="input tw-max-w-xs"
                     placeholder="Project id"
                     name="project"
-                    value="{% if tutorial.project %}{{tutorial.project}}{% else %}{% endif %}">
+                    id="project_id"
+                    value="{% if tutorial.project %}{{tutorial.project.unique_id}}{% else %}{% endif %}">
         </div>
 
         <div class="tw-flex tw-gap-3">

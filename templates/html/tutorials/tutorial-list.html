@@ -11,6 +11,21 @@
             tw-w-full md:tw-px-[25%] tw-place-items-center 
             tw-p-3 ">
 
+    <a href="{% url "create-tutorial" %}" class="btn btn-success tw-ml-auto">
+        Write Tutorial
+    </a>
+
+    {% if tutorials|length == 0 %}
+
+        <div class="tw-w-full tw-mt-[10%] tw-flex tw-flex-col tw-text-center tw-text-xl tw-place-items-center">
+            <p>No tutorials yet. Write one</p> 
+            <a href="{% url "create-tutorial" %}?project_id={{base.unique_id}}" class="browserdoc-btn tw-w-max ">
+                Write Tutorial
+            </a>
+        </div>
+
+    {% endif %}
+
     {% for tutorial in tutorials  %}
         <a href="{% url 'get-tutorial' tutorial.id tutorial.title|slugify %}" 
                                     class="tw-text-md tw-w-full tw-h-full">

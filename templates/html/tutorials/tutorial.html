@@ -26,8 +26,7 @@
         {{tutorial.title}}
     </div>
     <div class="tw-mt-[5%] tw-w-full tw-text-base" id="quill-editor">
-        {{tutorial.body.html|safe}}
-
+            {{tutorial.body.html|safe}}
     </div>
 
     <div class="tw-m-2 tw-p-2 tw-min-w-[30px] tw-min-h-[80px] 
@@ -92,6 +91,6 @@
 
 </script>
 <script src="{% static "./js/editor/blog-view.js" %}"></script>
-
+<link rel="stylesheet" href="{% static "./css/blog-view.css" %}">
 {% endblock content %}
 

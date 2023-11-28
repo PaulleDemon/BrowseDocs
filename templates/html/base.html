@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
     
-    <title>{% if page_title %}{{page_title}}{% else %}Browse-Docs{% endif %}</title>
+    <title>{% if page_title %}{{page_title}}{% else %}BrowseDocs{% endif %}</title>
     
     {% tailwind_css %}
 
@@ -37,7 +37,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/fetch-retry@5.0.6/dist/fetch-retry.umd.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     {% comment %} <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
@@ -99,7 +99,7 @@
                 {% endif %}
                 
                 <a class="nav-link hover:tw-text-blue-400" 
-                    href="{% if base.url %}{{base.url}}{% else %}{% url "list-tutorials" %}{% endif %}">
+                    href="{% if base %}{% url "list-tutorials" project_id=base.unique_id%}{% else %}{% url "list-tutorials" %}{% endif %}">
                         Tutorials
                 </a>
                 <a class="nav-link hover:tw-text-blue-400" href="">Blogs</a>
@@ -166,7 +166,7 @@
     </nav>
 
 
-    <div id="error-toast" class="toast bg-primary tw-h-max tw-z-[5000] tw-fixed tw-top-[5%] tw-left-[50%] tw-translate-x-[-50%] align-items-center text-bg-dark border-0" 
+    <div id="error-toast" class="toast bg-primary tw-h-max tw-z-[5000] tw-fixed tw-top-[5%] tw-left-[50%] tw-translate-x-[-50%] align-items-center border-0" 
         role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body" id="error-toast-body">

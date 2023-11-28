@@ -3,6 +3,12 @@ let headings = document.querySelectorAll("h1, h2");
 let tocContainer = document.getElementById("toc-container");
 let tocElements = []
 
+const tables = document.querySelectorAll('table')
+
+tables.forEach((ele) => {
+    ele.classList.add("table", "table-striped", "table-bordered", "tw-overflow-auto", "tw-max-w-full")
+    console.log("class: ", ele)
+})
 
 function generateTOC(){
     // generater table of contents
@@ -80,8 +86,18 @@ function highlightHandler(entries){
 // }
 
 // window.addEventListener("scroll", highLightCurrentIndex)
+// hljs.configure({languages:['python', 'javascript', 'java', 'rust', 
+//                             'ruby', 'php', 'cpp', 'csharp', 'kotlin', 'json', 
+//                             'html', 'css']})
 
 document.querySelectorAll('pre, .ql-code-block-container').forEach((el) => {
+    console.log("gets",  el.querySelector("select"))
+    const selectElement = el.querySelector("select");
+    
+    if (selectElement) {
+        el.removeChild(selectElement);
+    }
+
     hljs.highlightElement(el);
 })
 

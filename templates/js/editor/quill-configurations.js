@@ -112,8 +112,15 @@ editor.on('text-change', function(delta, oldDelta, source) {
         // editor.updateContents(delta, 'api');
         // updateOutput();
     }
-
     
+    if (delta.ops && delta.ops.length > 0) {
+        const lastOp = delta.ops[delta.ops.length - 1];
+        if (lastOp.attributes && typeof lastOp.attributes === 'object' && 'code-block' in lastOp.attributes) {
+            // FIXME: the slect inside code block should add the language class in
+            document.querySelectorAll("div.ql-code-block-container").forEach()
+
+        }
+    }
 
     function updateHeading() {
         // if current line is heading then update the heading with the id of the current title
@@ -139,6 +146,7 @@ editor.on('text-change', function(delta, oldDelta, source) {
     updateHeading()
 
 })
+
 
 
 // editor.on('selection-change', function(range, oldRange, source) {

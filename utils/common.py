@@ -63,8 +63,8 @@ def extract_path(path: str):
 
     result_path = '/'.join(path_components)
 
-    if not path.endswith('/'):
-        result_path += '/'
+    if path.endswith('/'):
+        result_path = result_path[:-1]
 
     return result_path
 
@@ -73,13 +73,19 @@ def get_language_name(extension):
     language_mapping = {
         'py': 'python',
         'js': 'javascript',
+        'ts': 'typescript',
         'html': 'html',
         'css': 'css',
         'java': 'java',
         'c++': 'cpp',
-        'c#': 'csharp',
-        'plain': 'plaintext'
-        # Add more mappings as needed
+        'cs': 'csharp',
+        'plain': 'plaintext',
+        'rs': 'rust',
+        'rb': 'ruby',
+        'kt': 'kotlin',
+        'sql': 'sql',
+        'swift': 'swift',
+        'sh': 'shell',
     }
 
-    return language_mapping.get(extension.lower(), extension)
+    return language_mapping.get(extension.lower(), extension.lower())

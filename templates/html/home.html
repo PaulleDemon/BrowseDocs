@@ -28,7 +28,7 @@
 
         {% for project in projects  %}
             <div class="tw-border-solid tw-border-[1px] tw-bg-gray-800
-            tw-rounded-lg tw-w-[60%] md:tw-max-w-[450px] tw-h-[200px] max-md:tw-w-[100%] 
+            tw-rounded-lg tw-w-[400px] md:tw-max-w-[450px] tw-h-[200px] max-md:tw-w-[100%] 
             tw-p-4 tw-flex  max-sm:tw-max-w-full tw-cursor-pointer
             " 
             onclick="updateUrl({% url "get-docs" unique_id=project.unique_id %})">

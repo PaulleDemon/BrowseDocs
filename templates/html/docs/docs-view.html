@@ -23,13 +23,13 @@
                     {% endfor %}
             {% endfor %}
           
-            <div class="btn-group dropup">
+            <div class="btn-group dropup tw-w-max !tw-fixed tw-bottom-2 tw-z-10">
                 <button type="button" class="btn dropdown-toggle !tw-text-left" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{documentation.version}}
+                    version {{documentation.version}}
                 </button>
-            <div class="dropdown-menu text-center">
+            <div class="dropdown-menu text-center tw-w-max">
                 {% for doc in project.documentation_set.all %}
-                    <a href="{% url "get-docs" name=project.name unique_id=project.unique_id page_url=doc.docpage_set.all.0.page_url version=doc.version %}">
+                    <a class="dropdown-item" href="{% url "get-docs" name=project.name unique_id=project.unique_id page_url=doc.docpage_set.all.0.page_url version=doc.version %}">
                         {{doc.version}}
                     </a>
                 {% endfor %}
