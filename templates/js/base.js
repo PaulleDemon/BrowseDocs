@@ -95,3 +95,18 @@ function hideQuickSearch(){
 
 intializeQuickSearch()
 initializePasswordInputs()
+
+
+function openNav(){
+
+	const navBar = document.getElementById("navbar") 
+
+	navBar.classList.remove("tw-hidden")
+
+}	
+
+function closeNav(){
+	const navBar = document.getElementById("navbar") 
+
+	navBar.classList.add("tw-hidden")
+}

@@ -21,7 +21,8 @@ function generateTOC(){
         listItem.style.maxHeight = "min-fit"
         listItem.classList.add("tw-list-none", "tw-overflow-hidden", "tw-rounded-lg")
         let link = document.createElement("a")
-        link.classList.add( "tw-rounded-lg", "tw-p-1", )
+        link.classList.add( "tw-rounded-lg", "tw-p-1", "tw-w-[100%]")
+        link.style.width = "100%"
         link.textContent = heading.textContent
         link.href = "#" + heading.id 
 
@@ -66,32 +67,15 @@ function highlightHandler(entries){
     }
 }
 
-// function highLightCurrentIndex(e){
-    
-//     let scrollPosition = window.scrollY;
 
-//     // tocContainer
-
-//     headings.forEach(function(heading) {
-//       let offsetTop = heading.offsetTop;
-//       let offsetBottom = offsetTop + heading.clientHeight;
-
-//       if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
-//         heading.classList.add("tw-bg-red-500")
-//       } else {
-//         heading.classList.remove("tw-bg-red-500")
-//       }
-//     })
 
 // }
 
-// window.addEventListener("scroll", highLightCurrentIndex)
 // hljs.configure({languages:['python', 'javascript', 'java', 'rust', 
 //                             'ruby', 'php', 'cpp', 'csharp', 'kotlin', 'json', 
 //                             'html', 'css']})
 
 document.querySelectorAll('pre, .ql-code-block-container').forEach((el) => {
-    console.log("gets",  el.querySelector("select"))
     const selectElement = el.querySelector("select");
     
     if (selectElement) {

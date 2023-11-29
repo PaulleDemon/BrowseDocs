@@ -30,9 +30,9 @@ class Blog(models.Model):
 
 class BlogImage(models.Model):
 
-    tutorial = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    image =  ContentTypeRestrictedFileField(upload_to='tutorial-media/', null=True, blank=True, 
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    image =  ContentTypeRestrictedFileField(upload_to='blog-media/', null=True, blank=True, 
                                             max_upload_size=5242880, content_types=["image/jpeg", "image/png", "image/jpg", "image/gif"])
 
     def __str__(self):
-        return self.tutorial.title[:30]
+        return self.blog.title[:30]

@@ -9,7 +9,7 @@
 
 <div class="tw-flex tw-flex-col tw-h-full 
             tw-w-full md:tw-px-[25%] tw-place-items-center 
-            tw-p-3 ">
+            tw-p-3 tw-min-h-[100vh]">
 
     <a href="{% url "create-tutorial" %}" class="btn btn-success tw-ml-auto">
         Write Tutorial
@@ -27,13 +27,13 @@
     {% endif %}
 
     {% for tutorial in tutorials  %}
-        <a href="{% url 'get-tutorial' tutorial.id tutorial.title|slugify %}" 
+        <a href="{% url 'get-tutorial' id=tutorial.id title=tutorial.title|slugify project_id=base.unique_id  %}" 
                                     class="tw-text-md tw-w-full tw-h-full">
             <div class="tw-text-4xl tw-w-full">
                 {{tutorial.title}}
             </div>
             <div class="tw-mt-[2%] tw-mb-[5%] tw-w-full">
-                {{tutorial.body.html|safe|slice:":300"}} <span class="tw-text-blue-500">continue reading...</span>
+                {{tutorial.body.html|safe|slice:":300"}} <span class="!tw-text-blue-500" style="color: #3495eb;">continue reading...</span>
             </div>
         </a>
     {% endfor %}
@@ -66,5 +66,13 @@
     {% endif %}
 
 </div>
+
+<script>
+    const tables = document.querySelectorAll('table')
+
+    tables.forEach((ele) => {
+        ele.classList.add("table", "table-striped", "table-bordered", "tw-overflow-auto", "tw-max-w-full")
+    })
+</script>
 
 {% endblock content %}

@@ -43,6 +43,7 @@
     {% comment %} <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script> {% endcomment %}
     
+    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" integrity="sha512-H+rglffZ6f5gF7UJgvH4Naa+fGCgjrHKMgoFOGmcPTRwR6oILo5R+gtzNrpDp7iMV3udbymBVjkeZGNz1Em4rQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> {% endcomment %}
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.0-dev.4/quill.min.js" integrity="sha512-s5yxCy6NoFieG522AqCHSTZnd9LEa38FF3sOZHPhfHUQBdiF/NTJV8qwkvJWz5F9cHrNZtImaEURkOv3tI5emA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.0-dev.4/quill.snow.css" integrity="sha512-GivcExJD5rBG3kdKHpTitaOKkKa073axVCLnludHsOmnthyTFxmjhTFfkXbe/3qQVwtMLdb8hhK1LjzfBDifIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -97,16 +98,35 @@
                 {% if base.name and base.unique_id %}
                     <a class="nav-link hover:tw-text-blue-400" href="{% url 'get-docs' name=base.name unique_id=base.unique_id %}">Docs</a>
                 {% endif %}
+
+                {% if base.name and base.unique_id %}
+                    <a class="nav-link hover:tw-text-blue-400" 
+                        href="{% url "list-tutorials" name=base.name project_id=base.unique_id%}">
+                            Tutorials
+                    </a>
+                {% else %}
+                    <a class="nav-link hover:tw-text-blue-400" 
+                        href="{% url "list-tutorials"%}">
+                            Tutorials
+                    </a>
+                {% endif %}
                 
-                <a class="nav-link hover:tw-text-blue-400" 
-                    href="{% if base %}{% url "list-tutorials" project_id=base.unique_id%}{% else %}{% url "list-tutorials" %}{% endif %}">
-                        Tutorials
-                </a>
-                <a class="nav-link hover:tw-text-blue-400" href="">Blogs</a>
+                {% if base.name and base.unique_id %}
+                    <a class="nav-link hover:tw-text-blue-400" 
+                        href="{% url "list-blogs" name=base.name project_id=base.unique_id%}">
+                            Blogs
+                    </a>
+                {% else %}
+                    <a class="nav-link hover:tw-text-blue-400" 
+                        href="{% url "list-blogs"%}">
+                            Blogs
+                    </a>
+                {% endif %}
+                
             </div>
 
             <div class="navbar-nav tw-ml-auto max-md:!tw-place-items-center tw-gap-4">
-                <div class="sm:tw-hidden tw-flex tw-w-[250px] tw-bg-inherit tw-rounded-full 
+                <div class=" tw-flex tw-w-[250px] tw-bg-inherit tw-rounded-full 
                             tw-border-solid tw-border tw-h-[40px] tw-place-items-center tw-p-3
                             tw-cursor-pointer tw-border-gray-500
                             " 
@@ -176,7 +196,7 @@
         </div>
     </div>
 
-    <div class="quick-search tw-hidden" id="quick-search-container">
+    <div class="quick-search tw-hidden tw-z-20" id="quick-search-container">
         <div class="input tw-flex">
             <input type="text" name="" 
                                     class="tw-w-full tw-bg-transparent
@@ -220,7 +240,6 @@
         </a>
     </footer>
     <script src="{% static "./js/base.js" %}"></script>
-   
     <script>
         // Timezone settings
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; // e.g. "America/New_York"

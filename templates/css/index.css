@@ -20,3 +20,15 @@ a{
     text-decoration: none;
     color: inherit;
 }
+
+.sidebar-close{
+    display: none;
+}
+
+@media screen and (max-width: 1000px) {
+    
+    .sidebar-close{
+        display: block;
+    }
+
+}

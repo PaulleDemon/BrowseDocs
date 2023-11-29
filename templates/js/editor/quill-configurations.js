@@ -57,8 +57,11 @@ const Parchment = Quill.import('parchment')
 
 Quill.register(NoticeBlot)
 Quill.register(InlineCodeBlot)
-Quill.register("modules/imageCompressor", imageCompressor);
-      
+Quill.register("modules/clipboard", PlainTextClipboard, true)
+Quill.register("modules/imageCompressor", imageCompressor)
+    
+
+const Delta = Quill.import('delta')
 
 
 let editor = new Quill('#editor', {
@@ -95,6 +98,12 @@ let editor = new Quill('#editor', {
             ignoreImageTypes: ['image/gif']
         },
         clipboard: {
+            matchers: [
+                [Node.TEXT_NODE, (node, delta) => {
+                    delta.ops = delta.ops.map(op => (typeof op.insert === 'string') ? { insert: op.insert.replace(/\n/g, ' ') } : op);
+                    return new Delta().retain(delta.length(), { bold: false });
+                  }]
+            ]
         },
     },
     theme: 'snow',
@@ -116,21 +125,19 @@ editor.on('text-change', function(delta, oldDelta, source) {
     if (delta.ops && delta.ops.length > 0) {
         const lastOp = delta.ops[delta.ops.length - 1];
         if (lastOp.attributes && typeof lastOp.attributes === 'object' && 'code-block' in lastOp.attributes) {
-            // FIXME: the slect inside code block should add the language class in
-            document.querySelectorAll("div.ql-code-block-container").forEach()
-
+            updateLanguage()
         }
     }
 
     function updateHeading() {
         // if current line is heading then update the heading with the id of the current title
         let cursorPosition = editor.getSelection()?.index;
-
+        
         if (!cursorPosition)
             return
-
+        
         let format = editor.getFormat(cursorPosition);
-  
+    
         if (format.header) {
             //if current line contains any heading formattig then add id
             const headingNodes = editor.root.querySelectorAll('h1, h2, h3');
@@ -147,6 +154,31 @@ editor.on('text-change', function(delta, oldDelta, source) {
 
 })
 
+
+function updateLanguage(){
+    document.querySelectorAll("div.ql-code-block-container")?.forEach(ele => {
+        const select = ele.querySelector("select")
+
+        ele.classList.forEach(className => {
+            if (className.startsWith("language")){
+                ele.classList.remove(className) // remove existing languages
+            }
+        })
+        if (select.value)
+            ele.classList.add(`language-${select.value}`)
+        
+        select.addEventListener("change", () => {
+            ele.classList.forEach(className => {
+                if (className.startsWith("language")){
+                    ele.classList.remove(className) // remove existing languages
+                }
+            })
+            ele.classList.add(`language-${select.value}`)
+        })    
+
+        
+    })
+}
 
 
 // editor.on('selection-change', function(range, oldRange, source) {
@@ -196,15 +228,11 @@ function toggleInlineCode() {
     const range = editor.getSelection()
     const format = editor.getFormat(range.index, range.length)
 
-    console.log("range: ", range, format)
     if (format['inline-code']) {
-        // If inline code is already present, remove it
         editor.formatText(range.index, range.length, 'inline-code', false);
     } else {
-        console.log("range: ", range.index + range.length, range.length)
-        // If inline code is not present, insert it and add a space to the right
+
         editor.formatText(range.index,  range.length, 'inline-code', true);
-        // editor.insertText(range.index + range.length + 2, ' ', true);
     }
     
 }
@@ -216,7 +244,6 @@ noticeButton.addEventListener('click', toggleNotice)
 
 
 function toggleNotice() {
-    console.log("notice toggle")
 
     const range = editor.getSelection();
     const format = editor.getFormat(range);

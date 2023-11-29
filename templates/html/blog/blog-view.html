@@ -8,9 +8,9 @@
 {% block content %}
 <div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-4">
 
-    {% if request.user == tutorial.user %}
+    {% if request.user == blog.user %}
 
-        <a href="{% url "create-tutorial" %}?edit={{tutorial.id}}&project_id={{tutorial.project.id}}" 
+        <a href="{% url "create-blog" %}?edit={{blog.id}}&project_id={{blog.project.id}}" 
             class="btn btn-success tw-w-[150px] tw-m-[2%] tw-ml-auto bi bi-pencil-square">
             Edit
         </a>
@@ -23,10 +23,10 @@
     </div>
 
     <div class="tw-text-4xl max-sm:tw-text-3xl tw-font-semibold tw-leading-snug tw-w-full">
-        {{tutorial.title}}
+        {{blog.title}}
     </div>
     <div class="tw-mt-[5%] tw-w-full tw-text-base" id="quill-editor">
-            {{tutorial.body.html|safe}}
+            {{blog.body.html|safe}}
     </div>
 
     <div class="tw-m-2 tw-p-2 tw-min-w-[30px] tw-min-h-[80px] 
@@ -53,15 +53,15 @@
                 tw-p-6 tw-rounded-lg tw-mt-[5%] tw-gap-4 tw-place-items-center">
         
         <span class="tw-text-2xl">Author</span>
-        <a href="https://github.com/{{tutorial.user.username}}">
-            <img src="https://github.com/{{tutorial.user.username}}.png" 
+        <a href="https://github.com/{{blog.user.username}}">
+            <img src="https://github.com/{{blog.user.username}}.png" 
                     alt="" srcset=""
                     class="tw-w-[100px] tw-h-[100px] tw-rounded-full"
                     >
-            <p class="tw-text-gray-400 tw-mt-2">@{{tutorial.user.username}}</p>
+            <p class="tw-text-gray-400 tw-mt-2">@{{blog.user.username}}</p>
         </a>
         <span class="tw-text-base">Last updated</span>
-        <span class="tw-text-sm">{% utc_to_local tutorial.datetime request.COOKIES.user_timezone %}</span>
+        <span class="tw-text-sm">{% utc_to_local blog.datetime request.COOKIES.user_timezone %}</span>
 
     </div>
 
@@ -77,8 +77,8 @@
     const facebook = document.getElementById("facebook-share")
     const copy_link = document.getElementById("copy-link")
 
-    twitter.href = `https://twitter.com/share?url=${window.location.href}&text=${encodeURIComponent(`Check out this tutorial: {{tutorial.title}}`)}`
-    reddit.href = `https://reddit.com/submit?url=${window.location.href}&title=${encodeURIComponent(`Check out this tutorial: {{tutorial.title}}`)}`
+    twitter.href = `https://twitter.com/share?url=${window.location.href}&text=${encodeURIComponent(`Check out this blog: {{blog.title}}`)}`
+    reddit.href = `https://reddit.com/submit?url=${window.location.href}&title=${encodeURIComponent(`Check out this blog: {{blog.title}}`)}`
     facebook.href = `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`
     
     copy_link.onclick = () => {

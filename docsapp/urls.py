@@ -19,6 +19,7 @@ urlpatterns = [
     path('docs/check-name-availability/', check_name_exists, name='name-availabilty'),
 
     path('<str:name>/about/<str:unique_id>/', get_project_about, name='project-about'),
+    path('<str:name>/docs/<str:unique_id>/<str:version>/', get_docs, name='get-docs'),
     path('<str:name>/docs/<str:unique_id>/<str:version>/<path:page_url>/', get_docs, name='get-docs'),
     path('<str:name>/docs/<str:unique_id>/', get_docs, name='get-docs'),
     path('<str:unique_id>/', get_docs, name='get-docs'),

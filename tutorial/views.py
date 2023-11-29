@@ -129,13 +129,22 @@ def save_draft(request):
 
 
 @require_http_methods(['GET'])
-def get_tutorial(request, id, title):
+def get_tutorial(request, id, title=None, project_id=None, name=None):
 
     try:
         tutorial = Tutorial.objects.get(id=id)
+        project = None
+        
+        if project_id:
+            
+            try:
+                project = Project.objects.get(unique_id=project_id)
+            except Project.DoesNotExist:
+                return render(request, '404.html')
 
         return render(request, 'tutorial.html', {
-                                            'tutorial': tutorial
+                                            'tutorial': tutorial,
+                                            'base': project
                                         })
 
     except Tutorial.DoesNotExist:
@@ -143,7 +152,7 @@ def get_tutorial(request, id, title):
 
 
 @require_http_methods(['GET'])
-def list_tutorials(request, project_id=None):
+def list_tutorials(request, project_id=None, name=None):
 
     my = request.GET.get('my')
 

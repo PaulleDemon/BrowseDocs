@@ -1,6 +1,11 @@
 /**
  * commonnly used functions
  */
+let defaultToast = document.getElementById("error-toast")
+
+window.addEventListener("load", () => {
+    defaultToast = document.getElementById("error-toast")
+})
 
 /**
  * 
