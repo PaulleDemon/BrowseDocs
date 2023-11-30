@@ -1,0 +1,95 @@
+
+.ql-toolbar.ql-snow{
+    font-size: 20px;
+    border: none !important;
+    outline: none !important;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    /* padding: 10px; */
+    position: sticky;
+    z-index: 10;
+    top: 40px;
+    background-color: #0F172A;
+    height: max-content;
+    flex-wrap: wrap;
+}
+
+.ql-toolbar .ql-picker-label, .ql-toolbar{
+    color: #fff;
+}
+
+.ql-align .ql-picker .ql-icon-picker{
+    font-size: 20px;
+}
+
+.notice-block{
+    /* background-color: #fcc740;
+    padding: 5px;
+    color: #000;
+    border-radius: 10px; */
+}
+
+.ql-container{
+    border: none !important;
+    outline: none !important;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.ql-formats{
+    margin-right: 20px; 
+}
+
+.ql-editor{
+    min-height: 10vh;
+}
+
+
+.ql-editor.ql-blank::before{
+    font-size: 16px;
+    color: grey;
+}
+
+.ql-editor p, .ql-editor img, .ql-editor pre {
+    margin-bottom: 5px !important;
+    line-height: 25px !important;
+  }
+
+.ql-editor pre {
+    background-color: #0a1124 !important;
+    color: #f8f8f2 !important;
+    overflow: visible;
+    padding: 5%;
+    border-radius: 10px;
+}
+
+.ql-editor img{
+    max-width: 80% !important;
+    margin: 5px auto !important;
+    display: block;
+    margin: 0 auto;
+}
+
+.ql-editor table, .ql-editor td{
+    border: 1px solid #fff;
+    padding: 5px;
+}
+
+.ql-editor .ql-code-block-container{
+    padding: 5px;
+    border-radius: 10px;
+    min-height: 50px;
+    background-color: red;
+}
+
+.ql-code-block-container select{
+    color: #fff;
+    background-color: #0a1124;
+}
+
+/* .ql-code-block-container{
+    background-color: #0a1124;
+    padding: 5px;
+} */

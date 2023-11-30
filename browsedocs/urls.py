@@ -39,6 +39,8 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('tutorial/', include('tutorial.urls')),
     
+    path('term/', include('terms.urls')),
+    
     path("", include('docsapp.urls')),
 
 

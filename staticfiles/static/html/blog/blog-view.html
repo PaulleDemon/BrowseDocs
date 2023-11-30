@@ -1,0 +1,96 @@
+{% extends './html/base.html' %}
+
+{% load tz %}
+{% load static %}
+
+{% load custom_tags %}
+
+{% block content %}
+<div class="tw-flex tw-flex-col tw-h-full tw-w-full md:tw-px-[25%] tw-place-items-center tw-p-4">
+
+    {% if request.user == blog.user %}
+
+        <a href="{% url "create-blog" %}?edit={{blog.id}}&project_id={{blog.project.unique_id}}" 
+            class="btn btn-success tw-w-[150px] tw-m-[2%] tw-ml-auto bi bi-pencil-square">
+            Edit
+        </a>
+
+    {% endif %}
+
+    <div class="tw-w-[250px] tw-min-h-[100px] tw-gap-4 tw-list-none
+                tw-text-sm tw-leading-9 max-md:tw-hidden
+                tw-fixed tw-top-[20%] tw-left-[4%] tw-z-10" id="toc-container">
+    </div>
+
+    <div class="tw-text-4xl max-sm:tw-text-3xl tw-font-semibold tw-leading-snug tw-w-full">
+        {{blog.title}}
+    </div>
+    <div class="tw-mt-[5%] tw-w-full tw-text-base" id="quill-editor">
+            {{blog.body.html|safe}}
+    </div>
+
+    <div class="tw-m-2 tw-p-2 tw-min-w-[30px] tw-min-h-[80px] 
+                            tw-flex md:tw-flex-col md:tw-fixed md:tw-top-[10%] 
+                            tw-place-content-center tw-justify-around max-sm:tw-text-xl md:tw-text-3xl
+                            md:tw-right-[10%] max-sm:tw-rounded-full">
+        <a class="tw-m-2 tw-cursor-pointer" id="twitter-share"  target="_blank" rel="noreferrer">
+            𝕏
+        </a>
+        <a class="tw-m-2 tw-cursor-pointer" id="reddit-share" target="_blank" rel="noreferrer">
+            <i class="bi bi-reddit"></i>
+        </a>
+        <a class="tw-m-2 tw-cursor-pointer" id="facebook-share" target="_blank" rel="noreferrer">
+            <i class="bi bi-facebook"></i>
+        </a>
+        <div class="tw-m-2 tw-cursor-pointer" id="copy-link" >
+            <i class="bi bi-share-fill"></i>
+        </div>
+        
+    </div>
+
+
+    <div class="tw-w-[350px] tw-flex tw-flex-col tw-bg-gray-700 tw-place-content-center 
+                tw-p-6 tw-rounded-lg tw-mt-[5%] tw-gap-4 tw-place-items-center">
+        
+        <span class="tw-text-2xl">Author</span>
+        <a href="https://github.com/{{blog.user.username}}">
+            <img src="https://github.com/{{blog.user.username}}.png" 
+                    alt="" srcset=""
+                    class="tw-w-[100px] tw-h-[100px] tw-rounded-full"
+                    >
+            <p class="tw-text-gray-400 tw-mt-2">@{{blog.user.username}}</p>
+        </a>
+        <span class="tw-text-base">Last updated</span>
+        <span class="tw-text-sm">{% utc_to_local blog.datetime request.COOKIES.user_timezone %}</span>
+
+    </div>
+
+
+</div>
+
+
+<script>
+    
+    // copy share button
+    const twitter = document.getElementById("twitter-share")
+    const reddit = document.getElementById("reddit-share")
+    const facebook = document.getElementById("facebook-share")
+    const copy_link = document.getElementById("copy-link")
+
+    twitter.href = `https://twitter.com/share?url=${window.location.href}&text=${encodeURIComponent(`Check out this blog: {{blog.title}}`)}`
+    reddit.href = `https://reddit.com/submit?url=${window.location.href}&title=${encodeURIComponent(`Check out this blog: {{blog.title}}`)}`
+    facebook.href = `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`
+    
+    copy_link.onclick = () => {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            toastAlert(null, "Link copied")
+          }, function(err) {
+            callback_form_toast_body.innerText = `Error copying link`
+          });
+    }
+
+</script>
+<script src="{% static "./js/editor/blog-view.js" %}"></script>
+<link rel="stylesheet" href="{% static "./css/blog-view.css" %}">
+{% endblock content %}
+

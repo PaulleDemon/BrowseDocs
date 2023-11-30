@@ -1,0 +1,47 @@
+{% extends './html/base.html' %}
+
+{% load tz %}
+{% load static %}
+
+{% block content %}
+
+    <div class="tw-h-full tw-w-full tw-flex-col tw-p-3">
+            
+        <div class="tw-mt-3 tw-p-4 !tw-leading-8 md:!tw-mx-[30%] tw-flex tw-flex-col md:tw-place-items-center" id=''>
+
+            {% if not user.is_authenticated %}
+                <div class="alert alert-warning">
+                    You are not logged in.
+                </div>
+            {% endif %}
+
+            <div class="tw-flex tw-flex-col tw-h-full tw-w-full tw-mt-[10%]" id="repo-container">
+                <div class="tw-text-2xl tw-text-center tw-font-bold tw-m-3">
+                    Select repository
+                </div>
+                {% comment %} <div class="tw-flex tw-gap-3 tw-w-full tw-justify-between">
+                    <a class="tw-text-center tw-text-blue-400 tw-m-2 !tw-right-auto">Manage repositories</a>
+                    <button type="button" id="reload-repo" 
+                            class="btn bi bi-arrow-clockwise bold !tw-left-auto"></button>
+                </div> {% endcomment %}
+
+                <div class="tw-flex tw-flex-col tw-border-solid tw-p-3 tw-w-full tw-border 
+                                tw-rounded-xl tw-min-h-[250px] tw-max-h-[450px] tw-overflow-y-auto 
+                                tw-gap-4
+                                tw-justify-between" id="repositories">
+                
+                    {% for repo in repos %}
+                        <div class="tw-flex tw-w-full tw-border-solid tw-p-2 tw-gap-2 tw-border-2 tw-rounded-xl
+                                    tw-place-items-center">
+                            {% comment %} <img src="{{repo.owner.avatar_url}}" class="tw-w-[35px] tw-h-[35px] tw-rounded-full" alt="" srcset=""> {% endcomment %}
+                            <span class="tw-max-w-[80%] tw-text-sm md:tw-text-lg tw-text-left tw-overflow-hidden">{{repo.full_name}}</span>
+                            {% comment %} <button class="btn btn-success !tw-ml-auto" name="import-repo" onclick="importRepository('{{repo.full_name}}')">import</button> {% endcomment %}
+                            <a href="{% url "project-create" %}?step=2&repo_name={{repo.full_name}}" class="btn btn-success !tw-ml-auto" name="import-repo">import</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -124,7 +124,7 @@ function updateQuickSearch(data){
 		quickSearchDropdown.appendChild(link)
 	}
 
-	if (data){
+	if (data && quickSearchDropdown.children.length > 0){
 		quickSearchDropdown.children[0].classList.add("search-active")
 		searchDropdownIndex = 0
 	}else{

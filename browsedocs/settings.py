@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'user',
     'blog',
     'docsapp',
-    'tutorial'
+    'tutorial',
+    'terms',
 ]
 
 
@@ -178,6 +179,7 @@ TEMPLATES = [
             BASE_DIR.joinpath("templates", "html", "docs"),
             BASE_DIR.joinpath("templates", "html", "blog"),
             BASE_DIR.joinpath("templates", "html", "tutorials"),
+            BASE_DIR.joinpath("templates", "html", "terms"),
 
             BASE_DIR.joinpath("templates", "html", "error"),
             BASE_DIR.joinpath("templates", "html", "authentication"),

@@ -1,7 +1,11 @@
 /**
  * commonnly used functions
  */
+let defaultToast = document.getElementById("error-toast")
 
+window.addEventListener("load", () => {
+    defaultToast = document.getElementById("error-toast")
+})
 
 /**
  * 
@@ -25,8 +29,7 @@ function alertError(alert, text=""){
 /**
  * 
  * @param {HTMLElement | null} toast 
- * @param {string} text
- * @param {"normal" | "danger"} type 
+ * @param {"normal" | "danger"} text 
  */
 function toastAlert(toast, text="", type="normal"){
 
@@ -75,6 +78,14 @@ function enableBtn(btn){
     btn.disabled = false
 }
 
+function isNameValid(text){
+    const regex = /^[a-zA-Z0-9_-]+$/
+
+    // Example usage
+    return regex.test(text)
+}
+
+
 function isValidEmail(email){
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
@@ -85,7 +96,30 @@ function isValidDomain(domain) {
 
     return domainPattern.test(domain);
 }
- 
+
+function isValidUrl(url){
+
+    try{
+        new URL(url)
+        return true
+    }catch(e){
+        return false
+    }
+
+}
+
+
+function slugify(text) {
+    if (text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')           
+            .replace(/[^\w-]+/g, '')        
+            .replace(/--+/g, '-')           
+            .replace(/^-+/, '')             
+            .replace(/-+$/, '')
+    }
+    return '';
+}
 
 /**
  * 
@@ -197,4 +231,221 @@ function isValidVariableFormat(inputString){
         return false
     }
     
+}
+
+/**
+ * 
+ * @param {string} template 
+ * @param {{}} context 
+ * @returns 
+ */
+function renderTemplate(template, context){
+    console.log("Context: ", context)
+    const copyContext = JSON5.parse(context || '{}');
+    
+    copyContext['from_email'] = copyContext['from_email'] || "paul@mail.com";
+    copyContext['from_name'] = copyContext['from_name'] || "Paul";
+    copyContext['from_signature'] = copyContext['from_signature'] || "Best regards, Paul";
+
+    return nunjucks.renderString(template, copyContext)
+}
+
+function parseTemplateModalVariables(){
+    const alertWarning = document.getElementById("templateModalAlert")
+    const testVariables = document.getElementById("templateModal-variables")
+
+    console.log("variables: ", JSON.parse(JSON.stringify(testVariables.value, null, 4))  )
+    if(!isValidVariableFormat(testVariables.value)){
+        alertError(alertWarning, "Cannot parse variables, Please use JS object model eg: {name: 'hellp', id: 2}")
+    }else{
+        hideAlertError(alertWarning)
+    }
+
+}
+
+async function viewTemplate(id){
+
+    const templateModalTitle = document.getElementById("templateViewModelLabel")
+    const templateModalSubject = document.getElementById("templateModalSubject")
+    
+    const templateModalBody = document.getElementById("templateViewModel-body")
+    const templateModalLoader = document.getElementById("templateViewModel-loader")
+    const testVariables = document.getElementById("templateModal-variables")
+    const editButton = document.getElementById("templateModalEdit")
+    
+    const alertWarning = document.getElementById("templateModalAlert")
+
+    console.log("sending request")
+
+    // fetches the full template.
+    templateModalLoader?.classList.remove("!tw-hidden")
+    
+    const res = await fetch(`/email/${id}/view-mail/`, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": Cookies.get('csrftoken'),
+            // 'Content-Type': 'application/json'
+            }, 
+    })
+
+    let data = undefined
+    try {
+        if (res.headers.get('content-type') === 'application/json') {
+            data = await res.json();
+            responseBody = JSON.stringify(data); // Store the JSON response body
+        } else {
+            data = await res.text();
+            responseBody = data; // Store the text response body
+        }
+    } catch (e) {
+        data = await res;
+        return
+    }
+    templateModalLoader?.classList.add("!tw-hidden")
+
+    if (res.status == 400){
+        alertError(alertWarning, "Something went wrong")
+    }
+
+    if (res.status == 429){
+        toastAlert(null, "Too many requests please wait", "danger")
+        alertError(alertWarning, "Too many requst please close this modal and wait")
+
+    }
+
+    if (res.status == 200){
+        console.log("data: ", data.subject, templateModalBody, templateModalSubject)
+        templateModalTitle.innerText = data.name
+        templateModalSubject.innerText = data.subject
+        templateModalBody.innerText = data.body
+        
+        editButton.setAttribute("href", data.edit_url)
+
+        try{
+            testVariables.value = data.variables// JSON.stringify(JSON.parse(data.variables), null, 4) || JSON.stringify({})
+        } catch(error){
+            alertError(alertWarning, "Cannot parse variables, please add your own")
+        }
+    }
+
+}
+
+
+
+/**
+ * 
+ * @param {Event} event 
+ * @param {HTMLDivElement} contextMenu 
+ * @returns 
+ */
+function setContextMenuPosition(event, contextMenu) {
+    var mousePosition = {};
+    var menuPosition = {};
+    var menuDimension = {};
+
+    menuDimension.x = contextMenu.offsetWidth;
+    menuDimension.y = contextMenu.offsetHeight;
+    mousePosition.x = event.pageX;
+    mousePosition.y = event.pageY;
+
+
+    function removeContextMenu(e){
+        if (!contextMenu.contains(e.target) || e.key == "Escape") {
+            contextMenu.classList.add("tw-hidden")
+            document.removeEventListener("click", removeContextMenu)
+            document.removeEventListener("keydown", removeContextMenu)
+        }
+    }
+    
+    // Hide context menu if clicked outside of it
+    document.addEventListener("click", removeContextMenu)
+    document.addEventListener("keydown", removeContextMenu)
+
+    if (mousePosition.x + menuDimension.x > window.innerWidth + window.scrollX) {
+        menuPosition.x = mousePosition.x - menuDimension.x;
+    } else {
+        menuPosition.x = mousePosition.x;
+    }
+
+    if (mousePosition.y + menuDimension.y > window.innerHeight + window.scrollY) {
+        menuPosition.y = mousePosition.y - menuDimension.y;
+    } else {
+        menuPosition.y = mousePosition.y;
+    }
+
+    // Set the position of the context menu
+    contextMenu.style.top = menuPosition.y + "px";
+    contextMenu.style.left = menuPosition.x + "px";
+    contextMenu.position = "fixed"
+    // Make the context menu visible
+    contextMenu.classList.remove("tw-hidden");
+
+    return menuPosition;
+}
+
+
+function updateUrl(url){
+    window.location = url
+}
+
+function isElementInViewport(el) {
+    // tells  if the element is in the viewport
+    var rect = el.getBoundingClientRect()
+  
+    return (
+      rect.top >= -1 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    )
+}
+
+
+
+  /**
+ * 
+ * @param {string} text 
+ * @param {"project"|"headings"} type 
+ */
+async function search(text, type){
+
+
+    const res = await fetch(`/search/?${type}=${text}`, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": Cookies.get('csrftoken'),
+            // "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryABC123"
+            }, 
+    })
+
+    let res_data = {}
+
+    try {
+        if (res.headers.get('content-type') === 'application/json') {
+            res_data = await res.json();
+            responseBody = JSON.stringify(data); // Store the JSON response body
+        } else {
+            res_data = await res.text();
+            responseBody = data; // Store the text response body
+        }
+    } catch (e) {
+        data = await res;
+    }
+    return [res.status, res_data]
+
+}
+
+
+let quickSearchData = []
+
+
+/**
+ * 
+ * @param {{title: string, url: string}[]} data
+ * 								
+ * 							
+ */
+function setQuickSearchData(data){
+	quickSearchData =  data
 }

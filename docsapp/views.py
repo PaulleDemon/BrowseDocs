@@ -377,6 +377,8 @@ def get_docs(request, unique_id, page_url=None, version=None, name=None):
 
             try:
                 doc_page = doc_page.get(page_url=extract_path(page_url))
+                doc_page.views += 1
+                doc_page.save()
 
             except DocPage.DoesNotExist:
                 return render(request, '404.html')
