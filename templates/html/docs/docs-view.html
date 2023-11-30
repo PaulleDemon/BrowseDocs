@@ -60,4 +60,12 @@
     <link rel="stylesheet" href="{% static "./css/quill-config.css" %} ">
     <link rel="stylesheet" href="{% static "./css/blog-view.css" %} ">
     <script src="{% static "./js/editor/blog-view.js" %}"></script>
+
+    <script>
+
+        const django_data = JSON.parse("{{search_data|escapejs}}")
+        
+        setQuickSearchData(django_data)
+
+    </script>
 {% endblock content %}

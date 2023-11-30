@@ -52,9 +52,9 @@
     <script src="https://unpkg.com/quill-image-compress@1.2.11/dist/quill.imageCompressor.min.js"></script>
     {% comment %} <script src="https://unpkg.com/quill-paste-smart@latest/dist/quill-paste-smart.js"></script> {% endcomment %}
 
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <link rel="stylesheet" href="{%static './css/index.css'%}">
-    
     <script src="{% static "./js/utils/elements.js" %}"></script>
     <script src="{% static "./js/utils/common.js" %}"></script>
     <script src="{% static "./js/utils/constants.js" %}"></script>
@@ -75,7 +75,9 @@
     
     {% block fullpage %}{% endblock fullpage %}
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top max-sm:!tw-bg-[#0F172A] max-sm:!tw-shadow-xl">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top max-sm:!tw-bg-[#0F172A] max-sm:!tw-shadow-xl"
+            if="navbar"
+        >
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -126,20 +128,23 @@
             </div>
 
             <div class="navbar-nav tw-ml-auto max-md:!tw-place-items-center tw-gap-4">
-                <div class=" tw-flex tw-w-[250px] tw-bg-inherit tw-rounded-full 
-                            tw-border-solid tw-border tw-h-[40px] tw-place-items-center tw-p-3
-                            tw-cursor-pointer tw-border-gray-500
-                            " 
-                            id="nav-search"
-                            onclick="showQuickSearch()">
-                    {% comment %} <input type="text" class="tw- tw-bg-inherit tw-rounded-full" name="" id=""> {% endcomment %}
-                    <i class="bi bi-search"></i>
-                    <div class="tw-p-2 tw-ml-auto">
-                        <button type="button" class="key-btn tw-px-3" onclick="hideQuickSearch()">Ctrl</button>
-                        <span>+</span>
-                        <button type="button" class="key-btn tw-px-3" onclick="hideQuickSearch()">k</button>
+                
+                {% if is_doc %}
+                    <div class=" tw-flex tw-w-[250px] tw-bg-inherit tw-rounded-full 
+                                tw-border-solid tw-border tw-h-[40px] tw-place-items-center tw-p-3
+                                tw-cursor-pointer tw-border-gray-500
+                                " 
+                                id="nav-search"
+                                onclick="showQuickSearch()">
+                        {% comment %} <input type="text" class="tw- tw-bg-inherit tw-rounded-full" name="" id=""> {% endcomment %}
+                        <i class="bi bi-search"></i>
+                        <div class="tw-p-2 tw-ml-auto">
+                            <button type="button" class="key-btn tw-px-3" onclick="hideQuickSearch()">Ctrl</button>
+                            <span>+</span>
+                            <button type="button" class="key-btn tw-px-3" onclick="hideQuickSearch()">k</button>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
                 <button class="bi bi-brightness-high-fill btn btn-lg" id="theme">
                     <i></i>
                 </button>
@@ -166,6 +171,8 @@
                             <hr class="dropdown-divider">
                             <a class="dropdown-item" href="#">My Documentations</a>
                             <a class="dropdown-item" href="{% url "list-tutorials" %}?my=true">My tutorials</a>
+                            <hr class="dropdown-divider">
+                            <a class="dropdown-item" href="{% url "list-blogs" %}?my=true">My blogs</a>
                             <hr class="dropdown-divider">
                             <a class="dropdown-item tw-flex tw-gap-4" href="{% url "logout" %}">
                                 <span>Logout</span>
@@ -210,7 +217,7 @@
                 <button type="button" class="key-btn" onclick="hideQuickSearch()">Esc</button>
             </div>
         </div>
-        <div class="tw-flex tw-w-full tw-flex-col tw-max-h-[450px] tw-overflow-y-auto" 
+        <div class="tw-flex tw-w-full tw-flex-col tw-max-h-[450px] tw-overflow-y-auto quick-search-dropdown" 
              id="search-dropdown">
              
         </div>

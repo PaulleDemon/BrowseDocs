@@ -120,7 +120,7 @@ def save_draft(request):
         return JsonResponse({'id': blog.id}, status=200)
 
     else:
-        # print("errors: ", form.errors)
+        print("errors: ", form.errors)
         return JsonResponse({'error': 'invalid data error'}, status=400)
 
 

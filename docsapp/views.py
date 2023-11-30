@@ -7,6 +7,7 @@ from django.views import View
 from django.db.models import Q
 from django.urls import reverse
 from django.http import JsonResponse
+from django.utils.text import slugify
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.shortcuts import render, redirect
@@ -347,11 +348,25 @@ def get_docs(request, unique_id, page_url=None, version=None, name=None):
         else:
             try:
                 doc = doc.get(version=version)
-
             except Documentation.DoesNotExist:
                 return render(request, '404.html')
 
-        print("Docs: ", doc)
+        search_data = []
+
+        for x in doc.sidebar:
+            url =  reverse('get-docs', kwargs={'name': doc.project.name, 
+                                                    'unique_id': doc.project.unique_id,
+                                                    'page_url': x.get('url'), 
+                                                    'version': doc.version})
+            search_data.append({
+                'title': x['name'],
+                'url': url
+            })
+            for heading in x.get('headings', []):
+                search_data.append({
+                        'title': heading,
+                        'url':  f"{url}#{slugify(heading)}"
+                        })
 
         doc_page = DocPage.objects.filter(documentation=doc)
 
@@ -365,12 +380,14 @@ def get_docs(request, unique_id, page_url=None, version=None, name=None):
 
             except DocPage.DoesNotExist:
                 return render(request, '404.html')
-
+        
         return render(request, 'docs-view.html', {
-            'project': project,
-            'base': project,
-            'doc_page': doc_page,
-            'documentation': doc
+                'project': project,
+                'base': project,
+                'doc_page': doc_page,
+                'documentation': doc,
+                'is_doc': True,
+                'search_data': json.dumps(search_data)
         })
 
     except Project.DoesNotExist:

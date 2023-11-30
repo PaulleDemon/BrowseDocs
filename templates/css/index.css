@@ -25,6 +25,22 @@ a{
     display: none;
 }
 
+.quick-search-dropdown{
+    margin-top: 10px;
+}
+
+.quick-search-dropdown a{
+    padding: 5px;
+}
+
+.search-active{
+    background-color: #3e639f;
+}
+
+h1, h2, h3, h4{
+    scroll-margin-top: 50px;
+}
+
 @media screen and (max-width: 1000px) {
     
     .sidebar-close{

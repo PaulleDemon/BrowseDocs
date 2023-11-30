@@ -435,3 +435,17 @@ async function search(text, type){
     return [res.status, res_data]
 
 }
+
+
+let quickSearchData = []
+
+
+/**
+ * 
+ * @param {{title: string, url: string}[]} data
+ * 								
+ * 							
+ */
+function setQuickSearchData(data){
+	quickSearchData =  data
+}

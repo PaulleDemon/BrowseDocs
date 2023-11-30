@@ -10,7 +10,7 @@
 
     {% if request.user == blog.user %}
 
-        <a href="{% url "create-blog" %}?edit={{blog.id}}&project_id={{blog.project.id}}" 
+        <a href="{% url "create-blog" %}?edit={{blog.id}}&project_id={{blog.project.unique_id}}" 
             class="btn btn-success tw-w-[150px] tw-m-[2%] tw-ml-auto bi bi-pencil-square">
             Edit
         </a>
