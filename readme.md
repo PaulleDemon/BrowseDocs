@@ -53,6 +53,6 @@ Developing and maintaining open-source and free projects requires a significant 
 
 **Other ways to support open-source**
 
-* To dedicate more time to open-source I am also giving a non-GPL/commercial code license that can be used in a closed source project. Send a mail to paul@adostrings.com
+* To dedicate more time to open-source You can purchase some of my production scale softwares on [Gumroad](https://paulfreeman.gumroad.com/)
 
-* I also have production scale private projects (dating app, Social media, food delivery and more.), If you are interested in purchase, send a mail to paul@adostrings.com. 
+* I also have production scale private projects (dating app, Social media, food delivery and more.), If you are interested, let me know
