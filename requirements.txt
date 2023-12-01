@@ -34,6 +34,4 @@ typeguard==4.1.5
 pytz==2023.3.post1
 lxml==4.9.3
 
-requests==2.31.0
-
 gunicorn
