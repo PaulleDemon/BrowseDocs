@@ -83,8 +83,6 @@ function intializeQuickSearch(){
 
 	updateQuickSearch(quickSearchData)
 
-	quickSearchDropdown.onclick = hideQuickSearch
-
 	quickSearchContainer.addEventListener('keydown', function (e) {
 		
 		if (e.key === 'ArrowUp' && searchDropdownIndex > 0) {
@@ -120,6 +118,7 @@ function updateQuickSearch(data){
 		let link = document.createElement(`a`)
 		link.innerText = x.title
 		link.href = x.url
+		link.onclick = hideQuickSearch
 
 		quickSearchDropdown.appendChild(link)
 	}
@@ -149,14 +148,15 @@ function showQuickSearch(){
 	event?.preventDefault()
 	event?.stopPropagation()
 
-	quickSearchContainer.classList.remove("tw-hidden")
+	quickSearchContainer.classList.remove("!tw-hidden")
 	quickSearchInput.focus()
-	navSearch.classList.add("tw-hidden")
+	navSearch.classList.add("!tw-hidden")
 }
 
 function hideQuickSearch(){
-	quickSearchContainer.classList.add("tw-hidden")
-	navSearch.classList.remove("tw-hidden")
+	quickSearchContainer.classList.add("!tw-hidden")
+	navSearch.classList.remove("!tw-hidden")
+	console.log("hidden")
 }
 
 quickSearchInput.oninput = (e) => {

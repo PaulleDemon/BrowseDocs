@@ -154,7 +154,7 @@ class ProjectCreateView(LoginRequiredMixin, View):
             instance.user = request.user
             instance.save()
 
-            generate_docs_celery(request.user.id, owner, repo, instance.id, request.POST.get("docs"))
+            # generate_docs_celery(request.user.id,  instance.id, request.POST.get("docs")) # this is already done in signals
 
             social = {
                 SOCIAL.REDDIT: request.POST.get('reddit'),
@@ -225,13 +225,13 @@ class UpdateDocsView(GenericAPIView):
     throttle_classes = [UpdateThrottle]
 
     def post(self, request):
-        # try:
-        project = Project.objects.get(id=int(request.data.get('projectid')), user=request.user)
+        try:
+            project = Project.objects.get(id=int(request.data.get('projectid')), user=request.user)
 
-        generate_docs_celery(request.user.id, project.id)
+            generate_docs_celery.delay(request.user.id, project.id)
 
-        # except (Project.DoesNotExist, TypeError):
-        #     return Response({'error': 'Permission denied'}, status=403)
+        except (Project.DoesNotExist, TypeError):
+            return Response({'error': 'Permission denied'}, status=403)
 
         # except Exception as e:
         #     return Response({'error': str(e)}, status=500)
@@ -394,7 +394,30 @@ def get_docs(request, unique_id, page_url=None, version=None, name=None):
 
     except Project.DoesNotExist:
         return render(request, '404.html')
-    
+
+
+@require_http_methods(['GET'])
+def redirect_shortened_url(request, unique_id, name=None, version=None):
+    try:
+        doc = Documentation.objects.filter(project__unique_id=unique_id).last()
+
+        if doc:
+            page = DocPage.objects.filter(documentation=doc).first()
+            
+            if page:
+                # Redirect to the detailed URL
+                detailed_url = reverse('get-docs', kwargs={'name': doc.project.name,
+                                                           'unique_id': unique_id,
+                                                           'version': version or doc.version,
+                                                           'page_url': page.page_url
+                                                           })
+                return redirect(detailed_url)
+
+    except (Documentation.DoesNotExist, DocPage.DoesNotExist):
+        pass
+
+    # If no valid redirection is possible, you can handle it here (e.g., render a 404 page).
+    return render(request, '404.html')
 
 @require_http_methods(['GET'])
 def get_project_about(request, name, unique_id):

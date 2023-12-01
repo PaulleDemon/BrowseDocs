@@ -41,13 +41,14 @@ def generate_docs_celery(user_id, project_id: int):
     generated = generate_docs(user, project_id)
 
     if generated != True:
-
-        message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation failed due to the following reasons: {' '.join([x for x in generated])}.\n\n Please go to dashboard and try again after rectifying errors.\n\n Best regards,\nBrowseDocs Team"
+        message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation failed due to the following reasons: {' '.join([x for x in generated])}.\n\n Please go to dashboard and try again after rectifying errors.\n\nBest regards,\nBrowseDocs Team"
 
         send_mail_celery.delay("Docs creation failed", message, recipient_list=[user.email])
 
     else:
-        print("successful")
-        message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation was successful. Please visit the following to .\n\n Best regards,\nBrowseDocs Team"
+
+        url = reverse("get-docs", kwargs={'unique_id': project_id})
+
+        message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation was successful. To visit your documentation please click on {url}.\n\nBest regards,\nBrowseDocs Team"
 
         send_mail_celery.delay("Docs creation Successful", message, recipient_list=[user.email])

@@ -37,7 +37,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/fetch-retry@5.0.6/dist/fetch-retry.umd.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"> {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     {% comment %} <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
@@ -72,12 +73,12 @@
 
     </head>
 {% comment %} <body class="tw-min-h-[100vh]" data-bs-theme="dark"> {% endcomment %}
-<body class="tw-min-h-[100vh] tw-bg-[#0F172A] !tw-text-white tw-overflow-x-hidden" data-bs-theme="dark">
+<body class="tw-min-h-[100vh] tw-overflow-x-hidden" data-bs-theme="light">
     
     {% block fullpage %}{% endblock fullpage %}
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top max-sm:!tw-bg-[#0F172A] max-sm:!tw-shadow-xl"
-            if="navbar"
+    <nav class="navbar navbar-expand-lg fixed-top max-sm:!tw-bg-[#0F172A] max-sm:!tw-shadow-xl"
+            id="navbar"
         >
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -197,7 +198,7 @@
     </nav>
 
 
-    <div id="error-toast" class="toast bg-primary tw-h-max tw-z-[5000] tw-fixed tw-top-[5%] tw-left-[50%] tw-translate-x-[-50%] align-items-center border-0" 
+    <div id="error-toast" class="toast text-bg-primary tw-h-max tw-z-[5000] tw-fixed tw-top-[5%] tw-left-[50%] tw-translate-x-[-50%] align-items-center border-0" 
         role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body" id="error-toast-body">
@@ -207,7 +208,7 @@
         </div>
     </div>
 
-    <div class="quick-search tw-hidden tw-z-20" id="quick-search-container">
+    <div class="quick-search !tw-hidden tw-z-20 tw-shadow-2xl" id="quick-search-container">
         <div class="input tw-flex">
             <input type="text" name="" 
                                     class="tw-w-full tw-bg-transparent

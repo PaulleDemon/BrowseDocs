@@ -6,9 +6,10 @@ let searchTimeout = null
 
 const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name, about, create_url, editable, source}) =>  `
 
-                    <div class="tw-border-solid tw-border-[1px] tw-bg-gray-800
+                    <div class="tw-border-solid tw-border-[1px]
                             tw-rounded-lg tw-w-[60%] md:tw-max-w-[450px] tw-h-[200px] max-md:tw-w-[100%] 
                             tw-p-4 tw-flex  max-sm:tw-max-w-full tw-cursor-pointer
+                            tw-shadow-xl
                             " 
                             onclick="updateUrl({% url "get-docs" unique_id=${project_id} %})">
 
@@ -24,16 +25,23 @@ const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name,
                             <div class="tw-text-xl tw-w-full">
                                 ${project_name}
                             </div>
-                            <div class="tw-mt-[2%] tw-text-sm tw-w-full tw-text-gray-400">
+                            <div class="tw-mt-[2%] tw-text-sm tw-w-full subtext-color">
                                 ${unique_name}
                             </div>
-                            <div class="tw-mt-[2%] tw-max-h-[40%] tw-w-full tw-overflow-hidden tw-text-gray-400">
+                            <div class="tw-mt-[2%] tw-max-h-[40%] tw-w-full tw-overflow-hidden subtext-color">
                                 ${about}
                             </div>
                             ${ editable &&
-                                `<a class="btn btn-success bi bi-pencil-square tw-m-1" href="${create_url}?step=2&repo_name=${source}&edit=${id}">
-                                    Edit    
-                                </a>`
+                                `
+                                <div class="tw-flex tw-justify-between tw-mt-2 tw">
+                                    <a class="btn btn-success w-50 bi bi-pencil-square" href="${create_url}?step=2&repo_name=${source}&edit=${id}">
+                                        Edit    
+                                    </a>
+                                    <button type="button" class="btn btn-primary bi bi-arrow-clockwise" onclick="updateDocument('${id}')">
+                                            Update
+                                    </button>
+                                </div>
+                                `
                             }
                         </div>
                     </div>
