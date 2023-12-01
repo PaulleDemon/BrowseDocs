@@ -5,5 +5,7 @@ __pycache__
 db.sqlite3
 firebase-cred.json
 media/
+encoded.txt
 
 sampletest.py
+.vercel

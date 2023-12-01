@@ -9,6 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
+import json
+import base64
 import environ
 import pyrebase
  
@@ -28,6 +31,20 @@ environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+cloud_platform = os.environ.setdefault('CLOUD_PLATFORM', '')
+
+if cloud_platform in ['DIGITAL_OCEAN', 'VERCEL']:
+    # since the firebase_cred cannot be uploaded manually 
+    # https://www.digitalocean.com/community/questions/how-to-upload-a-secret-credential-file
+    firebase_cred = env('FIREBASE_ENCODED')
+    decoded_bytes = base64.b64decode(firebase_cred)
+    decoded_json = json.loads(decoded_bytes.decode('utf-8'))
+  
+    with open(env('FIREBASE_CRED_PATH'), 'w') as f:
+        json.dump(decoded_json, f, indent=4)
+
 
 DEBUG = bool(int(env('DEBUG')))
 
