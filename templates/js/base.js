@@ -52,6 +52,11 @@ function togglePasswordVisibility(toggleButton, inputElement) {
 
 initializePasswordInputs()
 
+// scroll to current header in sidebar
+window.addEventListener("load", () => {
+	document.querySelector('.current-heading')?.scrollIntoView({ behavior: "instant", block: 'center'})
+})
+
 
 let searchDropdownIndex = -1
 
@@ -68,14 +73,6 @@ function intializeQuickSearch(){
 		}
 
 		if (e.key == "Escape"){
-			hideQuickSearch()
-		}
-
-	})
-
-	document.addEventListener("click", (e) => {
-
-		if (!quickSearchContainer.contains(e.target)){
 			hideQuickSearch()
 		}
 
@@ -151,12 +148,23 @@ function showQuickSearch(){
 	quickSearchContainer.classList.remove("!tw-hidden")
 	quickSearchInput.focus()
 	navSearch.classList.add("!tw-hidden")
+
+	document.addEventListener("click", hideQuickSearchCondition)
+}
+
+function hideQuickSearchCondition(e){
+
+	if (!quickSearchContainer.contains(e.target)){
+		hideQuickSearch()
+	}
+
 }
 
 function hideQuickSearch(){
+	console.log("hidden")
 	quickSearchContainer.classList.add("!tw-hidden")
 	navSearch.classList.remove("!tw-hidden")
-	console.log("hidden")
+	document.removeEventListener("click", hideQuickSearchCondition)
 }
 
 quickSearchInput.oninput = (e) => {
@@ -197,14 +205,33 @@ intializeQuickSearch()
 
 function openNav(){
 
-	const navBar = document.getElementById("navbar") 
+	const navBar = document.getElementById("sidebar") 
 
-	navBar.classList.remove("tw-hidden")
+	navBar.classList.remove("!tw-hidden")
 
 }	
 
 function closeNav(){
-	const navBar = document.getElementById("navbar") 
+	const navBar = document.getElementById("sidebar") 
 
-	navBar.classList.add("tw-hidden")
+	navBar.classList.add("!tw-hidden")
 }
+
+
+window.addEventListener('resize', (e) => {
+	console.log("width: ", e)
+	if (document.body.clientWidth > 900){
+		openNav()
+	}else{
+		closeNav()
+	}
+
+})
+
+window.onload("load", () => {
+	if (document.body.clientWidth > 900){
+		openNav()
+	}else{
+		closeNav()
+	}
+})

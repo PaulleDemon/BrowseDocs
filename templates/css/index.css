@@ -1,18 +1,16 @@
 :root{
 
-    /* --text-color: #fff; */
-    --text-color: #000;
-    /* --background-color: #0F172A; */
-    --background-color: #fff;
+    --text-color: #fff;
+    --background-color: #0F172A;
     --search-highlight-color: #73ceff93;
-    --codeblock-bg: #F6F8FA;
-}
+    --codeblock-bg: #080e1c;
+    --toc-highlight-bg: #20306857;
+}   
 
 *{
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-
     /* text-decoration: none; */
     list-style: inherit;
     /* font-size: 18px; */
@@ -33,19 +31,23 @@ a{
     color: inherit;
 }
 
+.primary-bg{
+    background-color: var(--background-color);
+}
+
 h1, h2, h3, h4{
-    scroll-margin-top: 50px;
+    scroll-margin-top: 80px;
 }
 
 .subtext-color{
     /* usually a grey color used for text such as username etc*/
-    color: #a9a9a9;
+    color: #6f6b6b;
 }
 
 .input{
     border: 2px solid #717070;
     border-radius: 5px;
-    /* background-color: ; */
+    background-color: transparent;
 }
 
 .input:focus-within{
@@ -63,7 +65,7 @@ h1, h2, h3, h4{
 .browserdoc-btn{
     border: 2px solid #717070;
     cursor: pointer;
-    padding: 2px 20px;
+    padding: 1px 20px;
     border-radius: 6px;
     background-color: inherit;
     display: flex;
@@ -72,6 +74,7 @@ h1, h2, h3, h4{
 
 .browserdoc-btn:hover{
     background-color: #0072c9;
+    color: #fff;
     border: 2px solid transparent;
 }
 
@@ -114,8 +117,13 @@ h1, h2, h3, h4{
     font-size: small;
 }
 
-.sidebar-close{
-    display: none;
+.current-heading{
+    color: #1e85ec;
+}
+
+
+.navbar{
+    background-color: var(--background-color);
 }
 
 /* ------------------ doc viewer --------------------*/
@@ -143,6 +151,11 @@ h1, h2, h3, h4{
 .sidebar-header:hover,.sidebar-item:hover, .sidebar-active{
     background-color: #1e85ec2f;
 }
+
+.sidebar-close{
+    display: none;
+}
+
 
 /* -----------------utils -----------*/
 .copy-btn{
@@ -182,6 +195,12 @@ details{
     margin: 5px;
 }
 
+/* ---- table of contents ----------*/
+
+.toc-active{
+    color: #1e85ec;
+    background-color: var(--toc-highlight-bg);
+}
 
 @media screen and (max-width: 1000px) {
     

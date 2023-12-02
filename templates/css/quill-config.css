@@ -9,15 +9,15 @@
     justify-content: center;
     /* padding: 10px; */
     position: sticky;
+    top: 80px;
     z-index: 10;
-    top: 40px;
-    background-color: #0F172A;
+    background-color: var(--background-color);
     height: max-content;
     flex-wrap: wrap;
 }
 
 .ql-toolbar .ql-picker-label, .ql-toolbar{
-    color: #fff;
+    color: var(--text-color);
 }
 
 .ql-align .ql-picker .ql-icon-picker{
@@ -85,8 +85,8 @@
 }
 
 .ql-code-block-container select{
-    color: #fff;
-    background-color: #0a1124;
+    /* color: #fff; */
+    background-color: var(--background-color);
 }
 
 /* .ql-code-block-container{
