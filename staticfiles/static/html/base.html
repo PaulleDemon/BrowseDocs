@@ -184,7 +184,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <a class="browserdoc-btn" href="{% url "login" %}">
+                    <a class="browserdoc-btn" href="{% url "login" %}?next={{ request.get_full_path }}">
                         Login
                     </a>
                 {% endif %}

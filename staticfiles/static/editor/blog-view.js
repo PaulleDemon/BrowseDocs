@@ -75,13 +75,12 @@ function highlightHandler(entries){
 //                             'html', 'css']})
 
 document.querySelectorAll('pre, .ql-code-block-container').forEach((el) => {
-    const selectElement = el.querySelector("select");
+    const selectElement = el.querySelector("select")
     
     if (selectElement) {
-        el.removeChild(selectElement);
+        el.removeChild(selectElement)
     }
-
-    hljs.highlightElement(el);
+    hljs.highlightElement(el)
 })
 
 const codeBlocks = Array.from(document.querySelectorAll(".ql-code-block-container, pre"))

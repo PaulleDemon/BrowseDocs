@@ -23,7 +23,7 @@
                 class="btn btn-light bi bi-gitlab">
                 Continue with GitLab
             </a> {% endcomment %}
-            <a href="{% url 'social:begin' 'github' %}"
+            <a href="{% url 'social:begin' 'github' %}?next={{ request.GET.next }}"
                 class="btn-dark btn">
                 <i class="bi bi-github"></i>
                 <span>Continue with Github</span>
