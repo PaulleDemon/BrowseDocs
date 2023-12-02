@@ -32,9 +32,10 @@
         <div class="tw-flex max-sm:tw-flex-col tw-place-content-center tw-flex-wrap tw-content-start  
                     tw-gap-8 tw-w-full tw-min-h-[100vh] md:tw-p-9" id="project-list">
             {% for project in projects  %}
-                <div class="tw-border-solid tw-border-[1px] tw-bg-gray-800
+                <div class="tw-border-solid tw-border-[1px] 
                             tw-rounded-lg tw-w-[60%] md:tw-max-w-[450px] tw-h-[200px] max-md:tw-w-[100%] 
                             tw-p-4 tw-flex  max-sm:tw-max-w-full tw-cursor-pointer
+                            tw-shadow-xl
                             " 
                             onclick="updateUrl({% url "get-docs" unique_id=project.unique_id %})" 
                             >
@@ -49,10 +50,10 @@
                             <div class="tw-text-xl tw-w-full">
                                 {{project.name}}
                             </div>
-                            <div class="tw-mt-[2%] tw-text-sm tw-w-full tw-text-gray-400">
+                            <div class="tw-mt-[2%] tw-text-sm tw-w-full subtext-color">
                                 @{{project.unique_name}}
                             </div>
-                            <div class="tw-mt-[2%] tw-max-h-[40%] tw-w-full tw-overflow-hidden tw-text-gray-400">
+                            <div class="tw-mt-[2%] tw-max-h-[40%] tw-w-full tw-overflow-hidden subtext-color">
                                 {{project.about}}
                             </div>
                             {% if project.user == request.user %}

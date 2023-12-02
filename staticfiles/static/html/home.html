@@ -29,9 +29,10 @@
     <div class="tw-flex tw-flex-wrap tw-gap-10 tw-mt-[3%] md:tw-mx-[10%]">
 
         {% for project in projects  %}
-            <div class="tw-border-solid tw-border-[1px] tw-bg-gray-800
+            <div class="tw-border-solid tw-border-[1px] 
             tw-rounded-lg tw-w-[400px] md:tw-max-w-[450px] tw-h-[200px] max-md:tw-w-[100%] 
             tw-p-4 tw-flex  max-sm:tw-max-w-full tw-cursor-pointer
+            tw-shadow-xl
             " 
             onclick="updateUrl('{% url "get-docs" name=project.name version=project.documentation_set.last.version unique_id=project.unique_id %}')">
 
@@ -45,14 +46,14 @@
                     <div class="tw-text-xl tw-w-full">
                         {{project.name}}
                     </div>
-                    <div class="tw-mt-[2%] tw-text-sm tw-w-full tw-text-gray-400">
+                    <div class="tw-mt-[2%] tw-text-sm tw-w-full subtext-color">
                         @{{project.unique_name}}
                     </div>
-                    <div class="tw-mt-[2%] tw-max-h-[40%] tw-w-full tw-overflow-hidden tw-text-gray-400">
+                    <div class="tw-mt-[2%] tw-max-h-[40%] tw-leading-5 tw-w-full tw-overflow-hidden subtext-color">
                         {{project.about}}
                     </div>
                     {% if project.user == request.user %}
-                        <div class="tw-flex tw-justify-between tw-mt-2 tw">
+                        <div class="tw-flex tw-justify-between tw-mt-auto">
                             <a class="btn btn-success w-50 bi bi-pencil-square" href="{% url "project-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
                                 Edit    
                             </a>
@@ -60,6 +61,14 @@
                                 Update
                             </button>
                         </div>
+                    
+                    {% else %}
+                        <button class="btn btn-success tw-mt-auto">
+                            
+                            <span>Vist project</span>
+                            <span class="bi bi-box-arrow-up-right"></span>
+                        </button>
+
                     {% endif %}
                 </div>
             </div>

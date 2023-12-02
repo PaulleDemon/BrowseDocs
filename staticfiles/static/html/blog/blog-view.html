@@ -49,7 +49,7 @@
     </div>
 
 
-    <div class="tw-w-[350px] tw-flex tw-flex-col tw-bg-gray-700 tw-place-content-center 
+    <div class="tw-w-[350px] tw-flex tw-flex-col tw-shadow-xl tw-place-content-center 
                 tw-p-6 tw-rounded-lg tw-mt-[5%] tw-gap-4 tw-place-items-center">
         
         <span class="tw-text-2xl">Author</span>
@@ -58,7 +58,7 @@
                     alt="" srcset=""
                     class="tw-w-[100px] tw-h-[100px] tw-rounded-full"
                     >
-            <p class="tw-text-gray-400 tw-mt-2">@{{blog.user.username}}</p>
+            <p class="subtext-color tw-mt-2">@{{blog.user.username}}</p>
         </a>
         <span class="tw-text-base">Last updated</span>
         <span class="tw-text-sm">{% utc_to_local blog.datetime request.COOKIES.user_timezone %}</span>

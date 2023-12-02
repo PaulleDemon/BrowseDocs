@@ -7,25 +7,30 @@
 
     <div class="tw-h-full tw-w-full tw-flex-col tw-p-3">
         
-        <button class="btn navbar-toggler-icon tw-fixed tw-top-[70px] !tw-bg-[#1d3b44eb] tw-z-10 sidebar-close" 
+        <button class="tw-p-2 tw-border-none tw-outline-none tw-fixed primary-bg tw-top-[60px] tw-z-10 sidebar-close" 
                 onclick="openNav()">
+                <i class="bi bi-list tw-text-xl"></i>
         </button>
 
         <div class="tw-fixed tw-top-[60px] tw-w-[250px] tw-flex tw-flex-col 
-                    tw-text-lg tw-h-[100vh] tw-overflow-y-auto sidebar tw-p-4" id="navbar">
+                    tw-text-lg tw-h-[100vh] sidebar tw-p-4" id="sidebar">
 
             <button class="btn btn-close sidebar-close" onclick="closeNav()">
             </button>
-            
-            <div class="tw-flex tw-flex-col tw-mt-[20px]">
+            <div class="tw-flex tw-flex-col tw-mt-[20px] tw-h-[80vh] tw-overflow-y-auto">
+                
                 {% for side in documentation.sidebar %}
-                    <a href="{% url "get-docs" name=project.name unique_id=project.unique_id page_url=side.url version=documentation.version %}" 
-                        class="tw-font-semi-bold tw-text-xl sidebar-header">
+                    {% url "get-docs" name=project.name unique_id=project.unique_id page_url=side.url version=documentation.version as view_url %}
+                    <a href="{{view_url}}" 
+                        class="tw-font-semi-bold tw-text-xl sidebar-header 
+                                {% if request.get_full_path == view_url %}current-heading{% endif %}"
+                        
+                        >
                         {{side.name}}
                     </a> 
                         
                         {% for heading in side.headings %}
-                            <a href="{% url "get-docs" name=project.name unique_id=project.unique_id page_url=side.url version=documentation.version %}#{{heading|slugify}}" 
+                            <a href="{{view_url}}#{{heading|slugify}}" 
                                 class="sidebar-item tw-text-base">
                                 &emsp;{{heading}}
                             </a>

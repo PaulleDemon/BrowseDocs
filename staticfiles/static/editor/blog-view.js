@@ -7,7 +7,6 @@ const tables = document.querySelectorAll('table')
 
 tables.forEach((ele) => {
     ele.classList.add("table", "table-striped", "table-bordered", "tw-overflow-auto", "tw-max-w-full")
-    console.log("class: ", ele)
 })
 
 function generateTOC(){
@@ -18,10 +17,9 @@ function generateTOC(){
   // Iterate over the headings
     headings.forEach(function(heading) {
         let listItem = document.createElement("li")
-        listItem.style.maxHeight = "min-fit"
-        listItem.classList.add("tw-list-none", "tw-overflow-hidden", "tw-rounded-lg")
+        listItem.classList.add("tw-list-none", "tw-overflow-hidden", "tw-rounded-lg", "tw-flex", "tw-p-2")
         let link = document.createElement("a")
-        link.classList.add( "tw-rounded-lg", "tw-p-1", "tw-w-[100%]")
+        link.classList.add( "tw-rounded-lg", "tw-w-[100%]")
         link.style.width = "100%"
         link.textContent = heading.textContent
         link.href = "#" + heading.id 
@@ -56,13 +54,14 @@ function highlightHandler(entries){
     let currentSection;
 
     for (let i = 0; i < headings.length; i++) {
-        currentSection = headings[i];
+        currentSection = headings[i]
         if (isElementInViewport(currentSection) || allEntries.has(currentSection)) {
-        tocElements.forEach((link) => link.classList.remove("tw-bg-gray-700", "tw-opacity-60", "tw-text-blue-400"));
-        document
-            .querySelector(`a[href="#${currentSection.id}"]`).parentNode
-            .classList.add("tw-bg-gray-700", "tw-opacity-60", "tw-text-blue-400");
-        break;
+            tocElements.forEach((link) => link.classList.remove("toc-active"))
+            
+            document
+                .querySelector(`a[href="#${currentSection.id}"]`).parentNode
+                .classList.add("toc-active");
+            break
         }
     }
 }

@@ -19,7 +19,7 @@
 
     <div class="tw-w-[250px] tw-min-h-[100px] tw-gap-4 tw-list-none
                 tw-text-sm tw-leading-9 max-md:tw-hidden
-                tw-fixed tw-top-[20%] tw-left-[4%] tw-z-10" id="toc-container">
+                tw-fixed tw-top-[20%] tw-left-[4%] tw-z-10 toc-container" id="toc-container">
     </div>
 
     <div class="tw-text-4xl max-sm:tw-text-3xl tw-font-semibold tw-leading-snug tw-w-full">
@@ -49,7 +49,7 @@
     </div>
 
 
-    <div class="tw-w-[350px] tw-flex tw-flex-col tw-bg-gray-700 tw-place-content-center 
+    <div class="tw-w-[350px] tw-flex tw-flex-col tw-shadow-xl tw-place-content-center 
                 tw-p-6 tw-rounded-lg tw-mt-[5%] tw-gap-4 tw-place-items-center">
         
         <span class="tw-text-2xl">Author</span>
@@ -58,7 +58,7 @@
                     alt="" srcset=""
                     class="tw-w-[100px] tw-h-[100px] tw-rounded-full"
                     >
-            <p class="tw-text-gray-400 tw-mt-2">@{{tutorial.user.username}}</p>
+            <p class="subtext-color tw-mt-2">@{{tutorial.user.username}}</p>
         </a>
         <span class="tw-text-base">Last updated</span>
         <span class="tw-text-sm">{% utc_to_local tutorial.datetime request.COOKIES.user_timezone %}</span>

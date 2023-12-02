@@ -1,8 +1,16 @@
+:root{
+
+    --text-color: #fff;
+    --background-color: #0F172A;
+    --search-highlight-color: #73ceff93;
+    --codeblock-bg: #080e1c;
+    --toc-highlight-bg: #20306857;
+}   
+
 *{
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-
     /* text-decoration: none; */
     list-style: inherit;
     /* font-size: 18px; */
@@ -14,6 +22,8 @@
 body{
     width: 100%;
     height: 100%;
+    color: var(--text-color);
+    background-color: var(--background-color) !important;
 }
 
 a{
@@ -21,8 +31,69 @@ a{
     color: inherit;
 }
 
-.sidebar-close{
-    display: none;
+.primary-bg{
+    background-color: var(--background-color);
+}
+
+h1, h2, h3, h4{
+    scroll-margin-top: 80px;
+}
+
+.subtext-color{
+    /* usually a grey color used for text such as username etc*/
+    color: #6f6b6b;
+}
+
+.input{
+    border: 2px solid #717070;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.input:focus-within{
+    border: 2px solid #0072c9;
+}
+
+.input-error{
+    border: 2px solid #ff1e1e;
+}
+
+.input-error:focus-within{
+    border: 2px solid #fd0101;
+}
+
+.browserdoc-btn{
+    border: 2px solid #717070;
+    cursor: pointer;
+    padding: 1px 20px;
+    border-radius: 6px;
+    background-color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.browserdoc-btn:hover{
+    background-color: #0072c9;
+    color: #fff;
+    border: 2px solid transparent;
+}
+
+.quick-search{
+    position: fixed;
+    left: 50%;
+    top: 30%;
+    width: 40%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    min-height: 300px;
+    transform: translate(-50%);
+    background-color: var(--background-color);
+}
+
+.search-active{
+    background-color: var(--search-highlight-color);
 }
 
 .quick-search-dropdown{
@@ -33,18 +104,112 @@ a{
     padding: 5px;
 }
 
-.search-active{
-    background-color: #3e639f;
+.key-btn{
+    /*used to denote key*/
+    max-height: max-content;
+    padding: 4px;
+    background-color: transparent;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid #717070;
+    max-height: min-content;
+    max-width: max-content;
+    font-size: small;
 }
 
-h1, h2, h3, h4{
-    scroll-margin-top: 80px;
+.current-heading{
+    color: #1e85ec;
+}
+
+
+.navbar{
+    background-color: var(--background-color);
+}
+
+/* ------------------ doc viewer --------------------*/
+
+.doc-viewer img{
+    max-width: 100%;
+}
+
+.doc-viewer a{
+    color: #1e85ec;
+}
+
+/* ------------------ sidebar ------------------------ */
+.sidebar{
+    background-color: var(--background-color);
+    z-index: 10;
+    padding: 10px;
+}
+
+.sidebar-header, .sidebar-item{
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.sidebar-header:hover,.sidebar-item:hover, .sidebar-active{
+    background-color: #1e85ec2f;
+}
+
+.sidebar-close{
+    display: none;
+}
+
+
+/* -----------------utils -----------*/
+.copy-btn{
+    position: absolute;
+    right: 10px;
+    top: 2%;
+    /* left: 0; */
+}
+
+.ql-code-block-container{
+    /* position: relative; */
+    padding: 10px;
+    border-radius: 10px;
+    color: var(--text-color);
+    background-color: var(--codeblock-bg);
+    width: 100%;
+    overflow: auto;
+    max-height: 1000px;
+    white-space: pre;
+}
+
+summary::after {
+    content: '▸'; 
+    margin-left: 10px; 
+    display: inline-block;
+    transform-origin: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+details[open] summary::after {
+    transform: rotate(90deg);
+}
+
+details{
+    padding: 10px;
+    list-style: none;
+    margin: 5px;
+}
+
+/* ---- table of contents ----------*/
+
+.toc-active{
+    color: #1e85ec;
+    background-color: var(--toc-highlight-bg);
 }
 
 @media screen and (max-width: 1000px) {
     
     .sidebar-close{
         display: block;
+    }
+
+    .quick-search{
+        width: 80%;
     }
 
 }

@@ -52,6 +52,11 @@ function togglePasswordVisibility(toggleButton, inputElement) {
 
 initializePasswordInputs()
 
+// scroll to current header in sidebar
+window.addEventListener("load", () => {
+	document.querySelector('.current-heading')?.scrollIntoView({ behavior: "instant", block: 'center'})
+})
+
 
 let searchDropdownIndex = -1
 
@@ -73,17 +78,7 @@ function intializeQuickSearch(){
 
 	})
 
-	document.addEventListener("click", (e) => {
-
-		if (!quickSearchContainer.contains(e.target)){
-			hideQuickSearch()
-		}
-
-	})
-
 	updateQuickSearch(quickSearchData)
-
-	quickSearchDropdown.onclick = hideQuickSearch
 
 	quickSearchContainer.addEventListener('keydown', function (e) {
 		
@@ -120,6 +115,7 @@ function updateQuickSearch(data){
 		let link = document.createElement(`a`)
 		link.innerText = x.title
 		link.href = x.url
+		link.onclick = hideQuickSearch
 
 		quickSearchDropdown.appendChild(link)
 	}
@@ -149,14 +145,26 @@ function showQuickSearch(){
 	event?.preventDefault()
 	event?.stopPropagation()
 
-	quickSearchContainer.classList.remove("tw-hidden")
+	quickSearchContainer.classList.remove("!tw-hidden")
 	quickSearchInput.focus()
-	navSearch.classList.add("tw-hidden")
+	navSearch.classList.add("!tw-hidden")
+
+	document.addEventListener("click", hideQuickSearchCondition)
+}
+
+function hideQuickSearchCondition(e){
+
+	if (!quickSearchContainer.contains(e.target)){
+		hideQuickSearch()
+	}
+
 }
 
 function hideQuickSearch(){
-	quickSearchContainer.classList.add("tw-hidden")
-	navSearch.classList.remove("tw-hidden")
+	console.log("hidden")
+	quickSearchContainer.classList.add("!tw-hidden")
+	navSearch.classList.remove("!tw-hidden")
+	document.removeEventListener("click", hideQuickSearchCondition)
 }
 
 quickSearchInput.oninput = (e) => {
@@ -197,14 +205,33 @@ intializeQuickSearch()
 
 function openNav(){
 
-	const navBar = document.getElementById("navbar") 
+	const navBar = document.getElementById("sidebar") 
 
-	navBar.classList.remove("tw-hidden")
+	navBar.classList.remove("!tw-hidden")
 
 }	
 
 function closeNav(){
-	const navBar = document.getElementById("navbar") 
+	const navBar = document.getElementById("sidebar") 
 
-	navBar.classList.add("tw-hidden")
+	navBar.classList.add("!tw-hidden")
 }
+
+
+window.addEventListener('resize', (e) => {
+	console.log("width: ", e)
+	if (document.body.clientWidth > 900){
+		openNav()
+	}else{
+		closeNav()
+	}
+
+})
+
+window.onload("load", () => {
+	if (document.body.clientWidth > 900){
+		openNav()
+	}else{
+		closeNav()
+	}
+})
