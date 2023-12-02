@@ -13,7 +13,7 @@
 
     <div class="tw-text-base md:tw-mx-[30%] tw-mt-6">
         Welcome to our open-source documentation hosting platform, 
-        designed for ease documentation creation for tools and libraries.
+        designed for ease documentation creation; for tools and libraries.
         Utilize the simplicity of Markdown to craft clear and 
         concise documentation, ensuring your ideas shine effortlessly.
     </div>
@@ -42,7 +42,8 @@
                             alt="" srcset="">
                 {% endif %}
 
-                <div class="tw-ml-[4%] tw-flex tw-flex-col tw-max-w-[80%] tw-overflow-x-hidden">
+                <div class="tw-ml-[4%] tw-flex tw-flex-col tw-w-full tw-overflow-x-hidden {% if project.project_logo %}tw-max-w-[80%]{% endif %}">
+
                     <div class="tw-text-xl tw-w-full">
                         {{project.name}}
                     </div>

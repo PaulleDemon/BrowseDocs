@@ -1,4 +1,5 @@
 import os
+import json
 import pytz
 from urllib.parse import urlparse
 from datetime import datetime, timezone
@@ -6,6 +7,8 @@ from datetime import datetime, timezone
 from django import template
 from django.utils import timezone
 from django.core import exceptions
+
+from delta import html
 
 register = template.Library()
 
@@ -63,4 +66,9 @@ def extract_path(url):
     return path[1:]
 
 
-# def 
+@register.filter
+def render_delta(delta: dict):
+    """
+        extracts path from url
+    """
+    return html.render(json.loads(delta)['ops'])

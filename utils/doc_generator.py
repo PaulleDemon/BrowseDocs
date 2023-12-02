@@ -1,9 +1,11 @@
 import json
 import markdown
+from copy import deepcopy
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from lxml.html.clean import clean_html
 
+from django.urls import reverse
 from django.utils.text import slugify
 
 from . import repos
@@ -38,12 +40,15 @@ def update_project(project_id, config):
         'name': config.get('project_name') or '',
         'about': config.get('about') or '',
         'version': config.get('version') or '',
-        'about': config.get('about') or '',
         'doc_path': config.get('source') or '',
         'project_logo': config.get('project_logo') or '',
         'authors': config.get('authors') or []
         # 'tags': config.get
     }
+
+    for key, value in deepcopy(conf).items():
+        if key in ['name', 'version', 'about', 'doc_path'] and value == '':
+            conf.pop(key)
 
     project = Project.objects.filter(id=project_id)
     project.update(**conf)
@@ -57,7 +62,7 @@ def update_project(project_id, config):
     #     for link_name, link_url in additional_links.items():
     #         AdditionalLink.objects.create(project=project, url=link_url, name=link_name)
 
-
+# TODO: return proper url if the doc is successfully created
 def generate_docs(user, project_id):
 
     error = []
@@ -68,7 +73,7 @@ def generate_docs(user, project_id):
 
     except Project.DoesNotExist:
         error.append("Project does not exists")
-        return error
+        return {'error': "Project does not exists"}
 
     config = read_config_file(user, owner, repo)
     update_project(project_id, config)
@@ -82,7 +87,7 @@ def generate_docs(user, project_id):
         if item.get("url") in url_set:
             error.append("duplicate urls found")
 
-            return error
+            return {'error': 'duplicate urls found'}
         
         if item.get("url"):
             url_set.add(item["url"])
@@ -96,10 +101,8 @@ def generate_docs(user, project_id):
 
     else:
         
-        doc = Documentation.objects.create(project=project, version=config.get("version"), 
+        doc = Documentation.objects.create(project=project, version=config.get("version", project.version), 
                                             )
-
-    print("Config", config)
 
     sidebar = []
 
@@ -109,16 +112,15 @@ def generate_docs(user, project_id):
 
         if not path:
             # error.append("sidebar path missing")
-            return "sidebar path missing"
+            return {'error': 'sidebar path missing'}
 
         if not path.endswith(".md"):
-            return f"non markdown file {path}"
+            return {'error': f"non markdown file {path}"}
 
         name = x.get("name", get_file_name(path))
         url = x.get("url", slugify(path))
-        #FIXME: problem in creating url
+        
         url = strip_path_slash(url)
-        print("url: ",  path)
 
         file_content = repos.get_file(user, owner, repo, path)
 
@@ -126,7 +128,7 @@ def generate_docs(user, project_id):
             return file_content.get("error")
 
         if not file_content or len(file_content) < 50:
-            return f"The document {path} is too small for document to be created. Add necessary details"
+            return {'error': f"The document {path} is too small for document to be created. Add necessary details"}
 
         html_content =  markdown.markdown(file_content, extensions=[
                                                                     CodeDivExtension(),
@@ -154,4 +156,4 @@ def generate_docs(user, project_id):
     doc.sidebar = sidebar
     doc.save()
 
-    return True
+    return {'url': reverse("get-docs", kwargs={'unique_id': project.unique_id})}

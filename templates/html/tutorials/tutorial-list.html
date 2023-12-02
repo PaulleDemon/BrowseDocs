@@ -27,7 +27,16 @@
     {% endif %}
 
     {% for tutorial in tutorials  %}
-        <a href="{% url 'get-tutorial' id=tutorial.id title=tutorial.title|slugify project_id=base.unique_id  %}" 
+
+        {% if tutorial.project %}
+        
+            {% url 'get-tutorial' id=tutorial.id title=tutorial.title|slugify project_id=tutorial.project.unique_id as tutorial_url %}
+        {% else %}
+            {% url 'get-tutorial' id=tutorial.id title=tutorial.title|slugify as tutorial_url %}
+
+        {% endif %}
+
+        <a href="{{tutorial_url}}" 
                                     class="tw-text-md tw-w-full tw-h-full">
             <div class="tw-text-4xl tw-w-full">
                 {{tutorial.title}}

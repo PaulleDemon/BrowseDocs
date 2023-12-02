@@ -146,6 +146,7 @@ class ProjectCreateView(LoginRequiredMixin, View):
             except Project.DoesNotExist:
                 return render(request, '404.html')
 
+        print("Post request: ", request.POST)
         form = ProjectForm(request.POST, instance=instance)
 
         if form.is_valid():

@@ -135,7 +135,7 @@ def scan_for_doc(user: User, owner, repo):
 
     config = read_config_file(user, owner, repo)
 
-    if config.get('error'):
+    if config.get('error') and config.get('error') != '.browsedocs.json not found':
         return config
 
     path = config.get('source')
@@ -160,11 +160,11 @@ def scan_for_doc(user: User, owner, repo):
 
         for item in contents['tree']:
             
-            if item['path'].lower() in ['readme.rst', 'readme.md'] or \
+            if item['path'].lower() in ['index.md', 'readme.md'] or \
                 path and item['path'].lower() == path or \
                 item['path'].lower() == 'docs' and item['type'] == 'tree':
 
-                docs_names.append({'path': item['path'], 'type': item['type']}) # only one either readme.rst or readme.md
+                docs_names.append({'path': item['path'], 'type': item['type']}) # only one either index.md or readme.md
 
 
         if not docs_names:

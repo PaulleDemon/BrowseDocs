@@ -45,8 +45,8 @@
                                     class="tw-w-[50px] tw-h-[50px]"
                                     alt="" srcset="">
                         {% endif %}
-                    
-                        <div class="tw-ml-[4%] tw-flex tw-flex-col tw-max-w-[80%] tw-overflow-x-hidden">
+                        
+                        <div class="tw-ml-[4%] tw-flex tw-flex-col tw-w-full tw-overflow-x-hidden {% if project.project_logo %}tw-max-w-[80%]{% endif %}">
                             <div class="tw-text-xl tw-w-full">
                                 {{project.name}}
                             </div>
@@ -57,7 +57,7 @@
                                 {{project.about}}
                             </div>
                             {% if project.user == request.user %}
-                                <div class="tw-flex tw-justify-between tw-mt-2 tw">
+                                <div class="tw-flex tw-justify-between tw-mt-auto">
                                     <a class="btn btn-success w-50 bi bi-pencil-square" 
                                         href="{% url "project-create" %}?step=2&repo_name={{project.source|extract_path}}&edit={{project.id}}">
                                         Edit    

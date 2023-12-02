@@ -228,7 +228,7 @@ window.addEventListener('resize', (e) => {
 
 })
 
-window.onload("load", () => {
+window.addEventListener("load", () => {
 	if (document.body.clientWidth > 900){
 		openNav()
 	}else{
