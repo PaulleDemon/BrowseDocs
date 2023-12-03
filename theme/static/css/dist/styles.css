@@ -536,20 +536,6 @@ select {
   max-height: 100%;
 }
 
-.tw-max-h-fit {
-  max-height: -moz-fit-content;
-  max-height: fit-content;
-}
-
-.tw-max-h-max {
-  max-height: -moz-max-content;
-  max-height: max-content;
-}
-
-.tw-max-h-\[50px\] {
-  max-height: 50px;
-}
-
 .tw-min-h-\[100px\] {
   min-height: 100px;
 }

@@ -47,7 +47,7 @@ def create_blog_view(request):
             project = Project.objects.get(unique_id=request.POST.get("project"), user=request.user)
 
         except Project.DoesNotExist:
-            raise ValidationError({'error': "project doesn't exist"})
+            return render(request, 'blog-create.html', context={'errors': ["project doesn't exist"], 'blog': request.POST})
 
         if id:
             try:
@@ -55,9 +55,9 @@ def create_blog_view(request):
                 instance = Blog.objects.get(id=id)
 
             except (Blog.DoesNotExist, ValueError):
-                raise ValidationError({
-                        'errors': ['invalid id']
-                    })
+                
+                return render(request, 'blog-create.html', context={'errors': ['invalid id'], 'blog': request.POST})
+            
 
         post = request.POST.copy() # to make it mutable
         post['project'] = project
@@ -120,7 +120,7 @@ def save_draft(request):
         return JsonResponse({'id': blog.id}, status=200)
 
     else:
-        print("errors: ", form.errors)
+        # print("errors: ", form.errors)
         return JsonResponse({'error': 'invalid data error'}, status=400)
 
 

@@ -207,19 +207,18 @@ function openNav(){
 
 	const navBar = document.getElementById("sidebar") 
 
-	navBar.classList.remove("!tw-hidden")
+	navBar?.classList?.remove("!tw-hidden")
 
 }	
 
 function closeNav(){
 	const navBar = document.getElementById("sidebar") 
 
-	navBar.classList.add("!tw-hidden")
+	navBar?.classList?.add("!tw-hidden")
 }
 
 
 window.addEventListener('resize', (e) => {
-	console.log("width: ", e)
 	if (document.body.clientWidth > 900){
 		openNav()
 	}else{

@@ -15,8 +15,6 @@ def has_only_text_children(element):
 
 def convert_element(element, ops):
 
-    print("element: ", element)
-
     if not isinstance(element, NavigableString):
         for child in element.children:
             if not has_only_text_children(element):
@@ -60,7 +58,7 @@ def convert_element(element, ops):
         convert_blockquote(element, ops)
 
     elif isinstance(element, NavigableString):
-        print("String: ", element.string)
+        # print("String: ", element.string)
         if element.string and element.string != "\n" and element.string != '':
             ops.append({"insert": element.string, "attributes": get_style_attributes(element)})
             ops[-1].update(get_class_and_id_attributes(element))

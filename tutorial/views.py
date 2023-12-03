@@ -49,7 +49,8 @@ def create_tutorial_view(request):
                 project = Project.objects.get(unique_id=request.POST.get("project"))
 
             except Project.DoesNotExist:
-                raise ValidationError({'error': "project doesn't exist"})
+                return render(request, 'tutorial-create.html', context={'errors': ["project doesn't exist"], 'tutorial': request.POST})
+
 
         if id:
             try:
@@ -80,7 +81,8 @@ def create_tutorial_view(request):
             else:
                 # print("errors: ", form.errors)
                 return render(request, 'tutorial-create.html', {
-                    'errors': form.errors
+                    'errors': form.errors,
+                    'tutorial': request.POST
                 })
 
 
@@ -124,7 +126,7 @@ def save_draft(request):
         return JsonResponse({'id': tutorial.id}, status=200)
 
     else:
-        print("errors: ", form.errors)
+        # print("errors: ", form.errors)
         return JsonResponse({'error': 'invalid data error'}, status=400)
 
 

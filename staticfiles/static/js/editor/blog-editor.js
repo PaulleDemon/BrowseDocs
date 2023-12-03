@@ -72,7 +72,7 @@ function onSubmit(){
         return false
     }
 
-    quillEditorTextArea.value = JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': editor.root.innerHTML})
+    quillEditorTextArea.value = JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': getQuillHtml(editor)})
 
     return true
 
@@ -103,7 +103,7 @@ async function saveDraft(){
 
     data.append("id", id)
     data.append("title", heading)
-    data.append("body", JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': editor.root.innerHTML}))
+    data.append("body", JSON.stringify({'delta': JSON.stringify(editor.getContents()), 'html': getQuillHtml(editor)}))
     data.append("tag", tags.value)
     data.append("project", projectId.value)
 

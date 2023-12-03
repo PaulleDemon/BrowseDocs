@@ -449,3 +449,42 @@ let quickSearchData = []
 function setQuickSearchData(data){
 	quickSearchData =  data
 }
+
+/**
+ * 
+ * @param {HTMLElement} editor 
+ */
+function getQuillHtml(editor){
+    // remove span from code blocks
+    
+    let root = editor.root.cloneNode(true)
+
+    root.querySelectorAll(".ql-code-block-container").forEach(ele => {
+        const select = ele.querySelector('select')
+        const spans = ele.querySelectorAll('span')
+
+        const divs = ele.querySelectorAll('.ql-code-block')
+        
+        if (select)
+            ele.removeChild(select)
+
+        spans.forEach(span => {
+            const textNode = document.createTextNode(span.innerText) 
+            span.innerHTML = ''
+            span.replaceWith(textNode)
+        })
+
+        
+        divs.forEach(div => {
+            console.log("inserting...")
+            const textNode = document.createTextNode("\n")
+            
+            ele.insertBefore(textNode, div) 
+        })
+
+    })
+    console.log("code block: ", root.innerHTML)
+
+
+    return root.innerHTML
+}

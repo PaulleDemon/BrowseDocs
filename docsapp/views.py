@@ -46,7 +46,12 @@ class ProjectCreateView(LoginRequiredMixin, View):
         edit = request.GET.get("edit")
         
         if step != '2':
-            repos = get_github_repo(request.user)
+            repos = list(get_github_repo(request.user))
+
+            # print("repos: ", list(repos))
+            
+            existing_projects = Project.objects.filter(source__in=[repo.get('html_url') for repo in repos]).values_list('source', flat=True)
+            repos = [repo for repo in repos if repo.get('html_url') not in existing_projects]
 
             return render(request, 'docs-import.html', context={
                             'repos': repos
@@ -113,6 +118,11 @@ class ProjectCreateView(LoginRequiredMixin, View):
                 except (Project.DoesNotExist, ValueError):
                     return render(request, '404.html') 
 
+            else:
+                if Project.objects.filter(source=doc_files.get('source')).exists():
+                    return JsonResponse({'error': 'This project already exists'}, status=400)
+
+
             return render(request, 'project-create.html', context={
                                         'config': doc_files.get('config'),
                                         'errors': doc_files.get('error'),
@@ -146,7 +156,11 @@ class ProjectCreateView(LoginRequiredMixin, View):
             except Project.DoesNotExist:
                 return render(request, '404.html')
 
-        print("Post request: ", request.POST)
+        if instance is None:
+            print("repo name: ", repo_name)
+            if Project.objects.filter(source=f'https://github.com/{repo_name}').exists():
+                return redirect('project-create')
+            
         form = ProjectForm(request.POST, instance=instance)
 
         if form.is_valid():
@@ -455,7 +469,7 @@ def get_project_about(request, name, unique_id):
                 sponsor[f'https://opencollective.com/{x.username}'] = "bi bi-opencollective"
 
             elif x.name == SPONSORS.PATREON:
-                sponsor[f'https://www.patreon.com/{x.username}'] = "bi bi-coin"
+                sponsor[f'https://www.patreon.com/{x.username}'] = "fa-brands fa-patreon"
 
             elif x.name == SPONSORS.BUYMEACOFFEE:
                 sponsor[f'https://buymeacoffee.com/{x.username}'] = "bi bi-coin"

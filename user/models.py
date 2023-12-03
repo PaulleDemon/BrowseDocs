@@ -17,8 +17,6 @@ class CustomUserManager(BaseUserManager):
         Create and save a User with the given email and password.
         """
 
-        print("email: ", email)
-       
         user = self.model(email=email, **extra_fields)
        
         if password:

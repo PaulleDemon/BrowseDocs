@@ -21,7 +21,8 @@ const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name,
                             ''
                         }
                     
-                        <div class="tw-ml-[4%] tw-flex tw-flex-col tw-max-w-[80%] tw-overflow-x-hidden">
+                        <div class="tw-ml-[4%] tw-flex tw-flex-col tw-w-full tw-overflow-x-hidden ${project_logo && 'tw-max-w-[80%]'}">
+
                             <div class="tw-text-xl tw-w-full">
                                 ${project_name}
                             </div>
@@ -33,7 +34,7 @@ const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name,
                             </div>
                             ${ editable &&
                                 `
-                                <div class="tw-flex tw-justify-between tw-mt-2 tw">
+                                <div class="tw-flex tw-justify-between tw-mt-auto">
                                     <a class="btn btn-success w-50 bi bi-pencil-square" href="${create_url}?step=2&repo_name=${source}&edit=${id}">
                                         Edit    
                                     </a>
