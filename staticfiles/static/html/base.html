@@ -72,6 +72,7 @@
 
         gtag('config', '{{gtag}}');
     </script>
+    <script src="{% static "./js/theme-loader.js" %}"></script>
 
     </head>
 {% comment %} <body class="tw-min-h-[100vh]" data-bs-theme="dark"> {% endcomment %}
@@ -259,7 +260,7 @@
         
     </footer>
     <script src="{% static "./js/base.js" %}"></script>
-    <script src="{% static "./js/theme-loader.js" %}"></script>
+    {% comment %} <script src="{% static "./js/theme-loader.js" %}"></script> {% endcomment %}
     <script>
         // Timezone settings
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; // e.g. "America/New_York"

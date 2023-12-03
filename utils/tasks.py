@@ -2,6 +2,7 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from django.urls import reverse
+from django.conf import settings
 from django.core.mail import send_mass_mail, send_mail
 
 from .common import get_name_from_email
@@ -47,7 +48,7 @@ def generate_docs_celery(user_id, project_id: int):
 
     else:
 
-        url = generated.get("url")
+        url = settings.DOMAIN + generated.get("url")
 
         message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation was successful. To visit your documentation please click on {url}.\n\nBest regards,\nBrowseDocs Team"
 
