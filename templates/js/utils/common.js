@@ -475,11 +475,16 @@ function getQuillHtml(editor){
         })
 
         
-        divs.forEach(div => {
-            const textNode = document.createTextNode("\n")
+        // divs.forEach((div, index) => {
+
+        //     if (index === 0){
+        //         return
+        //     }
+
+        //     const textNode = document.createTextNode("\n")
             
-            ele.insertBefore(textNode, div) 
-        })
+        //     ele.insertBefore(textNode, div) 
+        // })
 
     })
 

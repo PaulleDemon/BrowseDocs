@@ -10,10 +10,17 @@
 
     {% if request.user == tutorial.user %}
 
-        <a href="{% url "create-tutorial" %}?edit={{tutorial.id}}&project_id={{tutorial.project.id}}" 
-            class="btn btn-success tw-w-[150px] tw-m-[2%] tw-ml-auto bi bi-pencil-square">
-            Edit
-        </a>
+        {% if tutorial.project %}
+            <a href="{% url "create-tutorial" %}?edit={{tutorial.id}}&project_id={{tutorial.project.unique_id}}" 
+                class="btn btn-success tw-w-[150px] tw-m-[2%] tw-ml-auto bi bi-pencil-square">
+                Edit
+            </a>
+        {% else %}
+            <a href="{% url "create-tutorial" %}?edit={{tutorial.id}}" 
+                class="btn btn-success tw-w-[150px] tw-m-[2%] tw-ml-auto bi bi-pencil-square">
+                Edit
+            </a>
+        {% endif %}
 
     {% endif %}
 

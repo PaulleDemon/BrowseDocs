@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from django import template
 from django.utils import timezone
 from django.core import exceptions
+from django.utils.html import strip_tags
 
 from delta import html
 
@@ -72,3 +73,8 @@ def render_delta(delta: dict):
         extracts path from url
     """
     return html.render(json.loads(delta)['ops'])
+
+
+@register.filter
+def strip_html_tags(data: str):
+    return strip_tags(data)

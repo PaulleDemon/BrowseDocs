@@ -81,7 +81,7 @@
     padding: 5px;
     border-radius: 10px;
     min-height: 50px;
-    background-color: red;
+    background-color: var(--codeblock-bg);
 }
 
 .ql-code-block-container select{
