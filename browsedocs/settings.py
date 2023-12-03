@@ -62,7 +62,11 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = env('ALLOWED_PROD_HOSTS').replace(' ', '').split(',')
 
+if DEBUG:
+    DOMAIN = 'http://localhost:8000'
 
+else:
+    DOMAIN = env('DOMAIN')
 
 # Application definition
 

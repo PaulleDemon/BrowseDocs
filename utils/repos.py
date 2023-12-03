@@ -102,8 +102,8 @@ def read_config_file(user: User, owner, repo) -> dict:
             try:
                 return json.loads(file_content)
 
-            except json.decoder.JSONDecodeError:
-                return {'error': 'error decoding json, check json format of .browsedocs.json'}
+            except json.decoder.JSONDecodeError as e:
+                return {'error': f'error decoding json, check json format of .browsedocs.json {e}'}
 
         else:
             return {'error': f'Failed to retrieve content for {file_path}.'}
@@ -139,7 +139,7 @@ def scan_for_doc(user: User, owner, repo):
         return config
 
     path = config.get('source')
-
+    print("path: ", path)
     repo_info = get_repo_info(user, owner, repo)
 
     if not repo_info:
@@ -161,7 +161,7 @@ def scan_for_doc(user: User, owner, repo):
         for item in contents['tree']:
             
             if item['path'].lower() in ['index.md', 'readme.md'] or \
-                path and item['path'].lower() == path or \
+                path and item['path'].lower() == path.lower() or \
                 item['path'].lower() == 'docs' and item['type'] == 'tree':
 
                 docs_names.append({'path': item['path'], 'type': item['type']}) # only one either index.md or readme.md

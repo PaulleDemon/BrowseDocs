@@ -141,7 +141,7 @@ def generate_docs(user, project_id):
 
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        target = soup.find_all(['h1', 'h2'])
+        target = soup.find_all(['h1', 'h2', 'h3', 'h4'])
 
         sidebar.append({
             'name': name,

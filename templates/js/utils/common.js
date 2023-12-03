@@ -476,15 +476,12 @@ function getQuillHtml(editor){
 
         
         divs.forEach(div => {
-            console.log("inserting...")
             const textNode = document.createTextNode("\n")
             
             ele.insertBefore(textNode, div) 
         })
 
     })
-    console.log("code block: ", root.innerHTML)
-
 
     return root.innerHTML
 }

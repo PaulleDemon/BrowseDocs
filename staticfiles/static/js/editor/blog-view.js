@@ -74,7 +74,7 @@ function highlightHandler(entries){
 //                             'ruby', 'php', 'cpp', 'csharp', 'kotlin', 'json', 
 //                             'html', 'css']})
 
-document.querySelectorAll('pre, .ql-code-block-container').forEach((el) => {
+document.querySelectorAll('.ql-code-block-container').forEach((el) => {
     const selectElement = el.querySelector("select");
     
     if (selectElement) {
