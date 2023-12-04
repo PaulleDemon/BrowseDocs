@@ -48,8 +48,6 @@ class ProjectCreateView(LoginRequiredMixin, View):
         if step != '2':
             repos = list(get_github_repo(request.user))
 
-            # print("repos: ", list(repos))
-            
             existing_projects = Project.objects.filter(source__in=[repo.get('html_url') for repo in repos]).values_list('source', flat=True)
             repos = [repo for repo in repos if repo.get('html_url') not in existing_projects]
             

@@ -1,3 +1,4 @@
+import re
 import json
 import base64
 import requests
@@ -25,7 +26,7 @@ def get_headers(user: User):
     }
 
     
-
+next_pattern = re.compile(r'(?<=<)([\S]*)(?=>; rel="next")', re.IGNORECASE)
 def get_github_repo(user: User, private=False):
 
     """
@@ -37,18 +38,27 @@ def get_github_repo(user: User, private=False):
     # Make the API request
     headers = get_headers(user)
 
-    response = requests.get(f'https://api.github.com/users/{user.username}/repos', headers=headers)
+    repositories = []
+    url = f'https://api.github.com/users/{user.username}/repos?per_page=40'  # Adjust per_page as needed
 
-    repos = []
+    while True:
+        response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
-        repositories = response.json()
-        # sorts by latest commit
-        repos = list(sorted(repositories, key=lambda repo: repo['pushed_at'], reverse=True))
+        if response.status_code == 200:
+            repositories.extend(response.json())
 
-        # print('repos: ', repos[0])
-        if not private:
-            repos = filter(lambda a: a.get('private') == False, repos)
+        link_header = response.headers.get('link', '')
+        pages_remaining = 'rel="next"' in link_header
+
+        if pages_remaining:
+            url = re.search(next_pattern, link_header).group(0)
+        else:
+            break
+
+    repos = sorted(repositories, key=lambda repo: repo.get('pushed_at', ''), reverse=True)
+
+    if not private:
+        repos = [repo for repo in repos if not repo.get('private')]
 
     return repos
 
