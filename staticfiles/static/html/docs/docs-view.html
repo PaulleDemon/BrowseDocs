@@ -12,7 +12,7 @@
                 <i class="bi bi-list tw-text-xl"></i>
         </button>
 
-        <div class="tw-fixed tw-top-[60px] tw-w-[250px] tw-flex tw-flex-col 
+        <div class="tw-fixed tw-top-[50px] tw-w-[250px] tw-flex tw-flex-col 
                     tw-text-lg tw-h-[100vh] sidebar tw-p-4" id="sidebar">
 
             <button class="btn btn-close sidebar-close" onclick="closeNav()">
@@ -55,7 +55,7 @@
 
         <div class="tw-flex tw-w-full tw-gap-1">
             
-            <div class="tw-w-full tw-x-[25%] md:tw-px-[25%] tw-place-items-center tw-p-4 doc-viewer">
+            <div class="tw-w-full tw-x-[25%] tw-overflow-x-hidden md:tw-px-[25%] tw-place-items-center tw-p-4 doc-viewer">
                 {{doc_page.body.html|safe}}
             </div>
         

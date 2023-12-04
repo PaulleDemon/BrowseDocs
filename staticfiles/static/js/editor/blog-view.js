@@ -1,12 +1,24 @@
 
-let headings = document.querySelectorAll("h1, h2");
+let headings = document.querySelectorAll("h1, h2, h3");
 let tocContainer = document.getElementById("toc-container");
 let tocElements = []
 
 const tables = document.querySelectorAll('table')
 
 tables.forEach((ele) => {
-    ele.classList.add("table", "table-striped", "table-bordered", "tw-overflow-auto", "tw-max-w-full")
+
+    const wrapperDiv = document.createElement('div')
+    wrapperDiv.classList.add("tw-w-[100vw]", "tw-overflow-x-auto", "tw-flex", "tw-my-[2%]")
+
+    ele.classList.add("table", "table-striped", "table-responsive", 
+                        "table-bordered", "tw-w-full", 
+                        "tw-max-w-[100vw]")
+
+    const clonedTable = ele.cloneNode(true)
+    wrapperDiv.appendChild(clonedTable)
+
+    ele.parentNode.replaceChild(wrapperDiv, ele)
+
 })
 
 function generateTOC(){
@@ -119,4 +131,3 @@ function copyCodeToClipboard(element){
 
     })
 }
-
