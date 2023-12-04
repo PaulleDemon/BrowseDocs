@@ -84,6 +84,8 @@
     margin: 20px 0px;
     color: var(--text-color);
     background-color: var(--codeblock-bg);
+    width: 100%;
+    max-width: 100%;
     /* background-color: var(--background-color); */
 }
 
