@@ -77,16 +77,23 @@
     padding: 5px;
 }
 
-.ql-editor .ql-code-block-container{
-    padding: 5px;
+.ql-snow .ql-editor .ql-code-block-container{
+    padding: 15px;
     border-radius: 10px;
     min-height: 50px;
-    background-color: red;
+    margin: 20px 0px;
+    color: var(--text-color);
+    background-color: var(--codeblock-bg);
+    /* background-color: var(--background-color); */
 }
 
-.ql-code-block-container select{
-    /* color: #fff; */
+.ql-code-block-container > select{
     background-color: var(--background-color);
+}
+
+
+.ql-editor table, .ql-editor td{
+    border: 1px solid var(--text-color);
 }
 
 /* .ql-code-block-container{
