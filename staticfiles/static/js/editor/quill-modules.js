@@ -60,7 +60,7 @@ class PlainTextClipboard extends Quill.import('modules/clipboard') {
       console.log("pasting")
       const range = this.quill.getSelection(true)
       const text = e.clipboardData.getData('text/plain')
-      console.log("Text: ", text)
+    //   console.log("Text: ", text)
       this.quill.deleteText(range.index, range.length, Quill.sources.USER)
     //   this.quill.clipboard.dangerouslyPasteHTML(range.index, text, Quill.sources.USER)
       this.quill.insertText(range.index, text, Quill.sources.USER)

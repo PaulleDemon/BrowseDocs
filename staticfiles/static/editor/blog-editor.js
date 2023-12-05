@@ -23,7 +23,7 @@ if (project_id){
 }else{
     setTimeout(() => toastAlert(null, "invalid project id", "danger"), 10)
 }
-console.log("Body: ", body_data)
+// console.log("Body: ", body_data)
 if (body_data){
    
     setTimeout(() => editor.setContents(

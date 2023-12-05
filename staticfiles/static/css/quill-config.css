@@ -98,6 +98,10 @@
     border: 1px solid var(--text-color);
 }
 
+#editor > div.ql-tooltip.ql-editing > input[type=text]{
+    color: #000;
+}
+
 /* .ql-code-block-container{
     background-color: #0a1124;
     padding: 5px;

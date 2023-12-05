@@ -144,6 +144,10 @@ h1, h2, h3, h4{
     overflow-x: auto;
 }
 
+#quill-editor > p{
+    margin: 0px;
+}
+
 /* ------------------ sidebar ------------------------ */
 .sidebar{
     background-color: var(--background-color);

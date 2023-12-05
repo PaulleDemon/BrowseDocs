@@ -7,29 +7,67 @@
                     tw-flex max-md:tw-place-content-center 
                     tw-items-center tw-h-full tw-w-full">
         
-        <div class="max-md:tw-hidden tw-max-w-[30%] tw-flex 
+        <div class="tw-fixed tw-left-2 tw-top-2">
+             <img src="{% static "assets/logos/browsedocs.svg" %}" 
+                class="tw-h-[50px] tw-w-[50px]"
+                alt="">
+        </div>
+
+        {% comment %} <div class="max-md:tw-hidden tw-max-w-[30%] tw-flex 
                     tw-h-[80%] tw-p-4 tw-rounded-3xl
                         lg:tw-ml-[20%]
                         tw-overflow-hidden ">
             <img src="{% static "./assets/images/open-source.svg" %}" class="tw-w-full" alt="" srcset="">
-        </div>
+        </div> {% endcomment %}
 
-        <div  class="tw-w-[350px] tw-min-h-[250px] tw-h-max tw-bg-white
-                        tw-rounded-lg tw-p-3 tw-text-center tw-flex tw-flex-col tw-gap-3 max-md:tw-shadow-lg
-                        lg:tw-ml-auto lg:tw-mr-[20%]
-                        "
-            >  
-            {% comment %} <a href="{% provider_login_url 'github' method='js_sdk' %}?next=https://github.com"
-                class="btn btn-light bi bi-gitlab">
-                Continue with GitLab
-            </a> {% endcomment %}
-            <a href="{% url 'social:begin' 'github' %}?next={{ request.GET.next }}"
-                class="btn-dark btn">
-                <i class="bi bi-github"></i>
-                <span>Continue with Github</span>
-            </a>
-            
-        </div>
+        <div class="max-md:tw-hidden tw-flex tw-p-4
+                    tw-bg-[#0F172A] tw-w-full tw-h-full
+                    tw-max-w-[60%] tw-overflow-hidden 
+                    tw-text-white tw-place-content-center 
+                    tw-items-center
+                    ">
 
+            <div class="tw-flex tw-flex-col tw-gap-4">
+                <div class="tw-text-3xl tw-font-semibold">
+                    BrowseDocs
+                </div>
+                <div>
+                    A free an opensource documenation hosting
+                </div>
+            </div>
+            {% comment %} <img src="{% static "./assets/images/open-source.svg" %}" class="tw-w-full" alt="" srcset=""> {% endcomment %}
+        </div> 
+
+        <div class="tw-w-full tw-h-full tw-flex tw-flex-col tw-place-content-center tw-relative">
+
+            <div class="tw-text-center tw-absolute
+                        tw-top-[20%] tw-left-[50%] tw-translate-x-[-50%]
+                         tw-font-semibold tw-text-[#0F172A] tw-text-3xl">
+                BrowseDocs
+            </div>
+
+            <div  class="tw-w-[350px] tw-min-h-[250px] tw-h-max tw-bg-white
+                            tw-rounded-lg tw-p-3 tw-text-center tw-flex tw-flex-col tw-gap-3 
+                            max-md:tw-shadow-lg
+                            tw-mx-auto
+                            "
+                >  
+                <div class="tw-text-2xl tw-font-medium tw-m-2">
+                    Login
+                </div>
+                {% comment %} <a href="{% provider_login_url 'github' method='js_sdk' %}?next=https://github.com"
+                    class="btn btn-light bi bi-gitlab">
+                    Continue with GitLab
+                </a> {% endcomment %}
+                <div class="tw-place-content-center tw-flex tw-flex-col tw-my-auto tw-h-full tw-w-full">
+                    <a href="{% url 'social:begin' 'github' %}?next={{ request.GET.next }}"
+                        class="btn-dark btn">
+                        <i class="bi bi-github"></i>
+                        <span>Continue with Github</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
     </div>
 {% endblock fullpage %}

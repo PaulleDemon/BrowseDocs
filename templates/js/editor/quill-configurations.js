@@ -266,4 +266,11 @@ editor.keyboard.addBinding({
   }, function(range, context) {
         editor.insertText(range.index, '\n', Quill.sources.USER);
         editor.setSelection(range.index + 1, Quill.sources.SILENT);
-  })
+})
+
+
+let tooltip = editor.theme.tooltip
+let linkInput = tooltip.root.querySelector("input[data-link]")
+linkInput.dataset.link = 'browsedocs.com'
+linkInput.setAttribute('placeholder', 'browsedocs.com')
+console.log("Link input: ", linkInput)
