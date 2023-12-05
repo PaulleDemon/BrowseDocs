@@ -317,12 +317,12 @@ select {
   top: 5%;
 }
 
-.tw-top-\[60px\] {
-  top: 60px;
-}
-
 .tw-top-\[50px\] {
   top: 50px;
+}
+
+.tw-top-\[60px\] {
+  top: 60px;
 }
 
 .tw-z-10 {
@@ -369,16 +369,6 @@ select {
 .tw-mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-
-.tw-my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.tw-my-\[1\%\] {
-  margin-top: 1%;
-  margin-bottom: 1%;
 }
 
 .tw-my-\[2\%\] {

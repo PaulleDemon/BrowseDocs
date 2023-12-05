@@ -11,7 +11,7 @@ const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name,
                             tw-p-4 tw-flex  max-sm:tw-max-w-full tw-cursor-pointer
                             tw-shadow-xl
                             " 
-                            onclick="updateUrl({% url "get-docs" unique_id=${project_id} %})">
+                            onclick="updateUrl('/${project_id}')">
 
                         ${ project_logo ?
                             `<img src=${project_logo}
@@ -32,7 +32,7 @@ const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name,
                             <div class="tw-mt-[2%] tw-max-h-[40%] tw-w-full tw-overflow-hidden subtext-color">
                                 ${about}
                             </div>
-                            ${ editable &&
+                            ${ editable ?
                                 `
                                 <div class="tw-flex tw-justify-between tw-mt-auto">
                                     <a class="btn btn-success w-50 bi bi-pencil-square" href="${create_url}?step=2&repo_name=${source}&edit=${id}">
@@ -43,6 +43,8 @@ const PROJECT_CARD =  ({id, project_id, project_logo, unique_name, project_name,
                                     </button>
                                 </div>
                                 `
+                                :
+                                ''
                             }
                         </div>
                     </div>
@@ -53,17 +55,15 @@ function searchProject(){
   
     const value = event.target.value.trim()
 
-
-    if (value.length == 0){
-        searchListContainer.classList.add("tw-hidden")
-        projectListContainer.classList.remove("tw-hidden")
-        return
-    }
-
     if (searchTimeout){
         clearTimeout(searchTimeout)
     }
 
+    if (value.length === 0){
+        searchListContainer.classList.add("tw-hidden")
+        projectListContainer.classList.remove("tw-hidden")
+        return
+    }
 
     searchTimeout = setTimeout(async () => {
         const [status, data] = await search(value, "project")

@@ -34,8 +34,9 @@
             tw-p-4 tw-flex  max-sm:tw-max-w-full tw-cursor-pointer
             tw-shadow-xl
             " 
-            onclick="updateUrl('{% url "get-docs" name=project.name version=project.documentation_set.last.version unique_id=project.unique_id %}')">
-
+            onclick="updateUrl('{% url "get-docs" unique_id=project.unique_id %}')">
+            {% comment %} onclick="updateUrl('{% url "get-docs" name=project.name version=project.documentation_set.last.version unique_id=project.unique_id %}')"> {% endcomment %}
+            
                 {% if project.project_logo %}
                     <img src="{{project.project_logo}}" 
                             class="tw-w-[50px] tw-h-[50px]"
@@ -64,11 +65,11 @@
                         </div>
                     
                     {% else %}
-                        <button class="btn btn-success tw-mt-auto">
+                        <a href="{% url "get-docs" unique_id=project.unique_id %}" class="btn btn-success tw-mt-auto">
                             
                             <span>Vist project</span>
                             <span class="bi bi-box-arrow-up-right"></span>
-                        </button>
+                        </a>
 
                     {% endif %}
                 </div>
