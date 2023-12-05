@@ -22,7 +22,7 @@
                 {% for side in documentation.sidebar %}
                     {% url "get-docs" name=project.name unique_id=project.unique_id page_url=side.url version=documentation.version as view_url %}
                     <a href="{{view_url}}" 
-                        class="tw-font-semi-bold tw-text-2xl sidebar-header 
+                        class="tw-font-semi-bold tw-text-xl sidebar-header 
                                 tw-my-2
                                 {% if request.get_full_path == view_url %}current-heading{% endif %}
                                 "
