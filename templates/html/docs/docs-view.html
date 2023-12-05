@@ -12,7 +12,7 @@
                 <i class="bi bi-list tw-text-xl"></i>
         </button>
 
-        <div class="tw-fixed tw-top-[50px] tw-w-[250px] tw-flex tw-flex-col 
+        <div class="tw-fixed tw-top-[50px] tw-w-[280px] tw-flex tw-flex-col 
                     tw-text-lg tw-h-[100vh] sidebar tw-p-4" id="sidebar">
 
             <button class="btn btn-close sidebar-close" onclick="closeNav()">
@@ -22,8 +22,10 @@
                 {% for side in documentation.sidebar %}
                     {% url "get-docs" name=project.name unique_id=project.unique_id page_url=side.url version=documentation.version as view_url %}
                     <a href="{{view_url}}" 
-                        class="tw-font-semi-bold tw-text-xl sidebar-header 
-                                {% if request.get_full_path == view_url %}current-heading{% endif %}"
+                        class="tw-font-semi-bold tw-text-2xl sidebar-header 
+                                tw-my-2
+                                {% if request.get_full_path == view_url %}current-heading{% endif %}
+                                "
                         
                         >
                         {{side.name}}
@@ -31,8 +33,8 @@
                         
                         {% for heading in side.headings %}
                             <a href="{{view_url}}#{{heading|slugify}}" 
-                                class="sidebar-item tw-text-base">
-                                &emsp;{{heading}}
+                                class="sidebar-item tw-text-base tw-ml-2">
+                                {{heading}}
                             </a>
                         {% endfor %}
                 {% endfor %}

@@ -125,7 +125,10 @@ def generate_docs(user, project_id):
         file_content = repos.get_file(user, owner, repo, path)
 
         if isinstance(file_content, dict):
-            return file_content.get("error")
+            return {'error': file_content.get("error")}
+
+        if file_content is None:
+            return {'error':  f'{path} not found, please check the path'}
 
         if not file_content or len(file_content) < 50:
             return {'error': f"The document {path} is too small for document to be created. Add necessary details"}

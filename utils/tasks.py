@@ -42,7 +42,7 @@ def generate_docs_celery(user_id, project_id: int):
     generated = generate_docs(user, project_id)
 
     if 'error' in generated:
-        message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation failed due to the following reasons: {' '.join([x for x in generated])}.\n\n Please go to dashboard and try again after rectifying errors.\n\nBest regards,\nBrowseDocs Team"
+        message = f"Hi {get_name_from_email(user.email)},\n Your documentation creation failed due to the following reasons: {''.join([x for x in generated.get('error')])}.\n\n Please go to dashboard and try again after rectifying errors.\n\nBest regards,\nBrowseDocs Team"
 
         send_mail_celery.delay("Docs creation failed", message, recipient_list=[user.email])
 
