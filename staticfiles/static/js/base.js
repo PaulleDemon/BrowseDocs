@@ -123,6 +123,7 @@ function updateQuickSearch(data){
 	if (data && quickSearchDropdown.children.length > 0){
 		quickSearchDropdown.children[0].classList.add("search-active")
 		searchDropdownIndex = 0
+
 	}else{
 		searchDropdownIndex = -1
 	}
@@ -130,14 +131,18 @@ function updateQuickSearch(data){
 
 
 function updateSelectedOption() {
-	const options = quickSearchDropdown.children;
+	const options = quickSearchDropdown.children
 
 	for (let i = 0; i < options.length; i++) {
-	  options[i].classList.remove('search-active');
+		options[i].classList.remove('search-active')
 	}
 
 	if (searchDropdownIndex !== -1) {
-	  options[searchDropdownIndex].classList.add('search-active');
+		options[searchDropdownIndex].classList.add('search-active')
+		
+		if (!isElementVisibleInContainer(options[searchDropdownIndex], quickSearchDropdown)){
+			options[searchDropdownIndex].scrollIntoView()
+		}
 	}
 }
 

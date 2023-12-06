@@ -73,6 +73,10 @@ class Project(models.Model):
     def __str__(self):
         return self.name
     
+    def save(self, *args, **kwargs) -> None:
+        self.unique_name = self.unique_name.lower()
+        return super().save(*args, **kwargs)
+
 
 class Social(models.Model):
 

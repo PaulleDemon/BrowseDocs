@@ -131,3 +131,21 @@ function copyCodeToClipboard(element){
 
     })
 }
+
+
+function addRawQueryParamToImageLinks() {
+    // this is necessary to display images from githib
+    const imgElements = document.querySelectorAll('img')
+
+    imgElements.forEach(img => {
+        const currentSrc = img.getAttribute('src')
+
+        if (currentSrc && currentSrc.includes('?')) {
+            img.setAttribute('src', `${currentSrc}&raw=true`)
+        } else {
+            img.setAttribute('src', `${currentSrc}?raw=true`)
+        }
+    })
+}
+
+addRawQueryParamToImageLinks()

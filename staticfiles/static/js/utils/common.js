@@ -293,7 +293,25 @@ function isElementInViewport(el) {
     )
 }
 
+// Check if the element is within the container
+/**
+ * 
+ * @param {HTMLElement} element 
+ * @param {HTMLElement} container 
+ * @returns 
+ */
+function isElementVisibleInContainer(element, container) {
+    const elementRect = element.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
 
+    const isVisible =
+        elementRect.top >= containerRect.top &&
+        elementRect.bottom <= containerRect.bottom &&
+        elementRect.left >= containerRect.left &&
+        elementRect.right <= containerRect.right;
+
+    return isVisible;
+}
 
   /**
  * 

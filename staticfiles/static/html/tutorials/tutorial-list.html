@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="tw-flex tw-flex-col tw-h-full 
-            tw-w-full md:tw-px-[25%] tw-place-items-center 
+            tw-w-full md:tw-px-[30%] tw-place-items-center 
             tw-p-3 tw-min-h-[100vh]">
 
     <a href="{% url "create-tutorial" %}" class="btn btn-success tw-ml-auto">
@@ -25,6 +25,7 @@
         </div>
 
     {% endif %}
+    <div class="tw-mt-[5%]" />
 
     {% for tutorial in tutorials  %}
 
@@ -45,6 +46,7 @@
                 {{tutorial.body.html|slice:":300"|strip_html_tags|safe}} <span class="!tw-text-blue-500" style="color: #3495eb;">continue reading...</span>
             </div>
         </a>
+        <hr>
     {% endfor %}
 
     {% if tutorials.has_previous or tutorials.has_next %}

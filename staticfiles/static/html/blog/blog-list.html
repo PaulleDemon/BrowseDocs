@@ -8,11 +8,11 @@
 {% block content %}
 
 <div class="tw-flex tw-flex-col tw-h-full 
-            tw-w-full md:tw-px-[25%] tw-place-items-center 
+            tw-w-full md:tw-px-[30%] tw-place-items-center 
             tw-p-3 tw-min-h-[100vh]">
 
     {% if request.user == project.user  %}
-        <a href="{% url "create-blog" %}" class="btn btn-success bi bi-pencil-fill tw-ml-auto">
+        <a href="{% url "create-blog" %}?project_id={{base.unique_id}}" class="btn btn-success bi bi-pencil-fill tw-ml-auto">
             Write blog
         </a>
     {% endif %}
@@ -29,17 +29,21 @@
         </div>
 
     {% endif %}
-
+    <div class="tw-mt-[5%]" />
     {% for blog in blogs  %}
         <a href="{% url 'get-blog' id=blog.id title=blog.title|slugify project_id=blog.project.unique_id  %}" 
-                                    class="tw-text-md tw-w-full tw-h-full">
+                                    class="tw-text-md tw-w-full tw-h-full ">
             <div class="tw-text-4xl tw-w-full">
                 {{blog.title}}
             </div>
-            <div class="tw-mt-[2%] tw-mb-[5%] tw-w-full">
+            <div class="tw-mt-[2%] tw-mb-[2%] tw-w-full">
                 {{blog.body.html|slice:":300"|strip_html_tags|safe}} <span class="!tw-text-blue-500" style="color: #3495eb;">continue reading...</span>
             </div>
+            <div class="tw-text-sm tw-text-gray-500 tw-text-right">
+                {% utc_to_local blog.datetime request.COOKIES.user_timezone %}
+            </div>
         </a>
+        <hr>
     {% endfor %}
 
     {% if blogs.has_previous or blogs.has_next %}

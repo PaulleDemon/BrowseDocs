@@ -17,7 +17,7 @@ const lightHighlightJs = document.getElementById("highlightjs-light")
 const LIGHT_THEME = {
     '--text-color': '#000',
     '--background-color': '#fff',
-    '--search-highlight-color': '#73ceff93',
+    '--search-highlight-color': '#d8d8d8b3',
     '--codeblock-bg': '#F6F8FA',
     '--toc-highlight-bg': '#a5a5a5a4'
 
@@ -26,7 +26,7 @@ const LIGHT_THEME = {
 const DARK_THEME = {
     '--text-color': '#fff',
     '--background-color': '#0F172A',
-    '--search-highlight-color': '#73ceff93',
+    '--search-highlight-color': '#212f617a',
     '--codeblock-bg': '#080e1c',
     '--toc-highlight-bg':'#20306857',
 }
