@@ -402,7 +402,9 @@ def get_docs(request, unique_id, page_url=None, version=None, name=None):
                 'doc_page': doc_page,
                 'documentation': doc,
                 'is_doc': True,
-                'search_data': json.dumps(search_data)
+                'search_data': json.dumps(search_data),
+                'page_title': project.name
+
         })
 
     except Project.DoesNotExist:

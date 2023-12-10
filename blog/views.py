@@ -141,7 +141,8 @@ def get_blog(request, id, title, project_id):
 
         return render(request, 'blog-view.html', {
                                             'blog': blog,
-                                            'base': project
+                                            'base': project,
+                                            'page_title': blog.title
                                         })
 
     except Blog.DoesNotExist:

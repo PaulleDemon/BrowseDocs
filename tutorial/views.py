@@ -146,7 +146,9 @@ def get_tutorial(request, id, title=None, project_id=None, name=None):
 
         return render(request, 'tutorial.html', {
                                             'tutorial': tutorial,
-                                            'base': project
+                                            'base': project,
+                                            'page_title': tutorial.title
+
                                         })
 
     except Tutorial.DoesNotExist:

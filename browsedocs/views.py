@@ -11,7 +11,8 @@ def home_view(request):
     projects = Project.objects.all().order_by('-datetime')[:30]
 
     return render(request, 'home.html', {
-        'projects': projects
+        'projects': projects,
+        'page_title': 'opensource documentation'
     })
 
 def support_view(request):
